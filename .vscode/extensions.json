@@ -1,6 +1,7 @@
 {
-    "recommendations": [
-        "angular.ng-template",
-        "esbenp.prettier-vscode"
-    ]
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=827846
+  "recommendations": [
+  "angular.ng-template",
+  "esbenp.prettier-vscode",
+"angular.ng-template"]
 }
