@@ -10,6 +10,13 @@ The truth behind this project is that it is actually a playground for the author
 
 As such, some choices of architecture or libraries are not based on efficiency but rather on the sake of discovery or simplicity, depending on the case.
 
+### Global structure
+
+This project is composed of three sub-projects:
+- the client application to display photos to visitor,
+- the back-office application to add/edit/remove the client photos,
+- a library shared between the two applications.
+
 ### Current state
 
-The API is still under development and not ready for production.
+The project is still under development and not ready for production.
