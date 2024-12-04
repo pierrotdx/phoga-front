@@ -1,7 +1,7 @@
 import { InjectionToken } from '@angular/core';
 
 export interface IAuthProvider {
-  fetchAccessToken(): Promise<string>;
+  fetchAccessToken(): Promise<string | undefined>;
   logout(): Promise<void>;
 }
 
