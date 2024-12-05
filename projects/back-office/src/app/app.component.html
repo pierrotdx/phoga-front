@@ -1,3 +1,8 @@
+@if (isAuthenticated()) {
+<button (click)="logout()">logout</button>
+<router-outlet></router-outlet>
+} @else {
 <div style="background-color: red">
-  <button (click)="getAccessToken()">login</button>
+  <button (click)="login()">login</button>
 </div>
+}

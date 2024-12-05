@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AuthService } from './auth-context';
 
@@ -9,12 +9,24 @@ import { AuthService } from './auth-context';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  title = 'back-office';
+  isAuthenticated = signal<boolean>(false);
 
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService,
+    private readonly router: 
+  ) {
+    this.authService.isAuthenticated$.subscribe(this.onAuthenticationChange);
+  }
 
-  async getAccessToken() {
-    const accessToken = await this.authService.getAccessToken();
-    console.log('access token: ', accessToken);
+  private onAuthenticationChange = (isAuthenticated: boolean) => {
+    this.isAuthenticated.set(isAuthenticated);
+  };
+
+  async login() {
+    await this.authService.login();
+    this
+  }
+
+  async logout() {
+    await this.authService.logout();
   }
 }
