@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 
 import { AuthService } from './auth.service';
-import { AuthProviderFake } from '../adapters';
-import { AUTH_PROVIDER_TOKEN } from './models';
+import { AuthProviderFake } from '../../adapters';
+import { AUTH_PROVIDER_TOKEN } from '../models';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -25,10 +25,10 @@ describe('AuthService', () => {
 
   describe(`${AuthService.prototype.login.name}`, () => {
     it('should log the user in', async () => {
-      const isAuthBefore = service.isAuthenticated();
+      const isAuthBefore = service.isAuthenticated$.getValue();
       await service.login();
       expect(isAuthBefore).toBeFalse();
-      const isAuthAfter = service.isAuthenticated();
+      const isAuthAfter = service.isAuthenticated$.getValue();
       expect(isAuthAfter).toBeTrue();
     });
   });
@@ -53,9 +53,9 @@ describe('AuthService', () => {
     });
 
     it('should log the user out', async () => {
-      const isAuthBefore = service.isAuthenticated();
+      const isAuthBefore = service.isAuthenticated$.getValue();
       await service.logout();
-      const isAuthAfter = service.isAuthenticated();
+      const isAuthAfter = service.isAuthenticated$.getValue();
       expect(isAuthBefore).toBeTrue();
       expect(isAuthAfter).toBeFalse();
     });

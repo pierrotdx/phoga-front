@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { AUTH_PROVIDER_TOKEN, IAuthProvider } from './models';
+import { AUTH_PROVIDER_TOKEN, IAuthProvider } from '../models';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
