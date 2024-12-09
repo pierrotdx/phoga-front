@@ -1,8 +1,8 @@
 import { AuthService } from '@auth0/auth0-angular';
-import { IAuthProvider } from '../../core';
+import { IAuthProvisioner } from '../../../core';
 import { firstValueFrom } from 'rxjs';
 
-export class AuthProviderAuth0 implements IAuthProvider {
+export class AuthProvisionerAuth0 implements IAuthProvisioner {
   constructor(private readonly auth0Service: AuthService) {}
 
   async fetchAccessToken(): Promise<string | undefined> {

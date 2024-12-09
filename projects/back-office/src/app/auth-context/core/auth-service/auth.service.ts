@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { AUTH_PROVIDER_TOKEN, IAuthProvider } from '../models';
+import { AUTH_PROVISIONER_TOKEN, IAuthProvisioner } from '../models';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -12,8 +12,8 @@ export class AuthService {
   );
 
   constructor(
-    @Inject(AUTH_PROVIDER_TOKEN)
-    private readonly authProvider: IAuthProvider
+    @Inject(AUTH_PROVISIONER_TOKEN)
+    private readonly authProvisioner: IAuthProvisioner
   ) {
     this.accessToken$.subscribe(this.onAccessTokenChange);
   }
@@ -23,7 +23,7 @@ export class AuthService {
   };
 
   async login(): Promise<void> {
-    const accessToken = await this.authProvider.fetchAccessToken();
+    const accessToken = await this.authProvisioner.fetchAccessToken();
     this.accessToken$.next(accessToken);
   }
 
@@ -36,7 +36,7 @@ export class AuthService {
   }
 
   async logout(): Promise<void> {
-    await this.authProvider.logout();
+    await this.authProvisioner.logout();
     this.accessToken$.next(undefined);
   }
 }

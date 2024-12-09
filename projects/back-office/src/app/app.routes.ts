@@ -2,7 +2,7 @@ import { provideRouter, ROUTES, Routes } from '@angular/router';
 import { HomePageComponent, LoginPageComponent } from './pages';
 import { authGuard } from './auth-context';
 import { EndpointId, ENDPOINTS_TOKEN } from './endpoints-context';
-import { inject } from '@angular/core';
+import { inject, Provider } from '@angular/core';
 
 const routesFactory = (): Routes => {
   const endpoints = inject(ENDPOINTS_TOKEN);
@@ -20,7 +20,7 @@ const routesFactory = (): Routes => {
   return routes;
 };
 
-const routesProvider = {
+const routesProvider: Provider = {
   provide: ROUTES,
   useFactory: routesFactory,
   deps: [ENDPOINTS_TOKEN],
