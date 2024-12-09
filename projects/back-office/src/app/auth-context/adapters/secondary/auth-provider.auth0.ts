@@ -7,7 +7,7 @@ export class AuthProviderAuth0 implements IAuthProvider {
 
   async fetchAccessToken(): Promise<string | undefined> {
     const accessToken$ = firstValueFrom(
-      this.auth0Service.getAccessTokenWithPopup()
+      this.auth0Service.getAccessTokenWithPopup({ cacheMode: 'off' })
     );
     return await accessToken$;
   }

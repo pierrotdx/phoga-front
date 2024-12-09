@@ -1,17 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { AUTH_PROVIDER_TOKEN, AuthProviderFake } from './auth-context';
+import { AuthProviderFake } from './auth-context';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
-      providers: [
-        {
-          provide: AUTH_PROVIDER_TOKEN,
-          useClass: AuthProviderFake,
-        },
-      ],
+      providers: [AuthProviderFake],
     }).compileComponents();
   });
 

@@ -1,11 +1,12 @@
 import { Inject, Injectable } from '@angular/core';
-import { AUTH_PROVIDER_TOKEN, IAuthProvider } from './models';
+import { AUTH_PROVIDER_TOKEN, IAuthProvider } from '../models';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  isAuthenticated$ = new BehaviorSubject<boolean>(false);
   private readonly accessToken$ = new BehaviorSubject<string | undefined>(
     undefined
   );
@@ -13,12 +14,13 @@ export class AuthService {
   constructor(
     @Inject(AUTH_PROVIDER_TOKEN)
     private readonly authProvider: IAuthProvider
-  ) {}
-
-  isAuthenticated(): boolean {
-    const hasAccessToken = !!this.accessToken$.getValue();
-    return hasAccessToken;
+  ) {
+    this.accessToken$.subscribe(this.onAccessTokenChange);
   }
+
+  onAccessTokenChange = (accessToken: string | undefined): void => {
+    this.isAuthenticated$.next(!!accessToken);
+  };
 
   async login(): Promise<void> {
     const accessToken = await this.authProvider.fetchAccessToken();
@@ -26,7 +28,7 @@ export class AuthService {
   }
 
   async getAccessToken(): Promise<string | undefined> {
-    if (!this.isAuthenticated()) {
+    if (!this.isAuthenticated$.getValue()) {
       await this.login();
     }
     const accessToken = this.accessToken$.getValue();

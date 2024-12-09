@@ -1,20 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AuthService } from './auth-context';
+import { HeaderComponent } from './components';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, HeaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  title = 'back-office';
-
-  constructor(private readonly authService: AuthService) {}
-
-  async getAccessToken() {
-    const accessToken = await this.authService.getAccessToken();
-    console.log('access token: ', accessToken);
-  }
-}
+export class AppComponent {}
