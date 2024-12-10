@@ -1,6 +1,6 @@
 import { provideRouter, ROUTES, Routes } from '@angular/router';
 import { HomePageComponent, LoginPageComponent } from './pages';
-import { authGuard } from './auth-context';
+import { authGuard, Scope } from './auth-context';
 import { EndpointId, ENDPOINTS_TOKEN } from './endpoints-context';
 import { inject, Provider } from '@angular/core';
 
@@ -11,6 +11,7 @@ const routesFactory = (): Routes => {
       path: endpoints.getRelativePath(EndpointId.HomePage),
       loadComponent: () => HomePageComponent,
       canActivate: [authGuard],
+      data: { scopes: [Scope.RestrictedRead] },
     },
     {
       path: endpoints.getRelativePath(EndpointId.LoginPage),
