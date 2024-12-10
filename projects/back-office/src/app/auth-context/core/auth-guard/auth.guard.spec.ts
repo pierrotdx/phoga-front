@@ -1,78 +1,70 @@
-import { TestBed } from '@angular/core/testing';
-import {
-  ActivatedRouteSnapshot,
-  CanActivateFn,
-  Router,
-  RouterStateSnapshot,
-} from '@angular/router';
-
-import { authGuard } from './auth.guard';
-import { AuthService } from '../auth-service/auth.service';
+import { Router } from '@angular/router';
 import { AuthProviderFake } from '../../adapters';
 import { AuthGuard } from '@auth0/auth0-angular';
 import { EndpointsProvider } from '../../../endpoints-context';
 import { Scope } from '../models';
+import { AuthGuardTestUtils } from './auth-guard.test-utils';
 
 describe(`${AuthGuard.name}`, () => {
-  const fakeRoute = new ActivatedRouteSnapshot();
-  const fakeState = {} as RouterStateSnapshot;
+  let testUtils: AuthGuardTestUtils;
   const routerMock = {
     navigate: jasmine.createSpy('navigateByUrl'),
   };
-  let authService: AuthService;
-
-  const executeGuard: CanActivateFn = (...guardParameters) =>
-    TestBed.runInInjectionContext(() => authGuard(...guardParameters));
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        AuthProviderFake,
-        { provide: Router, useValue: routerMock },
-        EndpointsProvider,
-      ],
-    });
-    authService = TestBed.inject(AuthService);
+    const providers = [
+      AuthProviderFake,
+      { provide: Router, useValue: routerMock },
+      EndpointsProvider,
+    ];
+    testUtils = new AuthGuardTestUtils(providers);
   });
 
   it('should be created', () => {
-    expect(executeGuard).toBeTruthy();
+    expect(testUtils.executeGuard).toBeTruthy();
   });
 
-  it('should return `false` when the user is not authenticated and navigate to the login page', () => {
-    authService.isAuthenticated$.next(false);
-    const canActivate = executeGuard(fakeRoute, fakeState);
-    expect(canActivate).toBeFalse();
-    expect(routerMock.navigate).toHaveBeenCalled();
+  describe('when the user is not authenticated', () => {
+    beforeEach(() => {
+      testUtils.emitIsAuthenticated(false);
+    });
+
+    it('should return `false` and navigate to the login page', () => {
+      testUtils.expectCanActivateValue(false);
+      expect(routerMock.navigate).toHaveBeenCalled();
+    });
   });
 
-  it('should return `true` when the user is authenticated and no specific scope is required', () => {
-    authService.isAuthenticated$.next(true);
-    const canActivate = executeGuard(fakeRoute, fakeState);
-    expect(canActivate).toBeTrue();
-  });
+  describe('when the user is authenticated', () => {
+    let requiredScopes: Scope[] | undefined;
+    let userScopes: Scope[] | undefined;
 
-  it('should return `true` when the user is authenticated and has all required scopes', () => {
-    const requiredScopes = [Scope.PhotosRead];
-    fakeRoute.data = { scopes: requiredScopes };
-    authService.isAuthenticated$.next(true);
-    fakeAccessTokenScopes(authService, requiredScopes);
-    const canActivate = executeGuard(fakeRoute, fakeState);
-    expect(canActivate).toBeTrue();
-    fakeRoute.data = {};
-  });
+    beforeEach(() => {
+      testUtils.emitIsAuthenticated(true);
+    });
 
-  it('should return `false` when the user is authenticated but does not have all of the required scopes', () => {
-    const requiredScopes = [Scope.PhotosRead, Scope.PhotosWrite];
-    fakeRoute.data = { scopes: requiredScopes };
-    authService.isAuthenticated$.next(true);
-    fakeAccessTokenScopes(authService, requiredScopes.slice(0, 1));
-    const canActivate = executeGuard(fakeRoute, fakeState);
-    expect(canActivate).toBeFalse();
-    fakeRoute.data = {};
+    afterEach(() => {
+      requiredScopes = undefined;
+      userScopes = undefined;
+      testUtils.fakeRoute.data = {};
+    });
+
+    it('should return `true` when no specific scope is required', () => {
+      testUtils.expectCanActivateValue(true);
+    });
+
+    it('should return `true` when the user has all of the required scopes', () => {
+      requiredScopes = [Scope.PhotosRead];
+      userScopes = requiredScopes;
+      testUtils.setScopesScenario(requiredScopes, userScopes);
+      testUtils.expectCanActivateValue(true);
+    });
+
+    it('should return `false` when the user does not have all of the required scopes', () => {
+      requiredScopes = [Scope.PhotosRead, Scope.PhotosWrite];
+      userScopes = requiredScopes.slice(0, 1);
+      testUtils.setScopesScenario(requiredScopes, userScopes);
+      testUtils.expectCanActivateValue(false);
+    });
   });
 });
-
-function fakeAccessTokenScopes(authService: AuthService, scopes: Scope[] = []) {
-  spyOn(authService as any, 'getUserScopes').and.returnValue(scopes);
-}
