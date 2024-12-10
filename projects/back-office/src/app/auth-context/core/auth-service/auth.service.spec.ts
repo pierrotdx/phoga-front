@@ -1,22 +1,15 @@
-import { TestBed } from '@angular/core/testing';
-
 import { AuthService } from './auth.service';
-import { AuthProviderFake } from '../adapters';
-import { AUTH_PROVIDER_TOKEN } from './models';
+import { AuthProviderFake } from '../../adapters';
+import { AuthServiceTestUtils } from './auth-service.test-utils';
 
 describe('AuthService', () => {
+  let testUtils: AuthServiceTestUtils;
   let service: AuthService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        {
-          provide: AUTH_PROVIDER_TOKEN,
-          useClass: AuthProviderFake,
-        },
-      ],
-    });
-    service = TestBed.inject(AuthService);
+    const providers = [AuthProviderFake];
+    testUtils = new AuthServiceTestUtils(providers);
+    service = testUtils.authService;
   });
 
   it('should be created', () => {
@@ -25,10 +18,10 @@ describe('AuthService', () => {
 
   describe(`${AuthService.prototype.login.name}`, () => {
     it('should log the user in', async () => {
-      const isAuthBefore = service.isAuthenticated();
+      const isAuthBefore = testUtils.isAuthenticated();
       await service.login();
       expect(isAuthBefore).toBeFalse();
-      const isAuthAfter = service.isAuthenticated();
+      const isAuthAfter = testUtils.isAuthenticated();
       expect(isAuthAfter).toBeTrue();
     });
   });
@@ -53,18 +46,17 @@ describe('AuthService', () => {
     });
 
     it('should log the user out', async () => {
-      const isAuthBefore = service.isAuthenticated();
+      const isAuthBefore = testUtils.isAuthenticated();
       await service.logout();
-      const isAuthAfter = service.isAuthenticated();
+      const isAuthAfter = testUtils.isAuthenticated();
       expect(isAuthBefore).toBeTrue();
       expect(isAuthAfter).toBeFalse();
     });
 
     it("should reset the user's access token within the application", async () => {
-      const accessToken$ = service['accessToken$'];
-      const accessTokenBefore = accessToken$.getValue();
+      const accessTokenBefore = testUtils.getAccessToken();
       await service.logout();
-      const accessTokenAfter = accessToken$.getValue();
+      const accessTokenAfter = testUtils.getAccessToken();
       expect(accessTokenBefore).toBeDefined();
       expect(accessTokenAfter).toBeUndefined();
     });
