@@ -1,6 +1,6 @@
-import { IAuthProvider } from '../../core';
+import { IAuthProvisioner } from '../../../core';
 
-export class AuthProviderFake implements IAuthProvider {
+export class CAuthProvisionerFake implements IAuthProvisioner {
   async fetchAccessToken(): Promise<string> {
     return 'fake token';
   }
