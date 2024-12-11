@@ -6,7 +6,7 @@ import {
 import { AUTH_PROVISIONER_TOKEN } from '../../../core';
 import { AuthProvisionerAuth0 } from '../../secondary';
 import { inject, provideAppInitializer, Provider } from '@angular/core';
-import { ENVIRONMENT_TOKEN } from '../../../../../environment-context';
+import { ENVIRONMENT_TOKEN } from '@back-office/environment-context';
 
 const Auth0BuiltinProvider: Provider = provideAuth0();
 

@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { ISharedEnvironment } from '../../../../../shared/src';
+import { ISharedEnvironment } from '@shared/environment-context';
 
 export interface IEnvironment extends ISharedEnvironment {
   auth0Config: {
