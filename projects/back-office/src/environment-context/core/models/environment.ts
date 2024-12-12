@@ -13,5 +13,5 @@ export interface IEnvironment extends ISharedEnvironment {
 }
 
 export const ENVIRONMENT_TOKEN = new InjectionToken<IEnvironment>(
-  'BACK_OFFICE_ENVIRONMENT_TOKEN'
+  'Environment'
 );
