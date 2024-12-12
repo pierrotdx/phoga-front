@@ -1,7 +1,9 @@
 {
-    "cSpell.words": [
-        "phoga"
-    ],
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
+  "cSpell.words": ["phoga"],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "html.format.enable": true,
+  "[html]": {
+    "editor.defaultFormatter": "stringham.angular-template-formatter"
+  }
 }

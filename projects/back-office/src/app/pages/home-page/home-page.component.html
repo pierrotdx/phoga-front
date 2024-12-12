@@ -1,1 +1,14 @@
 <p>home-page works!</p>
+@if (photos$(); as photos) {
+  @for (photo of photos; track photo._id) {
+    @if(photo.metadata?.thumbnail; as thumbnail) {
+      <div>
+        <img [src]="thumbnail | bufferToImage$ | async" />
+      </div>
+    } @else {
+      <div>{{ photo._id }}</div>
+    }
+  } @empty {
+    <div>no photos yet</div>
+  }
+}
