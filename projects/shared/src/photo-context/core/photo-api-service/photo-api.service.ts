@@ -34,7 +34,13 @@ export class PhotoApiService {
     const url = new URL(`${this.apiUrl}/photo/${id}/metadata`);
     const reqUrl = url.toString();
     return this.httpClient.get<IPhoto>(reqUrl).pipe(
-      map((photo) => photo.metadata),
+      map((photo) => {
+        if (photo.metadata?.thumbnail) {
+          const thumbnail = Buffer.from(photo.metadata?.thumbnail);
+          photo.metadata.thumbnail = thumbnail;
+        }
+        return photo.metadata;
+      }),
       catchError(this.handleError)
     );
   }
