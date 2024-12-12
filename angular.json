@@ -170,8 +170,8 @@
               "sourceMap": true,
               "fileReplacements": [
                 {
-                  "replace": "projects/back-office/src/environments/environment.ts",
-                  "with": "projects/back-office/src/environments/environment.development.ts"
+                  "replace": "projects/back-office/src/environment-context/core/environment.ts",
+                  "with": "projects/back-office/src/environment-context/core/environment.development.ts"
                 }
               ]
             }
