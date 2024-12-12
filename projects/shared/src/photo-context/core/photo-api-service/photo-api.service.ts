@@ -34,15 +34,17 @@ export class PhotoApiService {
     const url = new URL(`${this.apiUrl}/photo/${id}/metadata`);
     const reqUrl = url.toString();
     return this.httpClient.get<IPhoto>(reqUrl).pipe(
-      map((photo) => {
-        if (photo.metadata?.thumbnail) {
-          const thumbnail = Buffer.from(photo.metadata?.thumbnail);
-          photo.metadata.thumbnail = thumbnail;
-        }
-        return photo.metadata;
-      }),
+      map((photo) => this.getPhotoMetadataFromServerPhoto(photo)),
       catchError(this.handleError)
     );
+  }
+
+  private getPhotoMetadataFromServerPhoto(photo: IPhoto): IPhoto['metadata'] {
+    if (photo.metadata?.thumbnail) {
+      const thumbnail = Buffer.from(photo.metadata?.thumbnail);
+      photo.metadata.thumbnail = thumbnail;
+    }
+    return photo.metadata;
   }
 
   private handleError(error: HttpErrorResponse): Observable<Error> {
@@ -95,8 +97,14 @@ export class PhotoApiService {
       this.addParamsToUrl(url, options.rendering);
     }
     const reqUrl = url.toString();
-    return this.httpClient
-      .get<IPhoto[]>(reqUrl)
-      .pipe(catchError(this.handleError));
+    return this.httpClient.get<IPhoto[]>(reqUrl).pipe(
+      map((photos) => {
+        photos.forEach((photo) => {
+          photo.metadata = this.getPhotoMetadataFromServerPhoto(photo);
+        });
+        return photos;
+      }),
+      catchError(this.handleError)
+    );
   }
 }
