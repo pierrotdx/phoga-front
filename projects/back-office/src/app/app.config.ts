@@ -6,10 +6,12 @@ import { RouteProviders } from './app.routes';
 import { ENVIRONMENT_TOKEN, EnvironmentProvider } from '../environment-context';
 import { PhotoApiService } from '@shared/photo-context';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
+    provideAnimationsAsync(),
     provideHttpClient(),
     EnvironmentProvider,
     RouteProviders,
