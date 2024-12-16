@@ -35,13 +35,19 @@ export class LoginPageComponent implements OnDestroy {
 
   private onAuthenticationChange = (isAuthenticated: boolean) => {
     this.isAuthenticated.set(isAuthenticated);
+    if (isAuthenticated) {
+      this.navigateToRestricted();
+    }
   };
+
+  private navigateToRestricted() {
+    const redirectUrl = this.endpoints.getRelativePath(EndpointId.HomePage);
+    this.router.navigate([redirectUrl]);
+  }
 
   async login() {
     try {
       await this.authService.login();
-      const redirectUrl = this.endpoints.getRelativePath(EndpointId.HomePage);
-      this.router.navigate([redirectUrl]);
     } catch (err) {
       console.error(err);
     }
