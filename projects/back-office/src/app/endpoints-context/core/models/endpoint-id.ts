@@ -1,4 +1,5 @@
 export enum EndpointId {
-  HomePage = 'home_page',
+  Restricted = 'restricted',
   LoginPage = 'login_page',
+  EditPage = 'edit_page',
 }

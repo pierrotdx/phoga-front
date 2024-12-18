@@ -1,15 +1,17 @@
 @if (photos$(); as photos) {
   @for (photo of photos; track photo._id) {
     @if(photo.metadata?.thumbnail; as thumbnail) {
-      <div>
+      <div [routerLink]="[photo._id]">
         <img [src]="thumbnail | bufferToImage$ | async" />
       </div>
     } @else {
       <div>{{ photo._id }}</div>
     }
   } @empty {
-    <div>no photos yet</div>
+    <div>no photos available</div>
   }
 } @else {
-  <mat-spinner></mat-spinner>
+  <div>
+    <mat-spinner></mat-spinner>
+  </div>
 }

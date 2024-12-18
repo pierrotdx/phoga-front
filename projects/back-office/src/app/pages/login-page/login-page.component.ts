@@ -53,7 +53,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   }
 
   private navigateToRestricted() {
-    const redirectUrl = this.endpoints.getRelativePath(EndpointId.HomePage);
+    const redirectUrl = this.endpoints.getRelativePath(EndpointId.Restricted);
     this.router.navigate([redirectUrl]);
   }
 

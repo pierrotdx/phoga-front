@@ -1,4 +1,8 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  Provider,
+  provideZoneChangeDetection,
+} from '@angular/core';
 
 import { AuthProvidersAuth0 } from './auth-context';
 import { EndpointsProvider } from './endpoints-context';
@@ -7,6 +11,11 @@ import { ENVIRONMENT_TOKEN, EnvironmentProvider } from '../environment-context';
 import { PhotoApiService } from '@shared/photo-context';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+
+const PhotoApiServiceProvider: Provider = {
+  provide: PhotoApiService,
+  deps: [ENVIRONMENT_TOKEN, HttpClient],
+};
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,9 +26,7 @@ export const appConfig: ApplicationConfig = {
     RouteProviders,
     AuthProvidersAuth0,
     EndpointsProvider,
-    {
-      provide: PhotoApiService,
-      deps: [ENVIRONMENT_TOKEN, HttpClient],
-    }, provideAnimationsAsync(),
+    PhotoApiServiceProvider,
+    provideAnimationsAsync(),
   ],
 };

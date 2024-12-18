@@ -1,18 +1,23 @@
-import { provideRouter, ROUTES, Routes } from '@angular/router';
-import { HomePageComponent, LoginPageComponent } from './pages';
+import {
+  provideRouter,
+  Route,
+  ROUTES,
+  Routes,
+  withComponentInputBinding,
+} from '@angular/router';
+import {
+  EditPhotoPageComponent,
+  HomePageComponent,
+  LoginPageComponent,
+} from './pages';
 import { authGuard, Scope } from './auth-context';
-import { EndpointId, ENDPOINTS_TOKEN } from './endpoints-context';
+import { EndpointId, ENDPOINTS_TOKEN, IEndpoints } from './endpoints-context';
 import { inject, Provider } from '@angular/core';
 
 const routesFactory = (): Routes => {
   const endpoints = inject(ENDPOINTS_TOKEN);
   const routes: Routes = [
-    {
-      path: endpoints.getRelativePath(EndpointId.HomePage),
-      loadComponent: () => HomePageComponent,
-      canActivate: [authGuard],
-      data: { scopes: [Scope.RestrictedRead] },
-    },
+    getRestrictedRoute(endpoints),
     {
       path: endpoints.getRelativePath(EndpointId.LoginPage),
       loadComponent: () => LoginPageComponent,
@@ -20,6 +25,25 @@ const routesFactory = (): Routes => {
   ];
   return routes;
 };
+
+function getRestrictedRoute(endpoints: IEndpoints): Route {
+  const restrictedRouter: Route = {
+    path: endpoints.getRelativePath(EndpointId.Restricted),
+    canActivate: [authGuard],
+    data: { scopes: [Scope.RestrictedRead, Scope.PhotosRead] },
+    loadChildren: () => [
+      {
+        path: '',
+        loadComponent: () => HomePageComponent,
+      },
+      {
+        path: endpoints.getRelativePath(EndpointId.EditPage),
+        loadComponent: () => EditPhotoPageComponent,
+      },
+    ],
+  };
+  return restrictedRouter;
+}
 
 const routesProvider: Provider = {
   provide: ROUTES,
@@ -29,6 +53,6 @@ const routesProvider: Provider = {
 };
 
 export const RouteProviders = [
-  provideRouter([]), // seems required for `routesProvider` to work
+  provideRouter([], withComponentInputBinding()),
   routesProvider,
 ];

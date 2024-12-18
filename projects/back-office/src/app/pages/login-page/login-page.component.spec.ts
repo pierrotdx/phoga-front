@@ -28,14 +28,14 @@ describe('LoginPageComponent', () => {
 
     beforeEach(() => {
       loginButton = testUtils.getLoginButton();
-      redirectUrl = endpoints.getRelativePath(EndpointId.HomePage);
+      redirectUrl = endpoints.getRelativePath(EndpointId.Restricted);
     });
 
     it('should exist', () => {
       expect(loginButton).not.toBeNull();
     });
 
-    it(`should redirect the user to the \`${EndpointId.HomePage}\` endpoint when authentication occurs`, () => {
+    it(`should redirect the user to the \`${EndpointId.Restricted}\` endpoint when authentication occurs`, () => {
       testUtils.fakeAuthentication();
       expect(testUtils.navigateSpy).toHaveBeenCalledOnceWith([redirectUrl]);
     });

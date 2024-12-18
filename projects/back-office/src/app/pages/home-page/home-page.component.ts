@@ -4,10 +4,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BufferToImagePipe } from '@shared/pipes';
 import { IPhoto, PhotoApiService } from '@shared/photo-context';
 import { firstValueFrom } from 'rxjs';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home-page',
-  imports: [AsyncPipe, BufferToImagePipe, MatProgressSpinnerModule],
+  imports: [AsyncPipe, BufferToImagePipe, MatProgressSpinnerModule, RouterLink],
   templateUrl: './home-page.component.html',
 })
 export class HomePageComponent implements OnInit {

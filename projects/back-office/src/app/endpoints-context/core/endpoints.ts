@@ -4,7 +4,8 @@ import { EndpointId } from './models/endpoint-id';
 export class Endpoints implements IEndpoints {
   private readonly endpoints: Record<EndpointId, Endpoint> = {
     [EndpointId.LoginPage]: new Endpoint(''),
-    [EndpointId.HomePage]: new Endpoint('restricted'),
+    [EndpointId.Restricted]: new Endpoint('restricted'),
+    [EndpointId.EditPage]: new Endpoint(':id'),
   };
 
   getRelativePath(id: EndpointId): string {
