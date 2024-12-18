@@ -1,18 +1,60 @@
-import { DebugElement } from '@angular/core';
+import { DebugElement, inject } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { AuthService } from '../../auth-context';
+import { AuthProviderFake, AuthService } from '../../auth-context';
 import { Router } from '@angular/router';
-import { ENDPOINTS_TOKEN, IEndpoints } from '../../endpoints-context';
+import {
+  ENDPOINTS_TOKEN,
+  EndpointsProvider,
+  IEndpoints,
+} from '../../endpoints-context';
 import { LoginPageComponent } from './login-page.component';
 
 export class LoginPageTestUtils {
   public readonly testBed: TestBed;
+
+  isAuthenticatedSpy!: jasmine.Spy;
+  navigateSpy!: jasmine.Spy;
+  loginSpy!: jasmine.Spy;
+  consoleSpy!: jasmine.Spy;
+
+  private readonly spies: jasmine.Spy[] = [
+    this.isAuthenticatedSpy,
+    this.navigateSpy,
+    this.loginSpy,
+    this.consoleSpy,
+  ];
+
   private fixture!: ComponentFixture<LoginPageComponent>;
 
-  constructor(providers: any[]) {
+  private readonly providers = [
+    AuthProviderFake,
+    EndpointsProvider,
+    AuthService,
+    Router,
+  ];
+
+  constructor() {
     this.testBed = TestBed.configureTestingModule({
-      providers,
+      providers: this.providers,
+    });
+    this.setSpies();
+  }
+
+  private setSpies(): void {
+    const authService = this.testBed.inject(AuthService);
+    this.isAuthenticatedSpy = spyOn(authService, 'isAuthenticated');
+    this.loginSpy = spyOn(authService, 'login');
+
+    const router = this.testBed.inject(Router);
+    this.navigateSpy = spyOn(router, 'navigate');
+
+    this.consoleSpy = spyOn(console, 'error');
+  }
+
+  resetSpies(): void {
+    this.spies.forEach((spy) => {
+      spy?.and.callThrough();
     });
   }
 
@@ -40,13 +82,9 @@ export class LoginPageTestUtils {
     return this.testBed.inject(ENDPOINTS_TOKEN);
   }
 
-  getLoginSpy() {
+  fakeAuthentication() {
+    this.isAuthenticatedSpy.and.returnValue(true);
     const authService = this.testBed.inject(AuthService);
-    return spyOn(authService, 'login');
-  }
-
-  getNavigateSpy() {
-    const router = this.testBed.inject(Router);
-    return spyOn(router, 'navigate');
+    authService.accessToken$.next('fake token');
   }
 }

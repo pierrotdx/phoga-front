@@ -1,9 +1,13 @@
+import { Injectable } from '@angular/core';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 
-export class TokenHandler {
+@Injectable({
+  providedIn: 'root',
+})
+export class TokenUtilsService {
   private tokenKey = 'token';
 
-  updateStoredToken(accessToken: string | undefined): void {
+  setStoredToken(accessToken: string | undefined): void {
     if (!accessToken) {
       return;
     }

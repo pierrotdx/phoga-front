@@ -2,41 +2,44 @@ import { TestBed } from '@angular/core/testing';
 import {
   ActivatedRouteSnapshot,
   CanActivateFn,
+  Router,
   RouterStateSnapshot,
 } from '@angular/router';
 import { authGuard } from './auth.guard';
 import { AuthService } from '../auth-service/auth.service';
-import { Scope } from '../models';
+import { EndpointsProvider } from '../../../endpoints-context';
+import { AuthProviderFake } from '../../adapters';
 
 export class AuthGuardTestUtils {
-  private readonly testBed: TestBed;
-  private readonly authService: AuthService;
-
   fakeRoute = new ActivatedRouteSnapshot();
   fakeState = {} as RouterStateSnapshot;
+  isAuthorizedSpy!: jasmine.Spy;
+  readonly routerMock = {
+    navigate: jasmine.createSpy('navigateByUrl'),
+  };
 
-  constructor(providers: any[]) {
+  private readonly providers = [
+    { provide: Router, useValue: this.routerMock },
+    EndpointsProvider,
+    AuthService,
+    AuthProviderFake,
+  ];
+  private readonly testBed: TestBed;
+
+  constructor() {
     this.testBed = TestBed.configureTestingModule({
-      providers,
+      providers: this.providers,
     });
-    this.authService = this.testBed.inject(AuthService);
+    this.setIsAuthorizedSpy();
+  }
+
+  private setIsAuthorizedSpy(): void {
+    const authService = this.testBed.inject(AuthService);
+    this.isAuthorizedSpy = spyOn(authService, 'isAuthorized');
   }
 
   executeGuard: CanActivateFn = (...guardParameters) =>
     this.testBed.runInInjectionContext(() => authGuard(...guardParameters));
-
-  emitIsAuthenticated(value: boolean): void {
-    this.authService.isAuthenticated$.next(value);
-  }
-
-  fakeUserScopes(scopes: Scope[] = []) {
-    spyOn(this.authService as any, 'getUserScopes').and.returnValue(scopes);
-  }
-
-  setScopesScenario(requiredScopes: Scope[], userScopes: Scope[]): void {
-    this.fakeRoute.data = { scopes: requiredScopes };
-    this.fakeUserScopes(userScopes);
-  }
 
   expectCanActivateValue(expectedValue: boolean): void {
     const canActivate = this.executeGuard(this.fakeRoute, this.fakeState);
