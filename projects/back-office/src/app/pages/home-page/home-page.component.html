@@ -1,4 +1,3 @@
-<p>home-page works!</p>
 @if (photos$(); as photos) {
   @for (photo of photos; track photo._id) {
     @if(photo.metadata?.thumbnail; as thumbnail) {
@@ -11,4 +10,6 @@
   } @empty {
     <div>no photos yet</div>
   }
+} @else {
+  <mat-spinner></mat-spinner>
 }

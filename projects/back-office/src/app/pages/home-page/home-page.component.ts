@@ -1,12 +1,13 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BufferToImagePipe } from '@shared/pipes';
 import { IPhoto, PhotoApiService } from '@shared/photo-context';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-home-page',
-  imports: [AsyncPipe, BufferToImagePipe],
+  imports: [AsyncPipe, BufferToImagePipe, MatProgressSpinnerModule],
   templateUrl: './home-page.component.html',
 })
 export class HomePageComponent implements OnInit {

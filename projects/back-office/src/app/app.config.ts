@@ -20,6 +20,6 @@ export const appConfig: ApplicationConfig = {
     {
       provide: PhotoApiService,
       deps: [ENVIRONMENT_TOKEN, HttpClient],
-    },
+    }, provideAnimationsAsync(),
   ],
 };
