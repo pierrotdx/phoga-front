@@ -1,0 +1,6 @@
+@if(viewModel) {
+    <form #editPhotoForm="ngForm" class="form-group" (ngSubmit)="onSubmit()">
+        <app-metadata-form [viewModel]="viewModel.metadata"></app-metadata-form>
+    </form>
+}
+<button (click)="logForm()">Log form</button>

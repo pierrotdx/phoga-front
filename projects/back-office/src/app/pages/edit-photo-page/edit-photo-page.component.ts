@@ -1,12 +1,18 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, effect, Input, signal } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 import { IPhoto, Photo, PhotoApiService } from '@shared/photo-context';
 import { BufferToImagePipe } from '@shared/pipes';
 import { firstValueFrom } from 'rxjs';
+import { EditPhotoFormComponent } from '../../components/edit-photo-form/edit-photo-form.component';
 
 @Component({
   selector: 'app-edit-photo-page',
-  imports: [AsyncPipe, BufferToImagePipe],
+  imports: [
+    AsyncPipe,
+    BufferToImagePipe,
+    EditPhotoFormComponent,
+    EditPhotoFormComponent,
+  ],
   templateUrl: './edit-photo-page.component.html',
 })
 export class EditPhotoPageComponent {
@@ -23,11 +29,7 @@ export class EditPhotoPageComponent {
     return this._photoId;
   }
 
-  constructor(private readonly photoApiService: PhotoApiService) {
-    effect(() => {
-      console.log('photo', this.photo());
-    });
-  }
+  constructor(private readonly photoApiService: PhotoApiService) {}
 
   private async getPhoto(): Promise<void> {
     const metadata = await this.getMetadata();

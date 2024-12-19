@@ -4,6 +4,7 @@
     } @else {
         <div>{{ photo._id }}</div>
     }
+    <app-edit-photo-form [photo]="photo"></app-edit-photo-form>
 } @else {
     <div>{{ photoId }}</div>
 }

@@ -11,6 +11,7 @@ import { ENVIRONMENT_TOKEN, EnvironmentProvider } from '../environment-context';
 import { PhotoApiService } from '@shared/photo-context';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { UuidProvider } from '@shared/uuid-context/adapters/primary/uuid-provider';
 
 const PhotoApiServiceProvider: Provider = {
   provide: PhotoApiService,
@@ -28,5 +29,6 @@ export const appConfig: ApplicationConfig = {
     EndpointsProvider,
     PhotoApiServiceProvider,
     provideAnimationsAsync(),
+    UuidProvider,
   ],
 };
