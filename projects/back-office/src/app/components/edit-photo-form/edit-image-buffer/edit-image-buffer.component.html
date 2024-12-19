@@ -1,0 +1,16 @@
+@if(viewModel) {
+    <img (click)="onImgPreviewClick()"
+    [src]="viewModel | bufferToImage$ | async"
+    [style]="'max-width:' + imgPreviewMaxWidthInPct +'%;'">
+} @else {
+    <div>no image</div>
+}
+<div>
+    <label for="image">Image
+        <input type="file"
+            name="imageBuffer"
+            (change)="onFileSelection($event)"
+            accept="image/*">
+    </label>
+    <button type="button" (click)="reset()">delete image</button>
+</div>

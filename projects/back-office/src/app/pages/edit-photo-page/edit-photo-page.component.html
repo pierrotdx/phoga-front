@@ -1,9 +1,8 @@
 @if(photo(); as photo) {
-    @if(photo.metadata?.thumbnail; as thumbnail) {
-        <img [src]="thumbnail | bufferToImage$ | async" />
-    } @else {
-        <div>{{ photo._id }}</div>
-    }
+    <app-edit-photo-form [photo]="photo"
+        (save)="onSave($event)"
+        (cancel)="onCancel()">
+    </app-edit-photo-form>
 } @else {
     <div>{{ photoId }}</div>
 }
