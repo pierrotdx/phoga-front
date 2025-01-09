@@ -1,4 +1,4 @@
-import { Component, OnDestroy, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { AuthService } from '../../auth-context';
 import { Subscription } from 'rxjs';
 
@@ -7,25 +7,33 @@ import { Subscription } from 'rxjs';
   imports: [],
   templateUrl: './header.component.html',
 })
-export class HeaderComponent implements OnDestroy {
+export class HeaderComponent implements OnInit, OnDestroy {
   isAuthenticated = signal<boolean>(false);
 
-  private readonly isAuthenticatedSub: Subscription;
+  private readonly accessTokenSub: Subscription;
 
   constructor(private readonly authService: AuthService) {
-    this.isAuthenticatedSub = this.authService.isAuthenticated$.subscribe(
-      this.onAuthenticationChange
+    this.accessTokenSub = this.authService.accessToken$.subscribe(
+      this.onAuthChange
     );
   }
 
-  ngOnDestroy(): void {
-    this.isAuthenticatedSub.unsubscribe();
+  ngOnInit(): void {
+    this.updateIsAuthenticated();
   }
 
-  private onAuthenticationChange = (isAuthenticated: boolean) => {
-    this.isAuthenticated.set(isAuthenticated);
+  ngOnDestroy(): void {
+    this.accessTokenSub.unsubscribe();
+  }
+
+  private onAuthChange = () => {
+    this.updateIsAuthenticated();
   };
 
+  private updateIsAuthenticated() {
+    const isAuth = this.authService.isAuthenticated();
+    this.isAuthenticated.set(isAuth);
+  }
   async logout() {
     await this.authService.logout();
   }

@@ -2,18 +2,41 @@ import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { HeaderComponent } from './header.component';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { AuthService } from '../../auth-context';
+import { AuthProviderFake, AuthService } from '../../auth-context';
 
 export class HeaderTestUtils {
   component!: HeaderComponent;
 
+  isAuthenticatedSpy!: jasmine.Spy;
+  logoutSpy!: jasmine.Spy;
+
+  private readonly spies: jasmine.Spy[] = [
+    this.isAuthenticatedSpy,
+    this.logoutSpy,
+  ];
+
   private readonly testBed: TestBed;
+  private readonly authService: AuthService;
   private fixture!: ComponentFixture<HeaderComponent>;
 
-  constructor(providers: any[]) {
+  constructor() {
+    const providers = [AuthService, AuthProviderFake];
     this.testBed = TestBed.configureTestingModule({
-      imports: [HeaderComponent],
       providers,
+      imports: [HeaderComponent],
+    });
+    this.authService = this.testBed.inject(AuthService);
+    this.setSpies();
+  }
+
+  private setSpies(): void {
+    this.logoutSpy = spyOn(this.authService, 'logout');
+    this.isAuthenticatedSpy = spyOn(this.authService, 'isAuthenticated');
+  }
+
+  resetSpies(): void {
+    this.spies.forEach((spy) => {
+      spy?.and.callThrough();
     });
   }
 
@@ -22,7 +45,9 @@ export class HeaderTestUtils {
 
     this.fixture = TestBed.createComponent(HeaderComponent);
     this.component = this.fixture.componentInstance;
+
     this.fixture.detectChanges();
+    this.getLogoutButton();
   }
 
   getLogoutButton(): DebugElement {
@@ -31,24 +56,21 @@ export class HeaderTestUtils {
   }
 
   triggerLogin() {
-    const authService = this.testBed.inject(AuthService);
-    authService.isAuthenticated$.next(true);
+    this.isAuthenticatedSpy.and.returnValue(true);
+    this.authService.accessToken$.next('fake token');
     this.fixture.detectChanges();
   }
 
   triggerLogout() {
-    const authService = this.testBed.inject(AuthService);
-    authService.isAuthenticated$.next(false);
+    this.isAuthenticatedSpy.and.returnValue(false);
+    this.authService.accessToken$.next(undefined);
     this.fixture.detectChanges();
   }
 
-  clickOn(debugElement: DebugElement) {
-    debugElement.nativeElement.click();
+  clickOnLogoutButton() {
+    this.logoutSpy.and.resolveTo();
+    const logoutButton = this.getLogoutButton();
+    logoutButton.nativeElement.click();
     tick();
-  }
-
-  getLogoutSpy() {
-    const authService = this.testBed.inject(AuthService);
-    return spyOn(authService, 'logout');
   }
 }

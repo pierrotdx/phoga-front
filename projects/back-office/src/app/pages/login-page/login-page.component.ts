@@ -1,4 +1,11 @@
-import { Component, Inject, OnDestroy, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  Inject,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth-context';
 import {
@@ -13,10 +20,10 @@ import { Subscription } from 'rxjs';
   imports: [],
   templateUrl: './login-page.component.html',
 })
-export class LoginPageComponent implements OnDestroy {
+export class LoginPageComponent implements OnInit, OnDestroy {
   isAuthenticated = signal<boolean>(false);
 
-  private readonly isAuthenticatedSub: Subscription;
+  private readonly accessTokenSub: Subscription;
 
   constructor(
     @Inject(ENDPOINTS_TOKEN)
@@ -24,24 +31,36 @@ export class LoginPageComponent implements OnDestroy {
     private readonly authService: AuthService,
     private readonly router: Router
   ) {
-    this.isAuthenticatedSub = this.authService.isAuthenticated$.subscribe(
-      this.onAuthenticationChange
-    );
+    this.accessTokenSub = this.authService.accessToken$.subscribe(() => {
+      this.updateIsAuthenticated();
+    });
+  }
+
+  ngOnInit(): void {
+    this.updateIsAuthenticated();
   }
 
   ngOnDestroy(): void {
-    this.isAuthenticatedSub.unsubscribe();
+    this.accessTokenSub.unsubscribe();
   }
 
-  private onAuthenticationChange = (isAuthenticated: boolean) => {
-    this.isAuthenticated.set(isAuthenticated);
-  };
+  private updateIsAuthenticated() {
+    const isAuth = this.authService.isAuthenticated();
+    this.isAuthenticated.set(isAuth);
+    if (isAuth) {
+      this.navigateToRestricted();
+    }
+  }
+
+  private navigateToRestricted() {
+    const redirectUrl = this.endpoints.getRelativePath(EndpointId.Restricted);
+    this.router.navigate([redirectUrl]);
+  }
 
   async login() {
     try {
       await this.authService.login();
-      const redirectUrl = this.endpoints.getRelativePath(EndpointId.HomePage);
-      this.router.navigate([redirectUrl]);
+      this.updateIsAuthenticated();
     } catch (err) {
       console.error(err);
     }

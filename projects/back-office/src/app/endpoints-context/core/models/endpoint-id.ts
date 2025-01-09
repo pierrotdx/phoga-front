@@ -1,4 +1,7 @@
 export enum EndpointId {
-  HomePage = 'home_page',
+  AdminPhoto = 'admin_photo',
+  Restricted = 'restricted',
   LoginPage = 'login_page',
+  EditPhoto = 'edit_photo',
+  AddPhoto = 'add_photo',
 }

@@ -1,14 +1,14 @@
-<p>home-page works!</p>
+<div>
+  <a id="add-photo-anchor" [routerLink]="[addPhotoUrl]">+ add photo</a>
+</div>
 @if (photos$(); as photos) {
-  @for (photo of photos; track photo._id) {
-    @if(photo.metadata?.thumbnail; as thumbnail) {
-      <div>
-        <img [src]="thumbnail | bufferToImage$ | async" />
-      </div>
-    } @else {
-      <div>{{ photo._id }}</div>
-    }
-  } @empty {
-    <div>no photos yet</div>
-  }
+  <div id="photos-container">
+    @for (photo of photos; track photo._id) {
+        <app-photo-item [photo]="photo"></app-photo-item>
+      }
+  </div>
+} @else {
+  <div>
+    <mat-spinner id="loading-spinner"></mat-spinner>
+  </div>
 }

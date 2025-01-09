@@ -1,0 +1,54 @@
+<div ngModelGroup="metadata">
+    <div>
+        <label for="description">
+            Description
+            <input
+                type="text"
+                id="description"
+                [(ngModel)]="viewModel.description"
+                name="description"
+            >
+        </label>
+    </div>
+    <div>
+        <label for="location">
+            Location
+            <input
+                type="text"
+                id="location"
+                [(ngModel)]="viewModel.location"
+                name="location"
+            >
+        </label>
+    </div>
+    <div>
+        <label>Titles
+            <div ngModelGroup="titles">
+                @for (title of viewModel.titles; track title.id) {
+                    <input
+                        type="text"
+                        id="title-id"
+                        [(ngModel)]="title.value"
+                        [name]="'title-' + title.id"
+                    >
+                    <button (click)="removeTitle(title.id)" type="button">-</button>
+                }
+            </div>
+            <div>
+                <button (click)="addTitle()" type="button">+</button>
+            </div>
+        </label>
+    </div>
+    <div>
+        <label for="date">
+            Date
+            <input
+                type="date"
+                id="date"
+                [(ngModel)]="viewModel.date"
+                name="date"
+            >
+        </label>
+        <button type="button" (click)="resetDate()">-</button>
+    </div>
+</div>

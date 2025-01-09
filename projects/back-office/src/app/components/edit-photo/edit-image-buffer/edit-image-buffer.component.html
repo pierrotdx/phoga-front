@@ -1,0 +1,23 @@
+@if(viewModel) {
+    <img (click)="onImgClick()"
+    [src]="viewModel | bufferToImage$ | async"
+    [style]="'max-height: 400px; max-width:' + imgWidthInPct +'%'">
+    <button type="button" (click)="deleteImage()">delete image</button>
+} @else {
+    <div>no image</div>
+}
+<div>
+    <label for="imageBuffer">Image
+        <input type="file"
+            name="imageBuffer"
+            (change)="onFileSelection($event)"
+            (cancel)="onFileSelectionCancel($event)"
+            accept="image/jpeg"
+            #imageBufferInput
+            >
+    </label>
+    <app-edit-image-buffer-validation [viewModel]="viewModel"
+        (isValid)="isValid.emit($event)">
+    </app-edit-image-buffer-validation>
+    <button type="button" (click)="reset()">reset</button>
+</div>

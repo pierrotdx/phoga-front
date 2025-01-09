@@ -6,13 +6,13 @@ import {
 import { Inject, Injectable } from '@angular/core';
 import { ENVIRONMENT_TOKEN } from '../../../environment-context/adapters/primary/environment-provider';
 import { ISharedEnvironment } from '@shared/environment-context';
-import { catchError, Observable, tap, map, throwError } from 'rxjs';
+import { catchError, Observable, map, throwError } from 'rxjs';
 import { Buffer } from 'buffer';
 import {
   ImageSize,
   IPhoto,
   IPhotoMetadata,
-  IRendering,
+  ISearchPhotoOptions,
 } from '@shared/photo-context/core/models';
 
 @Injectable({
@@ -85,10 +85,7 @@ export class PhotoApiService {
     });
   }
 
-  searchPhoto(options?: {
-    excludeImages?: boolean;
-    rendering?: IRendering;
-  }): Observable<IPhoto[] | Error> {
+  searchPhoto(options?: ISearchPhotoOptions): Observable<IPhoto[] | Error> {
     const url = new URL(`${this.apiUrl}/photo`);
     if (options?.excludeImages !== undefined) {
       url.searchParams.append('excludeImages', String(options.excludeImages));
@@ -106,5 +103,54 @@ export class PhotoApiService {
       }),
       catchError(this.handleError)
     );
+  }
+
+  addPhoto(photo: IPhoto): Observable<unknown> {
+    const url = new URL(`${this.apiUrl}/admin/photo`);
+    const formData = this.getFormDataFromPhoto(photo);
+    return this.httpClient.post(url.toString(), formData, {
+      responseType: 'arraybuffer',
+    });
+  }
+
+  editPhoto(photo: IPhoto): Observable<unknown> {
+    const url = new URL(`${this.apiUrl}/admin/photo`);
+    const formData = this.getFormDataFromPhoto(photo);
+    return this.httpClient.put(url.toString(), formData, {
+      responseType: 'arraybuffer',
+    });
+  }
+
+  private getFormDataFromPhoto(photo: IPhoto): FormData {
+    const formData = new FormData();
+    formData.append('_id', photo._id);
+    if (photo.imageBuffer) {
+      const file = new File([photo.imageBuffer!.buffer], 'image');
+      formData.append('image', file);
+    }
+    if (!photo.metadata) {
+      return formData;
+    }
+    if (photo.metadata.date) {
+      const isoString = photo.metadata.date.toISOString();
+      formData.append('date', isoString);
+    }
+    if (photo.metadata.description) {
+      formData.append('description', photo.metadata.description);
+    }
+    if (photo.metadata.location) {
+      formData.append('location', photo.metadata.location);
+    }
+    if (photo.metadata.titles) {
+      formData.append('titles', photo.metadata.titles.join(','));
+    }
+    return formData;
+  }
+
+  deletePhoto(id: IPhoto['_id']): Observable<unknown> {
+    const url = new URL(`${this.apiUrl}/admin/photo/${id}`);
+    return this.httpClient.delete(url.toString(), {
+      responseType: 'arraybuffer',
+    });
   }
 }

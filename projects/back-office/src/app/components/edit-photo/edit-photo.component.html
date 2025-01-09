@@ -1,0 +1,9 @@
+@if(photo(); as photo) {
+    <app-edit-photo-form [photo]="photo"
+        (save)="onSave($event)"
+        (cancel)="onCancel()">
+    </app-edit-photo-form>
+    <button style="background-color: red;" type="button" (click)="deletePhoto()">Delete photo</button>
+} @else {
+    <div>{{ photoId }}</div>
+}
