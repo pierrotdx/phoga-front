@@ -1,9 +1,0 @@
-@if(photo(); as photo) {
-    @if(photo.metadata?.thumbnail; as thumbnail) {
-        <img [src]="thumbnail | bufferToImage$ | async" />
-    } @else {
-        <div>{{ photo._id }}</div>
-    }
-} @else {
-    <div>{{ photoId }}</div>
-}

@@ -1,0 +1,6 @@
+@if(!validityState().required) {
+    <div style="background-color: red;">required</div>
+}
+@if(validityState().underMaxWeight === false) {
+    <div style="background-color: red;">file too large</div>
+}

@@ -1,0 +1,16 @@
+@if(viewModel) {
+    <form id="edit-photo-form" #editPhotoForm="ngForm" (ngSubmit)="onSubmit()">
+        <app-edit-image-buffer id="edit-image-buffer"
+         [(viewModel)]="viewModel.imageBuffer"
+            [cancel]="cancel"
+            (isValid)="onImageBufferValidationChange($event)">
+        </app-edit-image-buffer>
+        <app-edit-metadata id="edit-metadata"
+            [viewModel]="viewModel.metadata">
+        </app-edit-metadata>
+        <div>
+            <button id="submit-btn" type="submit" [disabled]="!isValid()">Save</button>
+            <button id="cancel-btn" type="button" (click)="cancel.emit()">Cancel</button>
+        </div>
+    </form>
+}

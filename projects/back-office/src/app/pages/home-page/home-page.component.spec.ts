@@ -1,34 +1,68 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { HomePageComponent } from './home-page.component';
-import { PhotoApiService } from '@shared/photo-context';
-import { ENVIRONMENT_TOKEN } from '@back-office/environment-context';
+import { Photo } from '@shared/photo-context';
+import { HomePageTestUtils } from './home-page.test-utils';
 
 describe('HomePageComponent', () => {
-  let component: HomePageComponent;
-  let fixture: ComponentFixture<HomePageComponent>;
+  let testUtils: HomePageTestUtils;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [HomePageComponent],
-      providers: [
-        {
-          provide: ENVIRONMENT_TOKEN,
-          useValue: { phogaApiUrl: 'toto' },
-        },
-        {
-          provide: PhotoApiService,
-          deps: [ENVIRONMENT_TOKEN],
-        },
-      ],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(HomePageComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    testUtils = new HomePageTestUtils();
+    await testUtils.globalBeforeEach();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(testUtils.component).toBeTruthy();
+  });
+
+  describe('add-photo feature', () => {
+    it('should have an anchor linking to the edit-photo form', () => {
+      const anchorId = 'add-photo-anchor';
+      const addPhotoAnchor = testUtils.getElementById(anchorId);
+      expect(addPhotoAnchor).toBeDefined();
+    });
+  });
+
+  describe('when photos are not loaded', () => {
+    beforeEach(() => {
+      testUtils.setPhotos(undefined);
+    });
+
+    describe('the loading spinner', () => {
+      it('should be displayed', () => {
+        const loadingSpinnerId = 'loading-spinner';
+        const loadingSpinner = testUtils.getElementById(loadingSpinnerId);
+        expect(loadingSpinner).toBeTruthy();
+      });
+    });
+
+    describe('the photos container', () => {
+      it('should not be displayed', () => {
+        const photosContainerId = 'photos-container';
+        const photosContainer = testUtils.getElementById(photosContainerId);
+        expect(photosContainer).toBeFalsy();
+      });
+    });
+  });
+
+  describe('when photos are loaded', () => {
+    beforeEach(() => {
+      const photos = [new Photo('dumb photo 1'), new Photo('dumb photo 2')];
+      testUtils.setPhotos(photos);
+    });
+
+    describe('the loading spinner', () => {
+      it('should not be displayed', () => {
+        const loadingSpinnerId = 'loading-spinner';
+        const loadingSpinner = testUtils.getElementById(loadingSpinnerId);
+        expect(loadingSpinner).toBeFalsy();
+      });
+    });
+
+    describe('the photos container', () => {
+      it('should be displayed', () => {
+        const photosContainerId = 'photos-container';
+        const photosContainer = testUtils.getElementById(photosContainerId);
+        expect(photosContainer).toBeTruthy();
+      });
+    });
   });
 });

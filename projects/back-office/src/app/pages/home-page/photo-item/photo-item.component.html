@@ -1,0 +1,13 @@
+@if(photo) {
+    @if(photo.metadata?.thumbnail; as thumbnail) {
+        <div id="thumbnail-container">
+            <a [routerLink]="[editPhotoBaseUrl, photo._id]">
+                <img [src]="thumbnail | bufferToImage$ | async" />
+            </a>
+        </div>
+    } @else {
+        <div id="photo-id">{{ photo._id }}</div>
+    }
+} @else {
+    <div id="no-photo">no photo</div>
+}

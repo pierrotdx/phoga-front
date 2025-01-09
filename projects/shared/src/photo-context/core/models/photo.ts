@@ -1,4 +1,4 @@
-import { IPhotoMetadata } from "./photo-metadata";
+import { IPhotoMetadata } from './photo-metadata';
 
 export interface IPhoto {
   _id: string;
@@ -13,9 +13,9 @@ export class Photo implements IPhoto {
   constructor(
     public readonly _id: string,
     data?: {
-      metadata?: IPhoto["metadata"];
-      imageBuffer?: IPhoto["imageBuffer"];
-    },
+      metadata?: IPhoto['metadata'];
+      imageBuffer?: IPhoto['imageBuffer'];
+    }
   ) {
     if (data?.metadata) {
       this.metadata = data.metadata;

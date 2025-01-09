@@ -4,13 +4,24 @@ import {
   provideZoneChangeDetection,
 } from '@angular/core';
 
-import { AuthProvidersAuth0 } from './auth-context';
+import {
+  authHttpInterceptor,
+  AuthProvidersAuth0,
+  AuthService,
+} from './auth-context';
 import { EndpointsProvider } from './endpoints-context';
 import { RouteProviders } from './app.routes';
 import { ENVIRONMENT_TOKEN, EnvironmentProvider } from '../environment-context';
 import { PhotoApiService } from '@shared/photo-context';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  provideHttpClient,
+  withInterceptors,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { UuidProvider } from '@shared/uuid-context/adapters/primary/uuid-provider';
 
 const PhotoApiServiceProvider: Provider = {
   provide: PhotoApiService,
@@ -21,12 +32,13 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideAnimationsAsync(),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([authHttpInterceptor])),
     EnvironmentProvider,
     RouteProviders,
     AuthProvidersAuth0,
     EndpointsProvider,
     PhotoApiServiceProvider,
     provideAnimationsAsync(),
+    UuidProvider,
   ],
 };
