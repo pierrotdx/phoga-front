@@ -1,26 +1,23 @@
 import {
+  HttpClient,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http';
+import {
   ApplicationConfig,
   Provider,
   provideZoneChangeDetection,
 } from '@angular/core';
-
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { RouteProviders } from './app.routes';
+import { PhotoApiService } from '@shared/photo-context';
 import {
   authHttpInterceptor,
   AuthProvidersAuth0,
-  AuthService,
-} from './auth-context';
-import { EndpointsProvider } from './endpoints-context';
-import { RouteProviders } from './app.routes';
+} from '@back-office/auth-context';
+import { EndpointsProvider } from '@back-office/endpoints-context';
 import { ENVIRONMENT_TOKEN, EnvironmentProvider } from '../environment-context';
-import { PhotoApiService } from '@shared/photo-context';
-import {
-  HTTP_INTERCEPTORS,
-  HttpClient,
-  provideHttpClient,
-  withInterceptors,
-  withInterceptorsFromDi,
-} from '@angular/common/http';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+
 import { UuidProvider } from '@shared/uuid-context/adapters/primary/uuid-provider';
 
 const PhotoApiServiceProvider: Provider = {

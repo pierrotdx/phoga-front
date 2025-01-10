@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { NavigationComponent } from './navigation.component';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { AuthProviderFake, AuthService } from '../../auth-context';
+import { AuthProviderFake, AuthService } from '@back-office/auth-context';
 
 export class NavSidebarTestUtils {
   component!: NavigationComponent;

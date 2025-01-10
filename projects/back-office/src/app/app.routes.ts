@@ -6,8 +6,12 @@ import {
   withComponentInputBinding,
 } from '@angular/router';
 import { HomePageComponent, LoginPageComponent } from './pages';
-import { authGuard, Scope } from './auth-context';
-import { EndpointId, ENDPOINTS_TOKEN, IEndpoints } from './endpoints-context';
+import { authGuard, Scope } from '@back-office/auth-context';
+import {
+  EndpointId,
+  ENDPOINTS_TOKEN,
+  IEndpoints,
+} from '@back-office/endpoints-context';
 import { inject, Provider } from '@angular/core';
 import { EditPhotoComponent } from './components/edit-photo/edit-photo.component';
 

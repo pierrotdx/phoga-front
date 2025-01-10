@@ -1,13 +1,13 @@
 import { DebugElement, inject } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { AuthProviderFake, AuthService } from '../../auth-context';
+import { AuthProviderFake, AuthService } from '@back-office/auth-context';
 import { Router } from '@angular/router';
 import {
   ENDPOINTS_TOKEN,
   EndpointsProvider,
   IEndpoints,
-} from '../../endpoints-context';
+} from '@back-office/endpoints-context';
 import { LoginPageComponent } from './login-page.component';
 
 export class LoginPageTestUtils {

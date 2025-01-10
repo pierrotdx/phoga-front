@@ -1,13 +1,13 @@
 import { Component, Inject, OnInit, signal } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { IPhoto, PhotoApiService } from '@shared/photo-context';
 import { firstValueFrom } from 'rxjs';
 import { RouterLink } from '@angular/router';
+import { IPhoto, PhotoApiService } from '@shared/photo-context';
 import {
   EndpointId,
   ENDPOINTS_TOKEN,
   IEndpoints,
-} from '@back-office/app/endpoints-context';
+} from '@back-office/endpoints-context';
 import { PhotoItemComponent } from './photo-item/photo-item.component';
 
 @Component({

@@ -1,7 +1,7 @@
 import { fakeAsync } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
+import { EndpointId, IEndpoints } from '@back-office/endpoints-context';
 import { LoginPageTestUtils } from './login-page.test-utils';
-import { EndpointId, IEndpoints } from '../../endpoints-context';
 
 describe('LoginPageComponent', () => {
   let testUtils: LoginPageTestUtils;

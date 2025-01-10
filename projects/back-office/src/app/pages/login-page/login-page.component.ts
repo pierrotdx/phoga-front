@@ -7,12 +7,12 @@ import {
   signal,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../auth-context';
+import { AuthService } from '@back-office/auth-context';
 import {
   EndpointId,
   ENDPOINTS_TOKEN,
   IEndpoints,
-} from '../../endpoints-context';
+} from '@back-office/endpoints-context';
 import { Subscription } from 'rxjs';
 
 @Component({

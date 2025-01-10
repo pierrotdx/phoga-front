@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
-import { AuthService } from '../../auth-context';
+import { AuthService } from '@back-office/auth-context';
 import { Subscription } from 'rxjs';
 
 @Component({

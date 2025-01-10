@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
-import { EndpointsProvider } from '@back-office/app/endpoints-context';
+import { EndpointsProvider } from '@back-office/endpoints-context';
 import {
   IPhoto,
   ISearchPhotoOptions,
