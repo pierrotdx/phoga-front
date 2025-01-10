@@ -1,12 +1,12 @@
 import { DebugElement } from '@angular/core';
-import { HeaderTestUtils } from './header.test-utils';
+import { NavSidebarTestUtils } from './nav-sidebar.test-utils';
 import { fakeAsync } from '@angular/core/testing';
 
-describe('HeaderComponent', () => {
-  let testUtils: HeaderTestUtils;
+describe('NavSidebarComponent', () => {
+  let testUtils: NavSidebarTestUtils;
 
   beforeEach(async () => {
-    testUtils = new HeaderTestUtils();
+    testUtils = new NavSidebarTestUtils();
     await testUtils.globalSetup();
   });
 
