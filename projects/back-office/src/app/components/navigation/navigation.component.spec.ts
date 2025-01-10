@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { NavSidebarTestUtils } from './nav-sidebar.test-utils';
+import { NavSidebarTestUtils } from './navigation.test-utils';
 import { fakeAsync } from '@angular/core/testing';
 
 describe('NavSidebarComponent', () => {

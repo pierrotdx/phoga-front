@@ -3,11 +3,11 @@ import { AuthService } from '../../auth-context';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-nav-sidebar',
+  selector: 'app-navigation',
   imports: [],
-  templateUrl: './nav-sidebar.component.html',
+  templateUrl: './navigation.component.html',
 })
-export class NavSidebarComponent implements OnInit, OnDestroy {
+export class NavigationComponent implements OnInit, OnDestroy {
   isAuthenticated = signal<boolean>(false);
 
   private readonly accessTokenSub: Subscription;

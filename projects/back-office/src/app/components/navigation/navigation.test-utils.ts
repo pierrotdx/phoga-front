@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
-import { NavSidebarComponent } from './nav-sidebar.component';
+import { NavigationComponent } from './navigation.component';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { AuthProviderFake, AuthService } from '../../auth-context';
 
 export class NavSidebarTestUtils {
-  component!: NavSidebarComponent;
+  component!: NavigationComponent;
 
   isAuthenticatedSpy!: jasmine.Spy;
   logoutSpy!: jasmine.Spy;
@@ -17,13 +17,13 @@ export class NavSidebarTestUtils {
 
   private readonly testBed: TestBed;
   private readonly authService: AuthService;
-  private fixture!: ComponentFixture<NavSidebarComponent>;
+  private fixture!: ComponentFixture<NavigationComponent>;
 
   constructor() {
     const providers = [AuthService, AuthProviderFake];
     this.testBed = TestBed.configureTestingModule({
       providers,
-      imports: [NavSidebarComponent],
+      imports: [NavigationComponent],
     });
     this.authService = this.testBed.inject(AuthService);
     this.setSpies();
@@ -43,7 +43,7 @@ export class NavSidebarTestUtils {
   async globalSetup() {
     await this.testBed.compileComponents();
 
-    this.fixture = TestBed.createComponent(NavSidebarComponent);
+    this.fixture = TestBed.createComponent(NavigationComponent);
     this.component = this.fixture.componentInstance;
 
     this.fixture.detectChanges();
