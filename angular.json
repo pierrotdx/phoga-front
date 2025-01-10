@@ -145,7 +145,10 @@
                 "input": "projects/back-office/public"
               }
             ],
-            "styles": ["projects/back-office/src/styles.scss"],
+            "styles": [
+              "projects/back-office/src/app/styles/styles.scss",
+              "node_modules\normalize.css\normalize.css"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -208,7 +211,10 @@
                 "input": "projects/back-office/public"
               }
             ],
-            "styles": ["projects/back-office/src/styles.scss"],
+            "styles": [
+              "projects/back-office/src/app/styles/styles.scss",
+              "node_modules\normalize.css\normalize.css"
+            ],
             "scripts": []
           }
         }
