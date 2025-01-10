@@ -1,5 +1,5 @@
-@use "./reset";
-@use "./material";
+@use "normalize" as normalize;
+@include normalize.normalize();
 
 body {
   background-color: yellow;
