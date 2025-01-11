@@ -1,5 +1,10 @@
 import { DebugElement, Type } from '@angular/core';
-import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  TestModuleMetadata,
+  tick,
+} from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 export class CompTestUtils<T> {
@@ -10,27 +15,33 @@ export class CompTestUtils<T> {
 
   constructor(
     private readonly comp: Type<T>,
-    private readonly config?: {
-      imports?: any[] | undefined;
-      providers?: any[] | undefined;
-    }
+    private readonly config: TestModuleMetadata
   ) {}
 
   protected async internalBeforeEach(): Promise<void> {
-    const imports = this.config?.imports?.length
-      ? [this.comp, ...this.config?.imports]
-      : [this.comp];
-    const providers = this.config?.providers?.length
-      ? this.config?.providers
-      : undefined;
-    this.testBed = TestBed.configureTestingModule({
-      imports,
-      providers,
-    });
+    const config = this.getConfig();
+    this.testBed = TestBed.configureTestingModule(config);
+    if (this.config.imports) {
+      this.testBed = this.testBed.overrideComponent(this.comp, {
+        set: {
+          imports: this.config.imports.filter((imp) => imp !== this.comp),
+        },
+      });
+    }
     await this.testBed.compileComponents();
     this.fixture = TestBed.createComponent(this.comp);
     this.component = this.fixture.componentInstance;
     this.fixture.detectChanges();
+  }
+
+  private getConfig(): TestModuleMetadata {
+    const imports = this.config?.imports
+      ? [this.comp, ...this.config?.imports]
+      : [this.comp];
+    const config: TestModuleMetadata = Object.assign({}, this.config, {
+      imports,
+    });
+    return config;
   }
 
   clickOn(debugElement: DebugElement) {

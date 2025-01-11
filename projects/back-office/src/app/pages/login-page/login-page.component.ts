@@ -1,68 +1,35 @@
-import {
-  Component,
-  effect,
-  Inject,
-  OnDestroy,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, EventEmitter, Inject, Output, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '@back-office/auth-context';
+import { AuthComponent } from '@back-office/auth-context';
 import {
   EndpointId,
   ENDPOINTS_TOKEN,
   IEndpoints,
 } from '@back-office/endpoints-context';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login-page',
-  imports: [],
+  imports: [AuthComponent],
   templateUrl: './login-page.component.html',
 })
-export class LoginPageComponent implements OnInit, OnDestroy {
+export class LoginPageComponent {
   isAuthenticated = signal<boolean>(false);
-
-  private readonly accessTokenSub: Subscription;
+  @Output() isAuthenticatedChange = new EventEmitter<boolean>(false);
 
   constructor(
-    @Inject(ENDPOINTS_TOKEN)
-    private readonly endpoints: IEndpoints,
-    private readonly authService: AuthService,
+    @Inject(ENDPOINTS_TOKEN) private readonly endpoints: IEndpoints,
     private readonly router: Router
-  ) {
-    this.accessTokenSub = this.authService.accessToken$.subscribe(() => {
-      this.updateIsAuthenticated();
-    });
-  }
-
-  ngOnInit(): void {
-    this.updateIsAuthenticated();
-  }
-
-  ngOnDestroy(): void {
-    this.accessTokenSub.unsubscribe();
-  }
-
-  private updateIsAuthenticated() {
-    const isAuth = this.authService.isAuthenticated();
-    this.isAuthenticated.set(isAuth);
-    if (isAuth) {
-      this.navigateToRestricted();
-    }
-  }
+  ) {}
 
   private navigateToRestricted() {
     const redirectUrl = this.endpoints.getRelativePath(EndpointId.Restricted);
     this.router.navigate([redirectUrl]);
   }
 
-  async login() {
-    try {
-      await this.authService.login();
-      this.updateIsAuthenticated();
-    } catch (err) {
-      console.error(err);
+  onAuthChange(isAuth: boolean) {
+    this.isAuthenticatedChange.emit(isAuth);
+    if (isAuth) {
+      this.navigateToRestricted();
     }
   }
 }
