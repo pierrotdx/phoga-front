@@ -8,7 +8,7 @@
     </div>
     <div class="layout__body row">
         <div  class="sidebar col-s-3" [class.sidebar--hidden]="hideMenu()">
-            <app-navigation></app-navigation>
+            <app-sidebar></app-sidebar>
         </div>
         <div class="main-content col-s-9" [class.main-content--hidden]="!hideMenu()">
             <router-outlet></router-outlet>

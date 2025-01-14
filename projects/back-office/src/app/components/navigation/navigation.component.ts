@@ -1,6 +1,5 @@
-import { Component, Inject, signal } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AuthComponent } from '@back-office/auth-context';
 import {
   EndpointId,
   ENDPOINTS_TOKEN,
@@ -9,11 +8,10 @@ import {
 
 @Component({
   selector: 'app-navigation',
-  imports: [RouterLink, AuthComponent],
+  imports: [RouterLink],
   templateUrl: './navigation.component.html',
 })
 export class NavigationComponent {
-  isAuthenticated = signal<boolean>(false);
   readonly addPhotoUrl: string;
 
   readonly restrictedUrl: string;

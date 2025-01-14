@@ -6,7 +6,7 @@ import { AuthProviderFake, AuthService } from '@back-office/auth-context';
 import { EndpointsProvider } from '@back-office/endpoints-context';
 import { RouterModule } from '@angular/router';
 
-export class NavSidebarTestUtils {
+export class NavigationTestUtils {
   component!: NavigationComponent;
 
   isAuthenticatedSpy!: jasmine.Spy;
@@ -22,7 +22,7 @@ export class NavSidebarTestUtils {
   private fixture!: ComponentFixture<NavigationComponent>;
 
   constructor() {
-    const providers = [AuthService, AuthProviderFake, EndpointsProvider];
+    const providers = [AuthProviderFake, EndpointsProvider];
     this.testBed = TestBed.configureTestingModule({
       providers,
       imports: [NavigationComponent, RouterModule.forRoot([])],
