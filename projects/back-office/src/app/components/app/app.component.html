@@ -1,0 +1,19 @@
+@if(isAuthenticated()) {
+    <div class="layout__header row">
+        <div class="col-s-12">
+            <button (click)="toggleMenu()">
+                <mat-icon fontIcon="menu"></mat-icon>
+            </button>
+        </div>
+    </div>
+    <div class="layout__body row">
+        <div  class="sidebar col-s-3" [class.sidebar--hidden]="hideMenu()">
+            <app-sidebar></app-sidebar>
+        </div>
+        <div class="main-content col-s-9" [class.main-content--hidden]="!hideMenu()">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+} @else {
+    <app-login-page (isAuthenticatedChange)="isAuthenticated.set($event)"></app-login-page>
+}

@@ -1,0 +1,6 @@
+@if(isAuthenticated()) {
+    <button (click)="logout()" id="logout">logout</button>
+} @else {
+    <button (click)="login()" id="login">login</button>
+}
+

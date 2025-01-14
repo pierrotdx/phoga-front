@@ -15,7 +15,7 @@ import {
   EndpointId,
   ENDPOINTS_TOKEN,
   IEndpoints,
-} from '@back-office/app/endpoints-context';
+} from '@back-office/endpoints-context';
 
 @Component({
   selector: 'app-edit-photo',

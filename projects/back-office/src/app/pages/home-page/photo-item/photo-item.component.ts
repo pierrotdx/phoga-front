@@ -1,13 +1,13 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, Inject, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { IPhoto } from '@shared/photo-context';
+import { BufferToImagePipe } from '@shared/pipes';
 import {
   EndpointId,
   ENDPOINTS_TOKEN,
   IEndpoints,
-} from '@back-office/app/endpoints-context';
-import { IPhoto } from '@shared/photo-context';
-import { BufferToImagePipe } from '@shared/pipes';
+} from '@back-office/endpoints-context';
 
 @Component({
   selector: 'app-photo-item',

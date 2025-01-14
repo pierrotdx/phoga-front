@@ -1,5 +1,1 @@
-@if (!isAuthenticated()) {
-<div style="background-color: red">
-  <button (click)="login()" id="login">login</button>
-</div>
-}
+<app-auth (isAuthenticatedChange)="onAuthChange($event)"></app-auth>

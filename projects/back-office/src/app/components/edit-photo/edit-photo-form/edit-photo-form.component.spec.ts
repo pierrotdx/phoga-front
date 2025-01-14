@@ -1,7 +1,6 @@
 import { DebugElement } from '@angular/core';
 import { EditPhotoFormTestUtils } from './edit-photo-form.test-utils';
 import { Photo } from '@shared/photo-context';
-import { fakeAsync, tick } from '@angular/core/testing';
 
 describe('EditPhotoFormComponent', () => {
   let testUtils: EditPhotoFormTestUtils;
