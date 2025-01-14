@@ -1,4 +1,5 @@
 import { Component, Inject } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import {
   EndpointId,
@@ -8,7 +9,7 @@ import {
 
 @Component({
   selector: 'app-navigation',
-  imports: [RouterLink],
+  imports: [RouterLink, MatIconModule],
   templateUrl: './navigation.component.html',
 })
 export class NavigationComponent {
