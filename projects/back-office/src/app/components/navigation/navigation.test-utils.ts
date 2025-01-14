@@ -3,6 +3,8 @@ import { NavigationComponent } from './navigation.component';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { AuthProviderFake, AuthService } from '@back-office/auth-context';
+import { EndpointsProvider } from '@back-office/endpoints-context';
+import { RouterModule } from '@angular/router';
 
 export class NavSidebarTestUtils {
   component!: NavigationComponent;
@@ -20,10 +22,10 @@ export class NavSidebarTestUtils {
   private fixture!: ComponentFixture<NavigationComponent>;
 
   constructor() {
-    const providers = [AuthService, AuthProviderFake];
+    const providers = [AuthService, AuthProviderFake, EndpointsProvider];
     this.testBed = TestBed.configureTestingModule({
       providers,
-      imports: [NavigationComponent],
+      imports: [NavigationComponent, RouterModule.forRoot([])],
     });
     this.authService = this.testBed.inject(AuthService);
     this.setSpies();

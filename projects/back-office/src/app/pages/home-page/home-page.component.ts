@@ -1,32 +1,19 @@
-import { Component, Inject, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { firstValueFrom } from 'rxjs';
-import { RouterLink } from '@angular/router';
+
 import { IPhoto, PhotoApiService } from '@shared/photo-context';
-import {
-  EndpointId,
-  ENDPOINTS_TOKEN,
-  IEndpoints,
-} from '@back-office/endpoints-context';
 import { PhotoItemComponent } from './photo-item/photo-item.component';
 
 @Component({
   selector: 'app-home-page',
-  imports: [MatProgressSpinnerModule, RouterLink, PhotoItemComponent],
+  imports: [MatProgressSpinnerModule, PhotoItemComponent],
   templateUrl: './home-page.component.html',
 })
 export class HomePageComponent implements OnInit {
   photos$ = signal<IPhoto[] | undefined>(undefined);
-  private readonly adminPhotoUrl: string;
-  readonly addPhotoUrl: string;
 
-  constructor(
-    @Inject(ENDPOINTS_TOKEN) private readonly endpoints: IEndpoints,
-    private readonly photoApiService: PhotoApiService
-  ) {
-    this.adminPhotoUrl = this.endpoints.getRelativePath(EndpointId.AdminPhoto);
-    this.addPhotoUrl = this.getAddPhotoUrl();
-  }
+  constructor(private readonly photoApiService: PhotoApiService) {}
 
   ngOnInit(): void {
     void this.searchPhoto();
@@ -40,11 +27,5 @@ export class HomePageComponent implements OnInit {
       return;
     }
     this.photos$.set(photos);
-  }
-
-  private getAddPhotoUrl(): string {
-    return `${this.adminPhotoUrl}/${this.endpoints.getRelativePath(
-      EndpointId.AddPhoto
-    )}`;
   }
 }

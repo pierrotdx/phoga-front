@@ -14,10 +14,12 @@ import {
 })
 export class NavigationComponent {
   isAuthenticated = signal<boolean>(false);
+  readonly addPhotoUrl: string;
 
   readonly restrictedUrl: string;
 
   constructor(@Inject(ENDPOINTS_TOKEN) private readonly endpoints: IEndpoints) {
-    this.restrictedUrl = this.endpoints.getRelativePath(EndpointId.Restricted);
+    this.restrictedUrl = this.endpoints.getFullPath(EndpointId.Restricted);
+    this.addPhotoUrl = this.endpoints.getFullPath(EndpointId.AddPhoto);
   }
 }

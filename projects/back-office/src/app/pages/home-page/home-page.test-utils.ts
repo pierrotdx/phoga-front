@@ -1,15 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterModule } from '@angular/router';
-import { EndpointsProvider } from '@back-office/endpoints-context';
 import {
   IPhoto,
   ISearchPhotoOptions,
   PhotoApiService,
 } from '@shared/photo-context';
 import { HomePageComponent } from './home-page.component';
-import { DebugElement } from '@angular/core';
+import { Component, DebugElement, NO_ERRORS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { from, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
+@Component({
+  selector: 'app-photo-item',
+  template: '',
+})
+export class PhotoItemStubComponent {}
 
 export class HomePageTestUtils {
   component!: HomePageComponent;
@@ -23,15 +28,21 @@ export class HomePageTestUtils {
 
   async globalBeforeEach(): Promise<void> {
     await TestBed.configureTestingModule({
-      imports: [HomePageComponent, RouterModule.forRoot([])],
+      imports: [HomePageComponent],
       providers: [
         {
           provide: PhotoApiService,
           useValue: this.photoApiServiceMock,
         },
-        EndpointsProvider,
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(HomePageComponent, {
+        set: {
+          imports: [PhotoItemStubComponent, MatProgressSpinnerModule],
+          schemas: [NO_ERRORS_SCHEMA],
+        },
+      })
+      .compileComponents();
 
     this.fixture = TestBed.createComponent(HomePageComponent);
     this.component = this.fixture.componentInstance;

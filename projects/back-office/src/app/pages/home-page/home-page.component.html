@@ -1,6 +1,3 @@
-<div>
-  <a id="add-photo-anchor" [routerLink]="[addPhotoUrl]">+ add photo</a>
-</div>
 @if (photos$(); as photos) {
   <div id="photos-container">
     @for (photo of photos; track photo._id) {
