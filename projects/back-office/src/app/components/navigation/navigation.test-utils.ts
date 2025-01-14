@@ -1,11 +1,13 @@
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
-import { HeaderComponent } from './header.component';
+import { NavigationComponent } from './navigation.component';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { AuthProviderFake, AuthService } from '../../auth-context';
+import { AuthProviderFake, AuthService } from '@back-office/auth-context';
+import { EndpointsProvider } from '@back-office/endpoints-context';
+import { RouterModule } from '@angular/router';
 
-export class HeaderTestUtils {
-  component!: HeaderComponent;
+export class NavigationTestUtils {
+  component!: NavigationComponent;
 
   isAuthenticatedSpy!: jasmine.Spy;
   logoutSpy!: jasmine.Spy;
@@ -17,13 +19,13 @@ export class HeaderTestUtils {
 
   private readonly testBed: TestBed;
   private readonly authService: AuthService;
-  private fixture!: ComponentFixture<HeaderComponent>;
+  private fixture!: ComponentFixture<NavigationComponent>;
 
   constructor() {
-    const providers = [AuthService, AuthProviderFake];
+    const providers = [AuthProviderFake, EndpointsProvider];
     this.testBed = TestBed.configureTestingModule({
       providers,
-      imports: [HeaderComponent],
+      imports: [NavigationComponent, RouterModule.forRoot([])],
     });
     this.authService = this.testBed.inject(AuthService);
     this.setSpies();
@@ -43,7 +45,7 @@ export class HeaderTestUtils {
   async globalSetup() {
     await this.testBed.compileComponents();
 
-    this.fixture = TestBed.createComponent(HeaderComponent);
+    this.fixture = TestBed.createComponent(NavigationComponent);
     this.component = this.fixture.componentInstance;
 
     this.fixture.detectChanges();

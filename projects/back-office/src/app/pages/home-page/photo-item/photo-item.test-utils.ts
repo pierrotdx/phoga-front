@@ -1,10 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PhotoItemComponent } from './photo-item.component';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { EndpointsProvider } from '@back-office/app/endpoints-context';
-import { IPhoto } from '@shared/photo-context';
 import { RouterModule } from '@angular/router';
+
+import { IPhoto } from '@shared/photo-context';
+
+import { EndpointsProvider } from '@back-office/endpoints-context';
+import { PhotoItemComponent } from './photo-item.component';
 
 export class PhotoItemTestUtils {
   component!: PhotoItemComponent;

@@ -1,90 +1,44 @@
-import { DebugElement, inject } from '@angular/core';
-import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { AuthProviderFake, AuthService } from '../../auth-context';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import {
+  EndpointId,
   ENDPOINTS_TOKEN,
   EndpointsProvider,
-  IEndpoints,
-} from '../../endpoints-context';
+} from '@back-office/endpoints-context';
 import { LoginPageComponent } from './login-page.component';
+import { CompTestUtils } from '@shared/comp.test-utils';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TestModuleMetadata } from '@angular/core/testing';
 
-export class LoginPageTestUtils {
-  public readonly testBed: TestBed;
+@Component({ selector: 'app-auth', template: '' })
+export class AuthStubComponent {}
 
-  isAuthenticatedSpy!: jasmine.Spy;
-  navigateSpy!: jasmine.Spy;
-  loginSpy!: jasmine.Spy;
-  consoleSpy!: jasmine.Spy;
-
-  private readonly spies: jasmine.Spy[] = [
-    this.isAuthenticatedSpy,
-    this.navigateSpy,
-    this.loginSpy,
-    this.consoleSpy,
-  ];
-
-  private fixture!: ComponentFixture<LoginPageComponent>;
-
-  private readonly providers = [
-    AuthProviderFake,
-    EndpointsProvider,
-    AuthService,
-    Router,
-  ];
-
+export class LoginPageTestUtils extends CompTestUtils<LoginPageComponent> {
   constructor() {
-    this.testBed = TestBed.configureTestingModule({
-      providers: this.providers,
-    });
-    this.setSpies();
+    const config: TestModuleMetadata = {
+      imports: [LoginPageComponent, AuthStubComponent],
+      providers: [EndpointsProvider, provideRouter([])],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    };
+    super(LoginPageComponent, config);
   }
 
-  private setSpies(): void {
-    const authService = this.testBed.inject(AuthService);
-    this.isAuthenticatedSpy = spyOn(authService, 'isAuthenticated');
-    this.loginSpy = spyOn(authService, 'login');
+  async globalSetup(): Promise<void> {
+    await this.internalBeforeEach();
+  }
 
+  getNavigateSpy(): jasmine.Spy {
     const router = this.testBed.inject(Router);
-    this.navigateSpy = spyOn(router, 'navigate');
-
-    this.consoleSpy = spyOn(console, 'error');
+    return spyOn(router, 'navigate');
   }
 
-  resetSpies(): void {
-    this.spies.forEach((spy) => {
-      spy?.and.callThrough();
-    });
+  getRestrictedUrl(): string {
+    const endpoints = this.testBed.inject(ENDPOINTS_TOKEN);
+    return endpoints.getRelativePath(EndpointId.Restricted);
   }
 
-  async globalSetup() {
-    await this.testBed.compileComponents();
-    this.fixture = this.testBed.createComponent(LoginPageComponent);
+  triggerSuccessfulLogin(): void {
+    const isAuth = true;
+    this.component.onAuthChange(isAuth);
     this.fixture.detectChanges();
-  }
-
-  getComponent(): LoginPageComponent {
-    return this.fixture.componentInstance;
-  }
-
-  clickOn(debugElement: DebugElement) {
-    debugElement.nativeElement.click();
-    tick();
-  }
-
-  getLoginButton() {
-    const pageElement = this.fixture.debugElement;
-    return pageElement.query(By.css('#login'))!;
-  }
-
-  getEndpoints(): IEndpoints {
-    return this.testBed.inject(ENDPOINTS_TOKEN);
-  }
-
-  fakeAuthentication() {
-    this.isAuthenticatedSpy.and.returnValue(true);
-    const authService = this.testBed.inject(AuthService);
-    authService.accessToken$.next('fake token');
   }
 }

@@ -145,7 +145,10 @@
                 "input": "projects/back-office/public"
               }
             ],
-            "styles": ["projects/back-office/src/styles.scss"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["node_modules/normalize-scss/sass"]
+            },
+            "styles": ["projects/back-office/src/app/styles/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -208,7 +211,10 @@
                 "input": "projects/back-office/public"
               }
             ],
-            "styles": ["projects/back-office/src/styles.scss"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["node_modules/normalize-scss/sass"]
+            },
+            "styles": ["projects/back-office/src/app/styles/styles.scss"],
             "scripts": []
           }
         }
