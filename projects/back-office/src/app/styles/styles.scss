@@ -1,6 +1,9 @@
-@use "normalize" as normalize;
-@include normalize.normalize();
+@use "material";
+@use "normalization";
+@use "variables";
+@use "grid-layout";
+@use "layout";
 
-body {
-  background-color: yellow;
+* {
+  box-sizing: border-box;
 }

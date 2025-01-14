@@ -1,40 +1,23 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
-import { AuthService } from '@back-office/auth-context';
-import { Subscription } from 'rxjs';
+import { Component, Inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { AuthComponent } from '@back-office/auth-context';
+import {
+  EndpointId,
+  ENDPOINTS_TOKEN,
+  IEndpoints,
+} from '@back-office/endpoints-context';
 
 @Component({
   selector: 'app-navigation',
-  imports: [],
+  imports: [RouterLink, AuthComponent],
   templateUrl: './navigation.component.html',
 })
-export class NavigationComponent implements OnInit, OnDestroy {
+export class NavigationComponent {
   isAuthenticated = signal<boolean>(false);
 
-  private readonly accessTokenSub: Subscription;
+  readonly restrictedUrl: string;
 
-  constructor(private readonly authService: AuthService) {
-    this.accessTokenSub = this.authService.accessToken$.subscribe(
-      this.onAuthChange
-    );
-  }
-
-  ngOnInit(): void {
-    this.updateIsAuthenticated();
-  }
-
-  ngOnDestroy(): void {
-    this.accessTokenSub.unsubscribe();
-  }
-
-  private onAuthChange = () => {
-    this.updateIsAuthenticated();
-  };
-
-  private updateIsAuthenticated() {
-    const isAuth = this.authService.isAuthenticated();
-    this.isAuthenticated.set(isAuth);
-  }
-  async logout() {
-    await this.authService.logout();
+  constructor(@Inject(ENDPOINTS_TOKEN) private readonly endpoints: IEndpoints) {
+    this.restrictedUrl = this.endpoints.getRelativePath(EndpointId.Restricted);
   }
 }
