@@ -1,19 +1,33 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnDestroy, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterOutlet } from '@angular/router';
+import { EventType, Router, RouterOutlet } from '@angular/router';
 import { LoginPageComponent } from '@back-office/app/pages';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { filter, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, SidebarComponent, LoginPageComponent, MatIconModule],
   templateUrl: './app.component.html',
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
   isAuthenticated = signal<boolean>(false);
   hideMenu = signal<boolean>(false);
 
-  constructor() {}
+  private readonly routeSub: Subscription;
+
+  constructor(private readonly router: Router) {
+    const navigationEnd$ = this.router.events.pipe(
+      filter((e) => e.type === EventType.NavigationEnd)
+    );
+    this.routeSub = navigationEnd$.subscribe(() => {
+      this.hideMenu.set(true);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.routeSub.unsubscribe();
+  }
 
   toggleMenu(): void {
     const hideMenu = this.hideMenu();
