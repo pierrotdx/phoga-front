@@ -23,6 +23,7 @@ const routesFactory = (): Routes => {
       path: endpoints.getRelativePath(EndpointId.LoginPage),
       loadComponent: () => LoginPageComponent,
     },
+    { path: '**', component: LoginPageComponent },
   ];
   return routes;
 };
