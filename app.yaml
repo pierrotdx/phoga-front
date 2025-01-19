@@ -1,0 +1,10 @@
+runtime: nodejs22
+
+handlers:
+  - url: /dist/back-office/browser/
+    static_files: index.html
+    upload: index.html
+
+  - url: /dist/back-office/browser/
+    static_files: \1
+    upload: (.*)
