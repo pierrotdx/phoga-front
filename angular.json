@@ -133,6 +133,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "allowedCommonJsDependencies": ["buffer"],
             "outputPath": "dist/back-office",
             "index": "projects/back-office/src/index.html",
             "browser": "projects/back-office/src/main.ts",
