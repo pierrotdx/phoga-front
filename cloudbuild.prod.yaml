@@ -1,0 +1,17 @@
+steps:
+  # Install
+  - name: "node"
+    entrypoint: "npm"
+    args: ["install"]
+
+  # Build
+  - name: "node"
+    entrypoint: "npm"
+    args: ["run", "build:bo:prod"]
+
+  # Deploy
+  - name: "gcr.io/cloud-builders/gcloud"
+    args: ["app", "deploy", "--version=production"]
+
+options:
+  logging: CLOUD_LOGGING_ONLY
