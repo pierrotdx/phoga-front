@@ -12,5 +12,6 @@ steps:
   # Deploy
   - name: "gcr.io/cloud-builders/gcloud"
     args: ["app", "deploy", "--version=stage"]
+
 options:
   logging: CLOUD_LOGGING_ONLY
