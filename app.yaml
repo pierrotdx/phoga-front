@@ -1,0 +1,44 @@
+runtime: nodejs22
+
+service: phoga-back-office
+
+handlers:
+  - url: /([^.]+)/?$ # URls with no dot in them (e.g. /index, /about, etc)
+    static_files: dist/back-office/browser/index.html
+    upload: dist/back-office/browser/index.html
+
+  # Serve index.html for the root URL ('/')
+  - url: /
+    static_files: dist/back-office/browser/index.html
+    upload: dist/back-office/browser/index.html
+    secure: always
+    redirect_http_response_code: 301
+    login: admin
+
+  # Serve CSS files from the root 'dist/back-office/browser/' directory
+  - url: /(.+)\.css
+    static_files: dist/back-office/browser/\1.css
+    upload: dist/back-office/browser/.+\.css
+
+  # Serve JavaScript files from the root 'dist/back-office/browser/' directory
+  - url: /(.+)\.js
+    static_files: dist/back-office/browser/\1.js
+    upload: dist/back-office/browser/.+\.js
+
+  # Serve HTML files from the root 'dist/back-office/browser/' directory
+  - url: /(.+)\.html
+    static_files: dist/back-office/browser/\1.html
+    upload: dist/back-office/browser/.+\.html
+
+  # Serve files from the 'assets/' directory
+  - url: /assets/(.*)
+    static_files: dist/back-office/browser/assets/\1
+    upload: dist/back-office/browser/assets/(.*)
+
+  # Catch-all rule to serve index.html for any path not matched above
+  - url: /.*
+    static_files: dist/back-office/browser/index.html
+    upload: dist/back-office/browser/index.html
+    secure: always
+    redirect_http_response_code: 301
+    login: admin
