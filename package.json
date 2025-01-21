@@ -4,7 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build:bo:stage": "ng build back-office --configuration production",
+    "deploy": "npm run build --configuration production",
+    "run:bo": "node ./dist/back-office/browser/main.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
