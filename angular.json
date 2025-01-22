@@ -178,6 +178,14 @@
                   "with": "projects/back-office/src/environment-context/core/environment.development.ts"
                 }
               ]
+            },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/back-office/src/environment-context/core/environment.ts",
+                  "with": "projects/back-office/src/environment-context/core/environment.staging.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "development"
