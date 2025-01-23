@@ -7,3 +7,6 @@ handlers:
   - url: /
     static_files: dist/back-office/browser/index.html
     upload: dist/back-office/browser/index.html
+
+  - url: /
+    static_dir: dist/back-office/browser/
