@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "build:bo": "ng build back-office --configuration development",
     "build:bo:staging": "ng build back-office --configuration staging",
     "build:bo:prod": "ng build back-office --configuration production",
     "deploy": "npm run build --configuration production",
