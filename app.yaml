@@ -11,4 +11,3 @@ handlers:
   # Serve CSS files from the root 'dist/back-office/browser/' directory
   - url: /
     static_dir: dist/back-office/browser/
-    upload: dist/back-office/browser/
