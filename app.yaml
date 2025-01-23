@@ -4,13 +4,11 @@ service: phoga-back-office
 
 handlers:
   # Serve index.html for the root URL ('/')
-  - url: /dist/back-office/browser/
-    static_files: index.html
-    upload: index.html
-    secure: always
-    redirect_http_response_code: 301
+  - url: /
+    static_files: dist/back-office/browser/index.html
+    upload: dist/back-office/browser/index.html
 
   # Serve CSS files from the root 'dist/back-office/browser/' directory
-  - url: dist/back-office/
-    static_folder: /browser
-    upload: /browser
+  - url: /
+    static_dir: dist/back-office/browser/
+    upload: dist/back-office/browser/
