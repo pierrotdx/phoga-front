@@ -7,7 +7,3 @@ handlers:
   - url: /
     static_files: dist/back-office/browser/index.html
     upload: dist/back-office/browser/index.html
-
-  # Serve CSS files from the root 'dist/back-office/browser/' directory
-  - url: /
-    static_dir: dist/back-office/browser/
