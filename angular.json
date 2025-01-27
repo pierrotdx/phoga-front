@@ -180,6 +180,8 @@
               ]
             },
             "staging": {
+              "optimization": false,
+              "extractLicenses": false,
               "fileReplacements": [
                 {
                   "replace": "projects/back-office/src/environment-context/core/environment.ts",
