@@ -180,27 +180,12 @@
               ]
             },
             "staging": {
-              "optimization": false,
-              "extractLicenses": false,
               "fileReplacements": [
                 {
                   "replace": "projects/back-office/src/environment-context/core/environment.ts",
                   "with": "projects/back-office/src/environment-context/core/environment.staging.ts"
                 }
-              ],
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
-                }
-              ],
-              "outputHashing": "all"
+              ]
             }
           },
           "defaultConfiguration": "development"
