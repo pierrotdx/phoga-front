@@ -1,3 +1,5 @@
+import { Buffer } from "buffer";
+
 export interface IPhotoMetadata {
   date?: Date;
   description?: string;
