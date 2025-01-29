@@ -1,3 +1,4 @@
+import { Buffer } from "buffer";
 import { IPhotoMetadata } from './photo-metadata';
 
 export interface IPhoto {
