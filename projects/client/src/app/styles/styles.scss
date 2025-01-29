@@ -1,0 +1,10 @@
+@use "normalization";
+@use "variables" as var;
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var.$font-family;
+}

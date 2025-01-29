@@ -59,7 +59,10 @@
                 "input": "projects/client/public"
               }
             ],
-            "styles": ["projects/client/src/styles.scss"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["node_modules/normalize-scss/sass"]
+            },
+            "styles": ["projects/client/src/app/styles/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -113,7 +116,10 @@
                 "input": "projects/client/public"
               }
             ],
-            "styles": ["projects/client/src/styles.scss"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["node_modules/normalize-scss/sass"]
+            },
+            "styles": ["projects/client/src/app/styles/styles.scss"],
             "scripts": []
           }
         }
