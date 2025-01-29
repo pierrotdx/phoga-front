@@ -1,3 +1,4 @@
+import { Buffer } from "buffer";
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({

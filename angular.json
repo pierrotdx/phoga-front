@@ -153,7 +153,32 @@
             "scripts": []
           },
           "configurations": {
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "projects/back-office/src/environment-context/core/environment.ts",
+                  "with": "projects/back-office/src/environment-context/core/environment.development.ts"
+                }
+              ]
+            },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/back-office/src/environment-context/core/environment.ts",
+                  "with": "projects/back-office/src/environment-context/core/environment.staging.ts"
+                }
+              ]
+            },
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/back-office/src/environment-context/core/environment.ts",
+                  "with": "projects/back-office/src/environment-context/core/environment.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -167,17 +192,6 @@
                 }
               ],
               "outputHashing": "all"
-            },
-            "development": {
-              "optimization": false,
-              "extractLicenses": false,
-              "sourceMap": true,
-              "fileReplacements": [
-                {
-                  "replace": "projects/back-office/src/environment-context/core/environment.ts",
-                  "with": "projects/back-office/src/environment-context/core/environment.development.ts"
-                }
-              ]
             }
           },
           "defaultConfiguration": "development"

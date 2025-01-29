@@ -1,3 +1,5 @@
+@use "variables" as var;
+
 .layout {
   &__header {
     /* For tablets and above */
@@ -14,6 +16,8 @@
 }
 
 .sidebar {
+  background-color: var.$clr-grey-01;
+
   &--hidden {
     display: none;
 
