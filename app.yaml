@@ -1,5 +1,7 @@
 runtime: nodejs22
 
+service: phoga-back-office
+
 handlers:
   - url: /
     static_files: dist/back-office/browser/index.html
