@@ -98,6 +98,9 @@ export class PhotoApiService {
       map((photos) => {
         photos.forEach((photo) => {
           photo.metadata = this.getPhotoMetadataFromServerPhoto(photo);
+          if (photo.imageBuffer) {
+            photo.imageBuffer = Buffer.from(photo.imageBuffer);
+          }
         });
         return photos;
       }),
