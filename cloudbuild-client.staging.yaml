@@ -11,7 +11,7 @@ steps:
 
   # Deploy
   - name: "gcr.io/cloud-builders/gcloud"
-    args: ["app", "deploy", "--version=staging"]
+    args: ["app", "deploy", "--appyaml=app-client.yaml", "--version=staging"]
 
 options:
   logging: CLOUD_LOGGING_ONLY

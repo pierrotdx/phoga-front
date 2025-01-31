@@ -11,7 +11,13 @@ steps:
 
   # Deploy
   - name: "gcr.io/cloud-builders/gcloud"
-    args: ["app", "deploy", "--version=production"]
+    args:
+      [
+        "app",
+        "deploy",
+        "--appyaml=app-back-office.yaml",
+        "--version=production",
+      ]
 
 options:
   logging: CLOUD_LOGGING_ONLY
