@@ -1,0 +1,12 @@
+@if (photos$(); as photos) {
+    @for (photo of photos; track photo._id; let index = $index; let even = $even) {
+      @if(even) {
+        <div class="collage">
+          <app-photo-card [photo]="photo" class="collage__item"></app-photo-card>
+          @if(photos[index + 1]; as nextPhoto) {
+            <app-photo-card [photo]="nextPhoto" class="collage__item"></app-photo-card>
+          }
+        </div>
+      }
+    }
+}
