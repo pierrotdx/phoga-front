@@ -40,9 +40,19 @@ export class PhotoApiService {
   }
 
   private getPhotoMetadataFromServerPhoto(photo: IPhoto): IPhoto['metadata'] {
-    if (photo.metadata?.thumbnail) {
+    if (!photo.metadata) {
+      return;
+    }
+    if (photo.metadata.thumbnail) {
       const thumbnail = Buffer.from(photo.metadata?.thumbnail);
       photo.metadata.thumbnail = thumbnail;
+    }
+    const titles = photo.metadata.titles;
+    if (titles) {
+      photo.metadata.titles = titles[0].split(',');
+    }
+    if (photo.metadata.date) {
+      photo.metadata.date = new Date(photo.metadata.date);
     }
     return photo.metadata;
   }
@@ -98,6 +108,9 @@ export class PhotoApiService {
       map((photos) => {
         photos.forEach((photo) => {
           photo.metadata = this.getPhotoMetadataFromServerPhoto(photo);
+          if (photo.imageBuffer) {
+            photo.imageBuffer = Buffer.from(photo.imageBuffer);
+          }
         });
         return photos;
       }),

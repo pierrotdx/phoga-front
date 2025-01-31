@@ -1,0 +1,18 @@
+steps:
+  # Install
+  - name: "node"
+    entrypoint: "npm"
+    args: ["install"]
+
+  # Build
+  - name: "node"
+    entrypoint: "npm"
+    args: ["run", "build:bo:staging"]
+
+  # Deploy
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      ["app", "deploy", "--appyaml=app-back-office.yaml", "--version=staging"]
+
+options:
+  logging: CLOUD_LOGGING_ONLY

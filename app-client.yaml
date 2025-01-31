@@ -1,0 +1,32 @@
+runtime: nodejs22
+
+service: phoga-client
+
+handlers:
+  - url: /
+    static_files: dist/client/browser/index.html
+    upload: dist/client/browser/index.html
+    mime_type: text/html
+
+  # Serve CSS files from the root 'dist/client/browser/' directory
+  - url: /(.+)\.css
+    static_files: dist/client/browser/\1.css
+    upload: dist/client/browser/.+\.css
+    mime_type: text/css
+
+  # Serve JavaScript files from the root 'dist/client/browser/' directory
+  - url: /(.+)\.js
+    static_files: dist/client/browser/\1.js
+    upload: dist/client/browser/.+\.js
+    mime_type: text/javascript
+
+  # Serve HTML files from the root 'dist/client/browser/' directory
+  - url: /(.+)\.html
+    static_files: dist/client/browser/\1.html
+    upload: dist/client/browser/.+\.html
+    mime_type: text/html
+
+  # Catch-all rule to serve index.html for any path not matched above
+  - url: /.*
+    static_files: dist/client/browser/index.html
+    upload: dist/client/browser/index.html

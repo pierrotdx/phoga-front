@@ -47,6 +47,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "allowedCommonJsDependencies": ["buffer"],
             "outputPath": "dist/client",
             "index": "projects/client/src/index.html",
             "browser": "projects/client/src/main.ts",
@@ -59,11 +60,19 @@
                 "input": "projects/client/public"
               }
             ],
-            "styles": ["projects/client/src/styles.scss"],
+            "styles": ["projects/client/src/app/styles/styles.scss"],
             "scripts": []
           },
           "configurations": {
             "production": {
+
+              "fileReplacements": [
+                {
+                  "replace": "projects/client/src/environment-context/core/environment.ts",
+                  "with": "projects/client/src/environment-context/core/environment.prod.ts"
+                }
+              ]
+            ,
               "budgets": [
                 {
                   "type": "initial",
@@ -78,6 +87,14 @@
               ],
               "outputHashing": "all"
             },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/client/src/environment-context/core/environment.ts",
+                  "with": "projects/client/src/environment-context/core/environment.staging.ts"
+                }
+              ]
+            },
             "development": {
               "optimization": false,
               "extractLicenses": false,
@@ -91,6 +108,9 @@
           "configurations": {
             "production": {
               "buildTarget": "client:build:production"
+            },
+            "staging": {
+              "buildTarget": "client:build:staging"
             },
             "development": {
               "buildTarget": "client:build:development"
@@ -113,7 +133,7 @@
                 "input": "projects/client/public"
               }
             ],
-            "styles": ["projects/client/src/styles.scss"],
+            "styles": ["projects/client/src/app/styles/styles.scss"],
             "scripts": []
           }
         }

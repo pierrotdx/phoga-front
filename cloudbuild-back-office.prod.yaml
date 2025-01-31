@@ -7,11 +7,17 @@ steps:
   # Build
   - name: "node"
     entrypoint: "npm"
-    args: ["run", "build:bo:staging"]
+    args: ["run", "build:bo:prod"]
 
   # Deploy
   - name: "gcr.io/cloud-builders/gcloud"
-    args: ["app", "deploy", "--version=staging"]
+    args:
+      [
+        "app",
+        "deploy",
+        "--appyaml=app-back-office.yaml",
+        "--version=production",
+      ]
 
 options:
   logging: CLOUD_LOGGING_ONLY
