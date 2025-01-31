@@ -1,0 +1,12 @@
+@use "reset";
+@use "variables" as var;
+@use "collage";
+@use "photoCard";
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var.$font-family;
+}

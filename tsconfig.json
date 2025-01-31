@@ -16,6 +16,7 @@
     "experimentalDecorators": true,
     "moduleResolution": "bundler",
     "paths": {
+      "@client/*": ["client/src/*", "client/src/app*"],
       "shared": ["./dist/shared"],
       "@shared/*": ["shared/src/*"],
       "@back-office/*": ["back-office/src/*", "back-office/src/app*"]

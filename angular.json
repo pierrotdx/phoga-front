@@ -47,6 +47,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "allowedCommonJsDependencies": ["buffer"],
             "outputPath": "dist/client",
             "index": "projects/client/src/index.html",
             "browser": "projects/client/src/main.ts",
@@ -59,7 +60,7 @@
                 "input": "projects/client/public"
               }
             ],
-            "styles": ["projects/client/src/styles.scss"],
+            "styles": ["projects/client/src/app/styles/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -113,7 +114,7 @@
                 "input": "projects/client/public"
               }
             ],
-            "styles": ["projects/client/src/styles.scss"],
+            "styles": ["projects/client/src/app/styles/styles.scss"],
             "scripts": []
           }
         }
