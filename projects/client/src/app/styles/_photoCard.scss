@@ -39,6 +39,10 @@
   background-color: var.$clr-photo-metadata-background--light;
   padding: var.$spacing-03;
 
+  &:empty{
+    display: none;
+  }
+
   & * {
     color: var.$clr-text;
   }
