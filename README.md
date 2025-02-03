@@ -13,10 +13,11 @@ As such, some choices of architecture or libraries are not based on efficiency b
 ### Global structure
 
 This project is composed of three sub-projects:
+
 - the client application to display photos to visitor,
 - the back-office application to add/edit/remove the client photos,
 - a library shared between the two applications.
 
 ### Current state
 
-The project is still under development and not ready for production.
+The project is still under development and not ready for production. The staging version of the client can be previewed [here](https://phoga-client-dot-phoga-449314.ew.r.appspot.com).
