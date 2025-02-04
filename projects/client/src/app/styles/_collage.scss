@@ -1,15 +1,18 @@
 @use "variables" as var;
 
 .collage {
+  background-color: var.$clr-white;
+
+  &__item {
+    display: block;
+    margin-bottom: var.$spacing-01;
+  }
+
   /* For tablets and above */
   @media only screen and (min-width: 600px) {
     display: flex;
     max-height: 500px;
     gap: var.$spacing-01;
-
-    &:not(:last-child) {
-      margin-bottom: var.$spacing-01;
-    }
 
     &__item {
       flex: 1 1 auto;

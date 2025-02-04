@@ -10,3 +10,10 @@
 html {
   font-family: var.$font-family;
 }
+
+lib-material-icon {
+  display: inline-block;
+  span {
+    vertical-align: middle;
+  }
+}

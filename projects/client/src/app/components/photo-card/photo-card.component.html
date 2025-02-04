@@ -1,12 +1,21 @@
 <article class="photo-card">
-    @if (photo) {
-        @if(photo.imageBuffer; as imageBuffer) {
-            <img class="photo-card__image" [src]="imageBuffer | bufferToImage$ | async" alt="image not available"/>
-        }
-        @if(photo.metadata; as metadata) {
-            <app-photo-metadata [photoMetadata]="photo.metadata" class="photo-card__metadata"></app-photo-metadata>
-        }
-    } @else {
-        photo not loaded
+    @if(photo.imageBuffer; as imageBuffer) {
+        <img class="photo-card__image"
+            [src]="imageBuffer | bufferToImage$ | async"
+            alt="image not available"/>
+        <button type="button"
+            (click)="toggleFullscreen()"
+            class="photo-card__expand">
+            <lib-material-icon [iconName]="'fullscreen'"></lib-material-icon>
+        </button>
+        <app-photo-fullscreen [show]="isFullscreen()"
+            [imageBuffer]="imageBuffer"
+            (closed)="toggleFullscreen()">
+        </app-photo-fullscreen>
+    }
+    @if(photo.metadata; as metadata) {
+        <app-photo-metadata [photoMetadata]="photo.metadata"
+            class="photo-card__metadata">
+        </app-photo-metadata>
     }
 </article>
