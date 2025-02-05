@@ -2,6 +2,7 @@
 @use "variables" as var;
 @use "collage";
 @use "photoCard";
+@use "about";
 
 * {
   box-sizing: border-box;
@@ -16,4 +17,12 @@ lib-material-icon {
   span {
     vertical-align: middle;
   }
+}
+
+.page-title {
+  color: var.$clr-text;
+  font-size: var.$fs-page-title;
+  font-weight: var.$fw-page-title;
+  text-align: center;
+  padding: var.$spacing-04;
 }
