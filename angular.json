@@ -65,14 +65,12 @@
           },
           "configurations": {
             "production": {
-
               "fileReplacements": [
                 {
                   "replace": "projects/client/src/environment-context/core/environment.ts",
                   "with": "projects/client/src/environment-context/core/environment.prod.ts"
                 }
-              ]
-            ,
+              ],
               "budgets": [
                 {
                   "type": "initial",
