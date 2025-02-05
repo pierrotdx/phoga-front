@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { CollageComponent } from '../collage/collage.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [CollageComponent],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
 })
 export class AppComponent {}
