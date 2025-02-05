@@ -26,6 +26,12 @@ handlers:
     upload: dist/client/browser/.+\.html
     mime_type: text/html
 
+  # Serve jpg files from the root 'dist/client/browser/' directory
+  - url: /(.+)\.jpg
+    static_files: dist/client/browser/\1.jpg
+    upload: dist/client/browser/.+\.jpg
+    mime_type: image/jpg
+
   # Catch-all rule to serve index.html for any path not matched above
   - url: /.*
     static_files: dist/client/browser/index.html
