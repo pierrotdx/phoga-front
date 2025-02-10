@@ -3,16 +3,16 @@ import { IEnvironment } from './models/environment';
 export const environment: IEnvironment = {
   phogaApiUrl: 'http://localhost:3000',
   mainContact: {
-    name: "First Contact",
-    description: "photography, website",
-    email: 'contact@nomail.com',
-    github: 'contactGithub',
-    instagram: 'contactInstagram',
+    name: 'Pierre',
+    description: 'photography, website',
+    email: 'pierrotdx@gmail.com',
+    github: 'pierrotdx',
+    instagram: 'noLink',
   },
   designContact: {
-    name: 'Second Contact',
+    name: 'Prachi',
     description: 'design',
-    email: 'designerName@nomail.com',
-    behance: 'designerBehance',
+    email: 'prachi@nomail.com',
+    behance: 'nolink',
   },
 };

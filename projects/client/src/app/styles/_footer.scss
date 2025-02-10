@@ -1,0 +1,21 @@
+@use "variables" as var;
+
+.footer {
+  background-color: var.$clr-primary;
+  margin-top: var.$spacing-01;
+  padding: var.$spacing-02;
+}
+
+.address {
+  display: flex;
+  justify-content: space-around;
+  gap: var.$spacing-01;
+
+  &__item {
+    display: block;
+
+    &:not(:last-child) {
+      margin-bottom: var.$spacing-01;
+    }
+  }
+}
