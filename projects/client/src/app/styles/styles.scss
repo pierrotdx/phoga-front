@@ -1,8 +1,10 @@
 @use "reset";
 @use "variables" as var;
+@use "contact";
 @use "collage";
 @use "photoCard";
 @use "about";
+@use "footer";
 
 * {
   box-sizing: border-box;
