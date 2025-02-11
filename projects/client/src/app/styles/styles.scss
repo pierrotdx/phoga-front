@@ -1,10 +1,7 @@
 @use "reset";
 @use "variables" as var;
-@use "contact";
-@use "collage";
-@use "photoCard";
-@use "about";
-@use "footer";
+@use "components";
+@use "pages";
 
 * {
   box-sizing: border-box;
@@ -27,4 +24,9 @@ lib-material-icon {
   font-weight: var.$fw-page-title;
   text-align: center;
   padding: var.$spacing-04;
+
+  /* For tablets and above */
+  @media only screen and (min-width: 600px) {
+    font-size: var.$fs-page-title-large;
+  }
 }

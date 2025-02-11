@@ -1,0 +1,72 @@
+@use "../variables" as var;
+
+.header {
+  display: flex;
+  padding: var.$spacing-03;
+  background-color: var.$clr-primary;
+
+  &__logo {
+    width: 20%;
+    max-width: 115px;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    margin: 0 var.$spacing-02;
+    font-size: var.$fs-header-title;
+
+    /* For tablets and above */
+    @media only screen and (min-width: 600px) {
+      font-size: var.$fs-header-title-large;
+    }
+  }
+
+  &__nav {
+    flex: 1 1 auto;
+    display: flex;
+  }
+}
+
+.navigation {
+  flex: 1 1 auto;
+  display: flex;
+
+  ul {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  li {
+    list-style: none;
+    margin: 0 var.$spacing-02;
+    padding: var.$spacing-01;
+    font-size: var.$fs-header-nav-item;
+
+    /* For tablets and above */
+    @media only screen and (min-width: 600px) {
+      font-size: var.$fs-header-nav-item-large;
+    }
+
+    &:hover,
+    &:focus {
+      border-top: 2px solid var.$clr-secondary;
+      border-bottom: 2px solid var.$clr-secondary;
+      font-weight: var.$fw-header-nav-active;
+      font-size: 1.4em;
+
+      /* For tablets and above */
+      @media only screen and (min-width: 600px) {
+        font-size: 1.8em;
+      }
+    }
+
+    a {
+      color: var.$clr-text;
+      text-decoration: none;
+      font-size: inherit;
+    }
+  }
+}
