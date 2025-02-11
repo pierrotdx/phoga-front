@@ -1,6 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HeaderComponent } from './header.component';
+import { NavigationComponent } from './navigation/navigation.component';
+import { Component } from '@angular/core';
+
+@Component({
+  template: '',
+  selector: 'app-navigation',
+})
+class NavigationStubComponent {}
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -8,9 +16,12 @@ describe('HeaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HeaderComponent]
+      imports: [HeaderComponent, NavigationComponent],
     })
-    .compileComponents();
+      .overrideComponent(HeaderComponent, {
+        set: { imports: [NavigationStubComponent] },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
