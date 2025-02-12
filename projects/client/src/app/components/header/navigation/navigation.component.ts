@@ -1,9 +1,8 @@
 import { Component, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-navigation',
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './navigation.component.html',
 })
 export class NavigationComponent {
