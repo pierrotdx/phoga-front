@@ -1,6 +1,5 @@
-import { Component, signal } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 import { IPhoto, PhotoApiService } from '@shared/photo-context';
-import { firstValueFrom } from 'rxjs';
 import { PhotosStripComponent } from '../photos-strip/photos-strip.component';
 
 @Component({
@@ -9,25 +8,16 @@ import { PhotosStripComponent } from '../photos-strip/photos-strip.component';
   templateUrl: './collage.component.html',
 })
 export class CollageComponent {
-  photoSets = signal<IPhoto[][]>([]);
-
-  private photos: IPhoto[] = [];
-
-  constructor(private readonly photoApiService: PhotoApiService) {}
-
-  ngOnInit(): void {
-    void this.searchPhoto();
-  }
-
-  private async searchPhoto() {
-    const photos = await firstValueFrom(this.photoApiService.searchPhoto());
-    if (photos instanceof Error) {
-      return;
-    }
-    this.photos = photos || [];
-    console.log('photos', photos);
+  private _photos: IPhoto[] = [];
+  @Input() set photos(value: IPhoto[]) {
+    this._photos = value || [];
     this.updatePhotoSets();
   }
+  get photos() {
+    return this._photos;
+  }
+
+  photoSets = signal<IPhoto[][]>([]);
 
   private updatePhotoSets(): void {
     const pairs = this.getPhotoPairs();
