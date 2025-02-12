@@ -36,7 +36,8 @@ handlers:
   - url: /(.+)\.svg
     static_files: dist/client/browser/\1.svg
     upload: dist/client/browser/.+\.svg
-    mime_type: image/svg+xml
+    http_headers:
+      content-type: image/svg+xml
 
   # Catch-all rule to serve index.html for any path not matched above
   - url: /.*
