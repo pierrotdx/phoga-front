@@ -9,7 +9,7 @@ import { PhotoCardComponent } from '../photo-card/photo-card.component';
   templateUrl: './collage.component.html',
 })
 export class CollageComponent {
-  photos$ = signal<IPhoto[] | undefined>(undefined);
+  photos = signal<IPhoto[] | undefined>(undefined);
 
   constructor(private readonly photoApiService: PhotoApiService) {}
 
@@ -22,10 +22,10 @@ export class CollageComponent {
     if (photos instanceof Error) {
       return;
     }
-    this.photos$.set(photos);
+    this.photos.set(photos);
     console.log(
       'photos',
-      this.photos$()?.map((p) => p._id)
+      this.photos()?.map((p) => p._id)
     );
   }
 }

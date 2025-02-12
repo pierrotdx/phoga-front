@@ -1,4 +1,4 @@
-@if (photos$(); as photos) {
+@if (photos(); as photos) {
     @for (photo of photos; track photo._id; let index = $index; let even = $even;) {
       @if(even) {
         <div class="collage">
