@@ -18,7 +18,7 @@ import { MaterialIconComponent } from '@shared/material-icon';
   templateUrl: './photo-card.component.html',
 })
 export class PhotoCardComponent {
-  @Input() photo!: IPhoto;
+  @Input() photo: IPhoto | undefined;
   readonly isFullscreen = signal<boolean>(false);
 
   toggleFullscreen() {
