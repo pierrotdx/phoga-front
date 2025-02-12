@@ -1,13 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { GalleryComponent } from './gallery.component';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { IPhoto, PhotoApiService } from '@shared/photo-context';
+import { AsyncPipe } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   template: '',
   selector: 'app-collage',
 })
-class CollageDumpComponent {}
+class CollageDumpComponent {
+  @Input() photos: IPhoto[] | undefined;
+}
 
 describe('GalleryComponent', () => {
   let component: GalleryComponent;
@@ -15,10 +19,18 @@ describe('GalleryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GalleryComponent, CollageDumpComponent],
+      imports: [GalleryComponent],
+      providers: [
+        {
+          provide: PhotoApiService,
+          useValue: {},
+        },
+      ],
     })
       .overrideComponent(GalleryComponent, {
-        set: { imports: [CollageDumpComponent] },
+        set: {
+          imports: [CollageDumpComponent, AsyncPipe, MatProgressSpinnerModule],
+        },
       })
       .compileComponents();
 

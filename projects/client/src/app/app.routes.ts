@@ -1,17 +1,9 @@
 import { Routes } from '@angular/router';
-import { AboutComponent, GalleryComponent } from './pages';
+import { AppComponent } from './components';
 
 export const routes: Routes = [
   {
-    path: 'about',
-    loadComponent: () => AboutComponent,
-  },
-  {
-    path: 'gallery',
-    loadComponent: () => GalleryComponent,
-  },
-  {
     path: '**',
-    loadComponent: () => GalleryComponent,
+    loadComponent: () => AppComponent,
   },
 ];
