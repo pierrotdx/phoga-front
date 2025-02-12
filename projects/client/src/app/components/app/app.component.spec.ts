@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -15,12 +14,29 @@ class FooterStubComponent {}
 })
 class HeaderStubComponent {}
 
+@Component({
+  selector: 'app-gallery',
+  template: '',
+})
+class GalleryStubComponent {}
+
+@Component({
+  selector: 'app-about',
+  template: '',
+})
+class AboutStubComponent {}
+
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({})
       .overrideComponent(AppComponent, {
         set: {
-          imports: [FooterStubComponent, HeaderStubComponent, RouterOutlet],
+          imports: [
+            AboutStubComponent,
+            FooterStubComponent,
+            GalleryStubComponent,
+            HeaderStubComponent,
+          ],
         },
       })
       .compileComponents();

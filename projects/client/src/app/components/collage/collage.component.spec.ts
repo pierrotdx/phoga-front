@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CollageComponent } from './collage.component';
-import { PhotoApiService } from '@shared/photo-context';
 
 describe('CollageComponent', () => {
   let component: CollageComponent;
@@ -10,12 +9,6 @@ describe('CollageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CollageComponent],
-      providers: [
-        {
-          provide: PhotoApiService,
-          useValue: {},
-        },
-      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CollageComponent);
