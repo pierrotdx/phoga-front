@@ -26,6 +26,7 @@ export class GalleryComponent implements OnInit {
 
   private size = 3;
   private from = 1;
+  private hasMoreToLoad = true;
 
   constructor(private readonly photoApiService: PhotoApiService) {}
 
@@ -35,7 +36,7 @@ export class GalleryComponent implements OnInit {
 
   async loadPhotos() {
     // one loading at a time
-    if (this.isLoading()) {
+    if (this.isLoading() || !this.hasMoreToLoad) {
       return;
     }
     this.isLoading.set(true);
@@ -53,6 +54,7 @@ export class GalleryComponent implements OnInit {
       return;
     }
     this.from += loadingResult.length;
+    this.hasMoreToLoad = loadingResult.length === this.size;
     const photos = this.photos$.getValue().concat(loadingResult);
     this.photos$.next(photos);
   }
