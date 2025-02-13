@@ -35,12 +35,26 @@ export class GalleryComponent implements OnInit {
   }
 
   async loadPhotos() {
-    // one loading at a time
-    if (this.isLoading() || !this.hasMoreToLoad) {
+    if (!this.isAllowedToLoadPhotos()) {
       return;
     }
+    const loadedPhotos = await this.fetchPhotos();
+    if (!loadedPhotos) {
+      return;
+    }
+    this.from += loadedPhotos.length;
+    this.hasMoreToLoad = loadedPhotos.length === this.size;
+    this.updatePhotos(loadedPhotos);
+  }
+
+  private isAllowedToLoadPhotos(): boolean {
+    // one loading at a time
+    return !this.isLoading() && this.hasMoreToLoad;
+  }
+
+  private async fetchPhotos() {
     this.isLoading.set(true);
-    const loadingResult = await firstValueFrom(
+    const result = await firstValueFrom(
       this.photoApiService.searchPhoto({
         rendering: {
           size: this.size,
@@ -49,13 +63,15 @@ export class GalleryComponent implements OnInit {
       })
     );
     this.isLoading.set(false);
-    if (loadingResult instanceof Error) {
-      console.error('error', loadingResult);
+    if (result instanceof Error) {
+      console.error('error', result);
       return;
     }
-    this.from += loadingResult.length;
-    this.hasMoreToLoad = loadingResult.length === this.size;
-    const photos = this.photos$.getValue().concat(loadingResult);
+    return result;
+  }
+
+  private updatePhotos(photosToAdd: IPhoto[]): void {
+    const photos = this.photos$.getValue().concat(photosToAdd);
     this.photos$.next(photos);
   }
 }
