@@ -1,5 +1,5 @@
 import { Component, Input, signal } from '@angular/core';
-import { IPhoto, PhotoApiService } from '@shared/photo-context';
+import { IPhoto } from '@shared/photo-context';
 import { PhotosStripComponent } from '../photos-strip/photos-strip.component';
 
 @Component({
