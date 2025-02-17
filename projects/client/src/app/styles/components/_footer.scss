@@ -7,15 +7,37 @@
 }
 
 .address {
-  display: flex;
-  justify-content: space-around;
-  gap: var.$spacing-01;
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  grid-template-rows: repeat(2, auto);
 
-  &__item {
-    display: block;
+  /* For tablets and above */
+  @media only screen and (min-width: 600px) {
+    grid-template-columns: repeat(3, auto);
+    grid-template-rows: repeat(1, auto);
+    justify-items: center;
+  }
+}
 
-    &:not(:last-child) {
-      margin-bottom: var.$spacing-01;
+.contact {
+  font-size: var.$fs-footer-contact;
+  padding: 0.5 * var.$spacing-01;
+
+  &__prefix {
+    font-weight: var.$fw-footer-contact-prefix;
+
+    &::after {
+      content: "\: ";
     }
   }
+}
+
+.social-media {
+  grid-column: 2;
+  grid-row: 1 / -1;
+  align-self: center;
+  justify-self: center;
+  display: flex;
+  gap: var.$spacing-01;
+  font-size: var.$fs-footer-contact-icon;
 }
