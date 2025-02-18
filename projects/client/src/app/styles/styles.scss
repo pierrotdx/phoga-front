@@ -1,7 +1,8 @@
 @use "reset";
 @use "variables" as var;
-@use "collage";
-@use "photoCard";
+@use "material";
+@use "components";
+@use "pages";
 
 * {
   box-sizing: border-box;
@@ -9,4 +10,24 @@
 
 html {
   font-family: var.$font-family;
+}
+
+lib-material-icon {
+  display: inline-block;
+  span {
+    vertical-align: middle;
+  }
+}
+
+.page-title {
+  color: var.$clr-text;
+  font-size: var.$fs-page-title;
+  font-weight: var.$fw-page-title;
+  text-align: center;
+  padding: var.$spacing-04;
+
+  /* For tablets and above */
+  @media only screen and (min-width: 600px) {
+    font-size: var.$fs-page-title-large;
+  }
 }

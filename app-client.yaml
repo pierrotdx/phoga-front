@@ -26,6 +26,19 @@ handlers:
     upload: dist/client/browser/.+\.html
     mime_type: text/html
 
+  # Serve image files from the root 'dist/client/browser/' directory
+  - url: /(.+)\.(jpg|jpeg|png)
+    static_files: dist/client/browser/\1.\2
+    upload: dist/client/browser/.+\.(jpg|jpeg|png|svg)
+    mime_type: image/\2
+
+  # Serve image files from the root 'dist/client/browser/' directory
+  - url: /(.+)\.svg
+    static_files: dist/client/browser/\1.svg
+    upload: dist/client/browser/.+\.svg
+    http_headers:
+      content-type: image/svg+xml
+
   # Catch-all rule to serve index.html for any path not matched above
   - url: /.*
     static_files: dist/client/browser/index.html

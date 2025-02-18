@@ -1,9 +1,16 @@
 import { Component } from '@angular/core';
-import { CollageComponent } from '../collage/collage.component';
+import { FooterComponent } from '../footer/footer.component';
+import { HeaderComponent } from '../header/header.component';
+import { AboutComponent, GalleryComponent } from '../../pages/';
 
 @Component({
   selector: 'app-root',
-  imports: [CollageComponent],
+  imports: [
+    AboutComponent,
+    FooterComponent,
+    HeaderComponent,
+    GalleryComponent,
+  ],
   templateUrl: './app.component.html',
 })
 export class AppComponent {}

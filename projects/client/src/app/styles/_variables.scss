@@ -8,12 +8,29 @@ $clr-primary: #eae9e9;
 $clr-secondary: #c7823a;
 $clr-text: #011c12;
 
-$clr-photo-metadata-background--light: rgba(255, 255, 255, 0.6);
-
 // Font sizes
+$fs-header-title: 16px;
+$fs-header-title-large: 24px;
+$fs-header-nav-item: 16px;
+$fs-header-nav-item-large: 24px;
+
+$fs-page-title: 32px;
+$fs-page-title-large: 64px;
+
+$fs-about-intro: 30px;
+
+$fs-footer-contact: 14px;
+$fs-footer-contact-icon: 24px;
+
 $fs-photo-metadata-title: 24px;
 $fs-photo-metadata-description: 16px;
 $fs-photo-metadata-additional: 14px;
+
+// Font weights
+$fw-page-title: 700;
+$fw-header-nav-active: 700;
+$fw-about-intro: 600;
+$fw-footer-contact-prefix: 600;
 
 // Spacings
 $spacing-01: 8px;

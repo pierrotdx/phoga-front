@@ -1,0 +1,22 @@
+@use "../variables" as var;
+
+.strip {
+  display: flex;
+  flex-direction: column;
+  gap: var.$spacing-01;
+  background-color: var.$clr-white;
+
+  &__item {
+    display: block;
+  }
+
+  /* For tablets and above */
+  @media only screen and (min-width: 600px) {
+    flex-direction: row;
+    gap: var.$spacing-01;
+
+    &__item {
+      flex: 1 1 auto;
+    }
+  }
+}

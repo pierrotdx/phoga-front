@@ -8,9 +8,8 @@ describe('CollageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CollageComponent]
-    })
-    .compileComponents();
+      imports: [CollageComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CollageComponent);
     component = fixture.componentInstance;

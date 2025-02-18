@@ -1,0 +1,12 @@
+@if(imageBuffer && show) {
+    <div class="photo-fullscreen">
+        <div class="photo-fullscreen__wrapper">
+            <img class="photo-fullscreen__image"
+                [src]="imageBuffer | bufferToImage$ | async"
+                alt="image not available"/>
+                <button class="photo-fullscreen__close" type="button" (click)="onClose()">
+                    <lib-material-icon [iconName]="'close'"></lib-material-icon>
+                </button>
+        </div>
+    </div>
+}
