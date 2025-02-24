@@ -1,6 +1,5 @@
 @use "reset";
-@use "variables" as var;
-@use "variables-new";
+@use "variables";
 @use "material";
 
 * {
@@ -8,7 +7,7 @@
 }
 
 html {
-  font-family: var.$font-family;
+  font-family: var(--font-family);
 }
 
 lib-material-icon {
@@ -19,14 +18,14 @@ lib-material-icon {
 }
 
 .page-title {
-  color: var.$clr-text;
-  font-size: var.$fs-page-title;
-  font-weight: var.$fw-page-title;
+  color: var(--clr-text);
+  font-size: 32px;
+  font-weight: 700;
   text-align: center;
-  padding: var.$spacing-04;
+  padding: var(--spacing-04);
 
   /* For tablets and above */
   @media only screen and (min-width: 600px) {
-    font-size: var.$fs-page-title-large;
+    font-size: 64px;
   }
 }

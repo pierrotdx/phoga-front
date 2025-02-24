@@ -1,23 +1,18 @@
-// Font families
-$font-family: "Quicksand", serif;
+:root {
+  --font-family: "Quicksand", serif;
 
-// Colors
-$clr-white: #ffffff;
-$clr-black: #000000;
-$clr-primary: #eae9e9;
-$clr-secondary: #c7823a;
-$clr-text: #011c12;
+  // Colors
+  --clr-white: #ffffff;
+  --clr-black: #000000;
+  --clr-primary: #eae9e9;
+  --clr-primary-rgb: 234, 233, 233;
+  --clr-secondary: #c7823a;
+  --clr-text: #011c12;
 
-// Font sizes
-$fs-page-title: 32px;
-$fs-page-title-large: 64px;
-
-// Font weights
-$fw-page-title: 700;
-
-// Spacings
-$spacing-01: 8px;
-$spacing-02: 16px;
-$spacing-03: 24px;
-$spacing-04: 32px;
-$spacing-05: 40px;
+  // Spacings
+  --spacing-01: 8px;
+  --spacing-02: 16px;
+  --spacing-03: 24px;
+  --spacing-04: 32px;
+  --spacing-05: 40px;
+}
