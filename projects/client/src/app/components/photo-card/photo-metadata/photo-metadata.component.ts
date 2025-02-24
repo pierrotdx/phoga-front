@@ -6,6 +6,7 @@ import { IPhoto } from '@shared/photo-context';
   selector: 'app-photo-metadata',
   imports: [MaterialIconComponent],
   templateUrl: './photo-metadata.component.html',
+  styleUrl: './photo-metadata.component.scss'
 })
 export class PhotoMetadataComponent {
   private _photoMetadata: IPhoto['metadata'] | undefined;

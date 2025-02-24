@@ -8,6 +8,7 @@ import { BufferToImagePipe } from '@shared/pipes';
   selector: 'app-photo-fullscreen',
   imports: [AsyncPipe, BufferToImagePipe, MaterialIconComponent],
   templateUrl: './photo-fullscreen.component.html',
+  styleUrl: './photo-fullscreen.component.scss',
 })
 export class PhotoFullscreenComponent {
   @Input() imageBuffer: Photo['imageBuffer'];

@@ -1,0 +1,52 @@
+.photo-card {
+  position: relative;
+  background-color: var(--clr-primary);
+  padding: var(--spacing-01);
+
+  /* For tablets and above */
+  @media only screen and (min-width: 600px) {
+    height: 500px;
+    background-color: unset;
+    padding: unset;
+  }
+
+  &__image {
+    width: 100%;
+    object-fit: cover;
+
+    /* For tablets and above */
+    @media only screen and (min-width: 600px) {
+      display: block;
+      height: 100%;
+    }
+  }
+
+  &__expand {
+    margin: var(--spacing-02);
+    position: absolute;
+    top: 0;
+    right: 0;
+    visibility: hidden;
+    border: none;
+
+    .photo-card:hover &,
+    .photo-card:active & {
+      visibility: visible;
+    }
+  }
+
+  &__metadata {
+    /* For tablets and above */
+    @media only screen and (min-width: 600px) {
+      background-color: rgba(var(--clr-primary-rgb), 0.6);
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      visibility: hidden;
+
+      .photo-card:hover & {
+        visibility: visible;
+      }
+    }
+  }
+}

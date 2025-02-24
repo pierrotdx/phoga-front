@@ -1,0 +1,42 @@
+.navigation {
+  flex: 1 1 auto;
+  display: flex;
+
+  ul {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  li {
+    list-style: none;
+    margin: 0 var(--spacing-02);
+    padding: var(--spacing-01);
+    font-size: 16px;
+
+    /* For tablets and above */
+    @media only screen and (min-width: 600px) {
+      font-size: 24px;
+    }
+
+    &:hover,
+    &:focus {
+      border-top: 2px solid var(--clr-secondary);
+      border-bottom: 2px solid var(--clr-secondary);
+      font-weight: 700;
+      font-size: 1.4em;
+
+      /* For tablets and above */
+      @media only screen and (min-width: 600px) {
+        font-size: 1.8em;
+      }
+    }
+
+    a {
+      color: var(--clr-text);
+      text-decoration: none;
+      font-size: inherit;
+    }
+  }
+}

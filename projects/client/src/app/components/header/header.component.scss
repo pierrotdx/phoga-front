@@ -1,0 +1,30 @@
+.header {
+  display: flex;
+  padding: var(--spacing-03);
+  background-color: var(--clr-primary);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+
+  &__logo {
+    width: 20%;
+    max-width: 115px;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    margin: 0 var(--spacing-02);
+    font-size: 16px;
+
+    /* For tablets and above */
+    @media only screen and (min-width: 600px) {
+      font-size: 24px;
+    }
+  }
+
+  &__nav {
+    flex: 1 1 auto;
+    display: flex;
+  }
+}

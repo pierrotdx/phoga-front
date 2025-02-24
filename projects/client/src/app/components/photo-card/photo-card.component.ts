@@ -16,6 +16,7 @@ import { MaterialIconComponent } from '@shared/material-icon';
     PhotoFullscreenComponent,
   ],
   templateUrl: './photo-card.component.html',
+  styleUrl: './photo-card.component.scss',
 })
 export class PhotoCardComponent {
   @Input() photo: IPhoto | undefined;

@@ -6,6 +6,7 @@ import { PhotoCardComponent } from '../photo-card/photo-card.component';
   selector: 'app-photos-strip',
   imports: [PhotoCardComponent],
   templateUrl: './photos-strip.component.html',
+  styleUrl: './photos-strip.component.scss',
 })
 export class PhotosStripComponent {
   @Input() photos: IPhoto[] | undefined;

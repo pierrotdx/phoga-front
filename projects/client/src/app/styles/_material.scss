@@ -1,5 +1,5 @@
 @use "@angular/material" as mat;
-@use "variables" as var;
+@use "variables";
 
 html {
   @include mat.theme(
@@ -19,6 +19,6 @@ mat-spinner {
   margin: auto;
 
   circle {
-    stroke: var.$clr-secondary;
+    stroke: var(--clr-secondary);
   }
 }

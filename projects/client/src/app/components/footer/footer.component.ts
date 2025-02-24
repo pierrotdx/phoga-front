@@ -9,6 +9,7 @@ import { faGithub, faInstagram } from '@fortawesome/free-brands-svg-icons';
   selector: 'app-footer',
   imports: [FontAwesomeModule],
   templateUrl: './footer.component.html',
+  styleUrl: './footer.component.scss',
 })
 export class FooterComponent {
   mainContact = signal<IContact | undefined>(undefined);

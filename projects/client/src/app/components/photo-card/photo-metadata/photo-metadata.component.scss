@@ -1,0 +1,43 @@
+.photo-metadata {
+  padding: var(--spacing-03);
+
+  &:empty {
+    display: none;
+  }
+
+  & * {
+    color: var(--clr-text);
+  }
+
+  &__title {
+    font-weight: 700;
+    font-size: 24px;
+
+    &:not(:last-child) {
+      margin-bottom: var(--spacing-03);
+    }
+  }
+
+  &__description {
+    font-size: 16px;
+
+    &:not(:last-child) {
+      margin-bottom: var(--spacing-04);
+    }
+  }
+
+  &__additional {
+    font-size: 14px;
+    display: flex;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: calc(0.5 * var(--spacing-01));
+
+      &:not(:last-child) {
+        margin-right: var(--spacing-02);
+      }
+    }
+  }
+}

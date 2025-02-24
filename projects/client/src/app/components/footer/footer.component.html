@@ -1,13 +1,13 @@
-<footer class="footer">
-    <address class="address">
+<footer>
+    <address>
         @if(mainContact(); as mainContact) {
-            <p class="address__item contact">
+            <p class="contact">
                 <span class="contact__prefix">Email</span>
                 <a href="mailto:{{ mainContact.email }}">
                     {{ mainContact.email }}
                 </a>
             </p>
-            <p class="address__item social-media">
+            <p class="social-media">
                 @if(mainContact.github; as github) {
                     <a href="{{ github }}"
                         target="_blank">
@@ -23,7 +23,7 @@
             </p>
         }
         @if(designContact(); as designContact) {
-            <p class="address__item contact">
+            <p class="contact">
                 <span class="contact__prefix">Design by</span>
                 <a href="{{ designContact.behance}}" target="_blank">
                     Prachi Karkun

@@ -6,6 +6,7 @@ import { PhotosStripComponent } from '../photos-strip/photos-strip.component';
   selector: 'app-collage',
   imports: [PhotosStripComponent],
   templateUrl: './collage.component.html',
+  styleUrl: './collage.component.scss',
 })
 export class CollageComponent {
   private _photos: IPhoto[] = [];
