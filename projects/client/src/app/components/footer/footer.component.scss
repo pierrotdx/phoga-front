@@ -1,12 +1,10 @@
-@use "../variables" as var;
-
-.footer {
-  background-color: var.$clr-primary;
-  margin-top: var.$spacing-01;
-  padding: var.$spacing-02;
+footer {
+  background-color: var(--clr-primary);
+  margin-top: var(--spacing-01);
+  padding: var(--spacing-02);
 }
 
-.address {
+address {
   display: grid;
   grid-template-columns: repeat(2, auto);
   grid-template-rows: repeat(2, auto);
@@ -20,11 +18,11 @@
 }
 
 .contact {
-  font-size: var.$fs-footer-contact;
-  padding: 0.5 * var.$spacing-01;
+  font-size: 14px;
+  padding: calc(0.5 * var(--spacing-01));
 
   &__prefix {
-    font-weight: var.$fw-footer-contact-prefix;
+    font-weight: 600;
 
     &::after {
       content: "\: ";
@@ -38,6 +36,6 @@
   align-self: center;
   justify-self: center;
   display: flex;
-  gap: var.$spacing-01;
-  font-size: var.$fs-footer-contact-icon;
+  gap: var(--spacing-01);
+  font-size: 24px;
 }
