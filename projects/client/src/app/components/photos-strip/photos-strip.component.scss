@@ -9,9 +9,13 @@
     flex-direction: row;
     gap: var(--spacing-01);
   }
-}
 
-.strip-item {
-  display: block;
-  flex: 1 1 auto;
+  &__item {
+    display: block;
+
+    /* For tablets and above */
+    @media only screen and (min-width: 600px) {
+      flex: 1 1 auto;
+    }
+  }
 }
