@@ -4,6 +4,7 @@
   height: 100dvh;
   z-index: 2;
   background-color: rgba($color: var(--clr-black), $alpha: 0.8);
+  backdrop-filter: brightness(20%);
   top: 0;
   left: 0;
   display: flex;
