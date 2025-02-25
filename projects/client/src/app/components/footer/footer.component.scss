@@ -18,7 +18,7 @@ address {
 }
 
 .contact {
-  font-size: 14px;
+  font-size: 0.9em;
   padding: calc(0.5 * var(--spacing-01));
 
   &__prefix {
@@ -37,5 +37,5 @@ address {
   justify-self: center;
   display: flex;
   gap: var(--spacing-01);
-  font-size: 24px;
+  font-size: 1.5em;
 }
