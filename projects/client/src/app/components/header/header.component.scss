@@ -5,22 +5,22 @@
   position: sticky;
   top: 0;
   z-index: 2;
+  gap: 0.5em;
+
+  /* For tablets and above */
+  @media only screen and (min-width: 600px) {
+    font-size: 1.5em;
+  }
 
   &__logo {
-    width: 20%;
-    max-width: 115px;
+    width: 4.5em;
+    flex: 0 0 auto;
   }
 
   &__title {
     display: flex;
     align-items: center;
-    margin: 0 var(--spacing-02);
-    font-size: 16px;
-
-    /* For tablets and above */
-    @media only screen and (min-width: 600px) {
-      font-size: 24px;
-    }
+    flex: 0 0 auto;
   }
 
   &__nav {

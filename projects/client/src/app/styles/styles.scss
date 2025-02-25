@@ -6,8 +6,15 @@
   box-sizing: border-box;
 }
 
-html {
+body {
   font-family: var(--font-family);
+  font-size: 16px;
+  line-height: 1.5;
+
+  /* For tablets and above */
+  @media only screen and (min-width: 600px) {
+    font-size: 1.15em;
+  }
 }
 
 lib-material-icon {
@@ -19,13 +26,13 @@ lib-material-icon {
 
 .page-title {
   color: var(--clr-text);
-  font-size: 32px;
+  font-size: 2em;
   font-weight: 700;
   text-align: center;
-  padding: var(--spacing-04);
+  padding: var(--spacing-01);
 
   /* For tablets and above */
   @media only screen and (min-width: 600px) {
-    font-size: 64px;
+    font-size: 4em;
   }
 }
