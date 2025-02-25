@@ -5,6 +5,7 @@
   position: sticky;
   top: 0;
   z-index: 2;
+  gap: 0.5em;
 
   /* For tablets and above */
   @media only screen and (min-width: 600px) {
@@ -19,7 +20,6 @@
   &__title {
     display: flex;
     align-items: center;
-    margin: 0 var(--spacing-02);
     flex: 0 0 auto;
   }
 

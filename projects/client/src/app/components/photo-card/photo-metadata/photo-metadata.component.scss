@@ -14,13 +14,13 @@
     font-size: 1.5em;
 
     &:not(:last-child) {
-      margin-bottom: var(--spacing-03);
+      margin-bottom: var(--spacing-01);
     }
   }
 
   &__description {
     &:not(:last-child) {
-      margin-bottom: var(--spacing-04);
+      margin-bottom: var(--spacing-02);
     }
   }
 
