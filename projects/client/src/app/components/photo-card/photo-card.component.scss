@@ -4,7 +4,7 @@
   padding: var(--spacing-01);
 
   /* For tablets and above */
-  @media only screen and (min-width: 600px) {
+  @media only screen and (width > 600px) {
     height: 500px;
     background-color: unset;
     padding: unset;
@@ -15,7 +15,7 @@
     object-fit: cover;
 
     /* For tablets and above */
-    @media only screen and (min-width: 600px) {
+    @media only screen and (width > 600px) {
       display: block;
       height: 100%;
     }
@@ -37,7 +37,7 @@
 
   &__metadata {
     /* For tablets and above */
-    @media only screen and (min-width: 600px) {
+    @media only screen and (width > 600px) {
       background-color: rgba(var(--clr-primary-rgb), 0.6);
       position: absolute;
       bottom: 0;

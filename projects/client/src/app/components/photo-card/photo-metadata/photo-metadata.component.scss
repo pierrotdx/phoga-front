@@ -19,6 +19,10 @@
   }
 
   &__description {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
     &:not(:last-child) {
       margin-bottom: var(--spacing-02);
     }
@@ -27,15 +31,13 @@
   &__additional {
     font-size: 0.85em;
     display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-01);
 
     li {
       display: flex;
       align-items: center;
       gap: calc(0.5 * var(--spacing-01));
-
-      &:not(:last-child) {
-        margin-right: var(--spacing-02);
-      }
     }
   }
 }

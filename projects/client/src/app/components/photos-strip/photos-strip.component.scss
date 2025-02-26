@@ -5,16 +5,15 @@
   background-color: var(--clr-white);
 
   /* For tablets and above */
-  @media only screen and (min-width: 600px) {
+  @media only screen and (width > 600px) {
     flex-direction: row;
-    gap: var(--spacing-01);
   }
 
   &__item {
     display: block;
 
     /* For tablets and above */
-    @media only screen and (min-width: 600px) {
+    @media only screen and (width > 600px) {
       flex: 1 1 auto;
     }
   }
