@@ -3,7 +3,7 @@
 .layout {
   &__header {
     /* For tablets and above */
-    @media only screen and (min-width: 600px) {
+    @media only screen and (width > 600px) {
       display: none;
     }
   }
@@ -22,7 +22,7 @@
     display: none;
 
     /* For tablets and above */
-    @media only screen and (min-width: 600px) {
+    @media only screen and (width > 600px) {
       display: initial;
     }
   }
@@ -34,7 +34,7 @@
   }
 
   /* For tablets and above */
-  @media only screen and (min-width: 600px) {
+  @media only screen and (width > 600px) {
     display: initial;
   }
 }

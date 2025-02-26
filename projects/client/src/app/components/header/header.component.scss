@@ -7,7 +7,7 @@
   z-index: 2;
 
   /* For tablets and above */
-  @media only screen and (min-width: 600px) {
+  @media only screen and (width > 600px) {
     padding: var(--spacing-02) 3.5em;
   }
 

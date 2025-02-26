@@ -5,7 +5,7 @@
   background-color: var(--clr-white);
 
   /* For tablets and above */
-  @media only screen and (min-width: 600px) {
+  @media only screen and (width > 600px) {
     flex-direction: row;
   }
 
@@ -13,7 +13,7 @@
     display: block;
 
     /* For tablets and above */
-    @media only screen and (min-width: 600px) {
+    @media only screen and (width > 600px) {
       flex: 1 1 auto;
     }
   }
