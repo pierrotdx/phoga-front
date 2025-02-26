@@ -7,7 +7,6 @@
   /* For tablets and above */
   @media only screen and (min-width: 600px) {
     flex-direction: row;
-    gap: var(--spacing-01);
   }
 
   &__item {
