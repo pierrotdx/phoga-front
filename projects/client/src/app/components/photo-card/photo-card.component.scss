@@ -8,36 +8,13 @@
     height: 500px;
     background-color: unset;
     padding: unset;
-  }
 
-  &__image {
-    width: 100%;
-    object-fit: cover;
-
-    /* For tablets and above */
-    @media only screen and (width > 600px) {
+    &__image {
       display: block;
       height: 100%;
     }
-  }
 
-  &__expand {
-    margin: var(--spacing-02);
-    position: absolute;
-    top: 0;
-    right: 0;
-    visibility: hidden;
-    border: none;
-
-    .photo-card:hover &,
-    .photo-card:active & {
-      visibility: visible;
-    }
-  }
-
-  &__metadata {
-    /* For tablets and above */
-    @media only screen and (width > 600px) {
+    &__metadata {
       background-color: rgba(var(--clr-primary-rgb), 0.6);
       position: absolute;
       bottom: 0;

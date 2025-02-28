@@ -1,29 +1,14 @@
-import { AsyncPipe } from '@angular/common';
-import { Component, Input, signal } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { IPhoto } from '@shared/photo-context';
-import { BufferToImagePipe } from '@shared/pipes';
 import { PhotoMetadataComponent } from '../photo-metadata/photo-metadata.component';
-import { PhotoFullscreenComponent } from '../photo-fullscreen/photo-fullscreen.component';
-import { MaterialIconComponent } from '@shared/material-icon';
+import { PhotoImageComponent } from '../photo-image/photo-image.component';
 
 @Component({
   selector: 'app-photo-card',
-  imports: [
-    BufferToImagePipe,
-    AsyncPipe,
-    PhotoMetadataComponent,
-    MaterialIconComponent,
-    PhotoFullscreenComponent,
-  ],
+  imports: [PhotoMetadataComponent, PhotoImageComponent],
   templateUrl: './photo-card.component.html',
   styleUrl: './photo-card.component.scss',
 })
 export class PhotoCardComponent {
   @Input() photo: IPhoto | undefined;
-  readonly isFullscreen = signal<boolean>(false);
-
-  toggleFullscreen() {
-    const isFullscreen = this.isFullscreen();
-    this.isFullscreen.set(!isFullscreen);
-}
 }

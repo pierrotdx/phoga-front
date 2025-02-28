@@ -1,0 +1,29 @@
+.photo-image {
+  &__image {
+    width: 100%;
+    object-fit: cover;
+  }
+
+  &__expand {
+    margin: var(--spacing-02);
+    position: absolute;
+    top: 0;
+    right: 0;
+    visibility: hidden;
+    border: none;
+
+    :host:hover &,
+    :host:active & {
+      visibility: visible;
+    }
+  }
+
+  /* For tablets and above */
+  @media only screen and (width > 600px) {
+    height: 100%;
+
+    &__image {
+      height: 100%;
+    }
+  }
+}
