@@ -1,12 +1,16 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, Inject, Input, signal } from '@angular/core';
 import { MaterialIconComponent } from '@shared/material-icon/material-icon.component';
-import { IPhoto } from '@shared/photo-context';
+import {
+  IPhoto,
+  IPhotoUtilsService,
+  PHOTO_UTILS_SERVICE_TOKEN,
+} from '@shared/photo-context';
 
 @Component({
   selector: 'app-photo-metadata',
   imports: [MaterialIconComponent],
   templateUrl: './photo-metadata.component.html',
-  styleUrl: './photo-metadata.component.scss'
+  styleUrl: './photo-metadata.component.scss',
 })
 export class PhotoMetadataComponent {
   private _photoMetadata: IPhoto['metadata'] | undefined;
@@ -27,14 +31,14 @@ export class PhotoMetadataComponent {
   location = signal<string | undefined>(undefined);
   date = signal<string | undefined>(undefined);
 
+  constructor(
+    @Inject(PHOTO_UTILS_SERVICE_TOKEN)
+    private readonly photoUtilsService: IPhotoUtilsService
+  ) {}
+
   private updateTitle(): void {
-    const titles = this.photoMetadata?.titles || [];
-    if (titles.length > 0) {
-      const mainTitle = titles[0];
-      this.title.set(mainTitle);
-    } else {
-      this.title.set(undefined);
-    }
+    const title = this.photoUtilsService.getTitle(this.photoMetadata);
+    this.title.set(title);
   }
 
   private updateDescription(): void {
