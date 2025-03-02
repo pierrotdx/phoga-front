@@ -29,13 +29,13 @@ export class PhotoImageComponent {
   get photo() {
     return this._photo;
   }
+  showFullscreen = signal<boolean>(false);
 
   constructor(
     @Inject(PHOTO_UTILS_SERVICE_TOKEN)
     private readonly photoUtilsService: IPhotoUtilsService
   ) {}
 
-  readonly isFullscreen = signal<boolean>(false);
   readonly imageAlt = signal<string | undefined>(undefined);
 
   private setImageAlt(): void {
@@ -44,8 +44,7 @@ export class PhotoImageComponent {
     this.imageAlt.set(alt);
   }
 
-  toggleFullscreen() {
-    const isFullscreen = this.isFullscreen();
-    this.isFullscreen.set(!isFullscreen);
+  expandImage() {
+    this.showFullscreen.set(true);
   }
 }

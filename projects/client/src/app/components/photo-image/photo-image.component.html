@@ -7,14 +7,13 @@
             [alt]="imageAlt()">
         <button
             type="button"
-            (click)="toggleFullscreen()"
+            (click)="expandImage()"
             class="photo-image__expand">
             <lib-material-icon [iconName]="'fullscreen'"></lib-material-icon>
         </button>
         <app-photo-fullscreen
-            [show]="isFullscreen()"
-            [imageBuffer]="imageBuffer"
-            (closed)="toggleFullscreen()">
+            [(show)]="showFullscreen"
+            [imageBuffer]="imageBuffer">
         </app-photo-fullscreen>
     </div>
 }
