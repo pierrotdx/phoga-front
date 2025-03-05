@@ -1,22 +1,15 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, Inject, Input, signal } from '@angular/core';
-import { MaterialIconComponent } from '@shared/material-icon';
 import {
   IPhoto,
   IPhotoUtilsService,
   PHOTO_UTILS_SERVICE_TOKEN,
 } from '@shared/photo-context';
 import { BufferToImagePipe } from '@shared/pipes';
-import { PhotoFullscreenComponent } from '../photo-fullscreen/photo-fullscreen.component';
 
 @Component({
   selector: 'app-photo-image',
-  imports: [
-    AsyncPipe,
-    BufferToImagePipe,
-    MaterialIconComponent,
-    PhotoFullscreenComponent,
-  ],
+  imports: [AsyncPipe, BufferToImagePipe],
   templateUrl: './photo-image.component.html',
   styleUrl: './photo-image.component.scss',
 })
@@ -42,9 +35,5 @@ export class PhotoImageComponent {
     const title = this.photoUtilsService.getTitle(this.photo?.metadata);
     const alt = title || "photo's image";
     this.imageAlt.set(alt);
-  }
-
-  expandImage() {
-    this.showFullscreen.set(true);
   }
 }

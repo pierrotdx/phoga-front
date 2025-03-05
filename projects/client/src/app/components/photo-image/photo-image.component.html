@@ -1,19 +1,7 @@
 
 @if (photo?.imageBuffer; as imageBuffer) {
-    <div class="photo-image">
-        <img
-            class="photo-image__image"
-            [src]="imageBuffer | bufferToImage$ | async"
-            [alt]="imageAlt()">
-        <button
-            type="button"
-            (click)="expandImage()"
-            class="photo-image__expand">
-            <lib-material-icon [iconName]="'fullscreen'"></lib-material-icon>
-        </button>
-        <app-photo-fullscreen
-            [(show)]="showFullscreen"
-            [imageBuffer]="imageBuffer">
-        </app-photo-fullscreen>
-    </div>
+    <img
+        class="photo-image__image"
+        [src]="imageBuffer | bufferToImage$ | async"
+        [alt]="imageAlt()">
 }

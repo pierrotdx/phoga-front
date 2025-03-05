@@ -1,10 +1,10 @@
-.photo-metadata {
-  padding: var(--spacing-03);
-
+:host {
   &:empty {
     display: none;
   }
+}
 
+.photo-metadata {
   & * {
     color: var(--clr-text);
   }

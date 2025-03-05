@@ -15,6 +15,11 @@ body {
   @media only screen and (width > 600px) {
     font-size: 1.15em;
   }
+
+  &:has(.disable-body-scrolling) {
+    overflow: hidden;
+    height: 100%;
+  }
 }
 
 lib-material-icon {

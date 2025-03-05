@@ -1,14 +1,6 @@
 @if(show()) {
-    <div class="overlay">
-        <div class="overlay__content">
-            <ng-content/>
-            <button 
-                class="overlay__close"
-                type="button"
-                (click)="onClose()">
-                <lib-material-icon [iconName]="'close'"></lib-material-icon>
-          </button>
-        </div>
+    <div class="overlay" [class.disable-body-scrolling]="show()">
+        <ng-content/>
     </div>
 }
 

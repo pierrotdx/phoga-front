@@ -1,10 +1,11 @@
 import { Component, Inject, Input, signal } from '@angular/core';
-import { MaterialIconComponent } from '@shared/material-icon/material-icon.component';
+import { MaterialIconComponent } from '@shared/material-icon-component/material-icon.component';
 import {
   IPhoto,
   IPhotoUtilsService,
   PHOTO_UTILS_SERVICE_TOKEN,
 } from '@shared/photo-context';
+import { isEmpty, omit } from 'ramda';
 
 @Component({
   selector: 'app-photo-metadata',
@@ -16,7 +17,10 @@ export class PhotoMetadataComponent {
   private _photoMetadata: IPhoto['metadata'] | undefined;
 
   @Input() set photoMetadata(value: IPhoto['metadata'] | undefined) {
-    this._photoMetadata = value;
+    const metadataToDisplay = value ? omit(['thumbnail'], value) : undefined;
+    this._photoMetadata = isEmpty(metadataToDisplay)
+      ? undefined
+      : metadataToDisplay;
     this.updateTitle();
     this.updateDescription();
     this.updateLocation();

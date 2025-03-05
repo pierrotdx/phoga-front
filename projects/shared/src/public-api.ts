@@ -5,6 +5,6 @@
 export * from './comp.test-utils';
 export * from './contact-context';
 export * from './environment-context';
-export * from './material-icon';
+export * from './material-icon-component';
 export * from './photo-context';
 export * from './pipes';

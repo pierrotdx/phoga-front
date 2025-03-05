@@ -1,6 +1,16 @@
 @if(photo) {
     <article class="photo-card">
-        <app-photo-image [photo]="photo" class="photo-card__image"></app-photo-image>
+        <div class="photo-card__image-container">
+            <app-photo-image [photo]="photo"
+                            class="photo-card__image">
+            </app-photo-image>
+            <button
+                type="button"
+                (click)="seeDetails()"
+                class="photo-card__image-btn">
+                <lib-material-icon>expand_content</lib-material-icon>
+            </button>
+        </div>
         <app-photo-metadata [photoMetadata]="photo.metadata"
                             class="photo-card__metadata">
         </app-photo-metadata>

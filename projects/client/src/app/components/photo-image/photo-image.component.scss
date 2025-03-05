@@ -1,27 +1,24 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .photo-image {
   &__image {
     width: 100%;
-    object-fit: cover;
+    object-fit: var(--photo-image-object-fit, contain);
   }
+}
 
-  &__expand {
-    margin: var(--spacing-02);
-    position: absolute;
-    top: 0;
-    right: 0;
-    visibility: hidden;
-    border: none;
-
-    :host:hover &,
-    :host:active & {
-      visibility: visible;
-    }
-  }
-
-  /* For tablets and above */
-  @media only screen and (width > 600px) {
+/* For tablets and above */
+@media only screen and (width > 600px) {
+  :host {
     height: 100%;
+    backdrop-filter: brightness(20%);
+  }
 
+  .photo-image {
     &__image {
       height: 100%;
     }

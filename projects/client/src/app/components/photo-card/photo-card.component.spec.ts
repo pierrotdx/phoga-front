@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PhotoCardComponent } from './photo-card.component';
 import { AsyncPipe } from '@angular/common';
-import { MaterialIconComponent } from '@shared/material-icon';
+import { MaterialIconComponent } from '@shared/material-icon-component';
 import { BufferToImagePipe } from '@shared/pipes';
 import { PhotoFullscreenComponent } from '../photo-fullscreen/photo-fullscreen.component';
 import { PhotoMetadataComponent } from '../photo-metadata/photo-metadata.component';
