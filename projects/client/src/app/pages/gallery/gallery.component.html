@@ -2,6 +2,14 @@
     <h2 class="page-title">Gallery</h2>
     @if(photos$ | async; as photos) {
         <app-collage [photos]="photos"></app-collage>
+        @if(selectedPhoto()) {
+            <app-overlay [(show)]="showDetailedView">
+                <app-detailed-view [photos]="photos"
+                                   [(photo)]="selectedPhoto"
+                                   (close)="closeDetailedView()">
+                </app-detailed-view>
+            </app-overlay>
+        }
     }
     @if(isLoading()) {
         <mat-spinner></mat-spinner>

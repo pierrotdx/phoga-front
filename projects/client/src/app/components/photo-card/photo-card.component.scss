@@ -1,5 +1,4 @@
 .photo-card {
-  position: relative;
   background-color: var(--clr-primary);
   padding: var(--spacing-01);
   display: flex;
@@ -7,6 +6,7 @@
 
   &__image-container {
     flex: 1 1 auto;
+    position: relative;
 
     app-photo-image {
       --photo-image-object-fit: cover;
@@ -27,8 +27,8 @@
     position: absolute;
     top: 0;
     right: 0;
-    margin: var(--spacing-02);
-    padding: 0.6rem;
+    margin: 0.5rem;
+    padding: 0.5rem;
     color: var(--clr-white);
     background-color: var(--clr-black);
     border: none;
@@ -49,6 +49,7 @@
     height: 500px;
     background-color: unset;
     padding: unset;
+    position: relative;
 
     &__image-container {
       max-height: 100%;

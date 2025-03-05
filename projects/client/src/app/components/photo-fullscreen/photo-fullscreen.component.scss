@@ -1,5 +1,6 @@
 .photo-fullscreen {
   display: flex;
+  position: relative;
   align-items: center;
   justify-content: center;
 
@@ -7,5 +8,26 @@
     object-fit: contain;
     max-width: 100vw;
     max-height: 100vh;
+  }
+
+  &__close-btn {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0.5rem;
+    padding: 0.5rem;
+    color: var(--clr-white);
+    background-color: var(--clr-black);
+    border: none;
+    border-radius: 0.5rem;
+
+    lib-material-icon {
+      --material-icon-fs: 1.2rem;
+    }
+
+    .photo-fullscreen:hover & {
+      display: revert;
+    }
   }
 }

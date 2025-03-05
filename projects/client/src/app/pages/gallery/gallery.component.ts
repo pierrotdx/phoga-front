@@ -1,13 +1,20 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, signal } from '@angular/core';
 import {
   MatProgressSpinner,
   MatProgressSpinnerModule,
 } from '@angular/material/progress-spinner';
 import { CollageComponent } from '@client/app/components';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
-import { IPhoto, PhotoApiService } from '@shared/photo-context';
+import { BehaviorSubject, firstValueFrom, Subscription } from 'rxjs';
+import {
+  IPhoto,
+  IPhotoSelector,
+  PHOTO_SELECTOR_SERVICE_TOKEN,
+  PhotoApiService,
+} from '@shared/photo-context';
+import { DetailedViewComponent } from '@client/app/components/detailed-view/detailed-view.component';
+import { OverlayComponent } from '../../components/overlay/overlay.component';
 
 @Component({
   selector: 'app-gallery',
@@ -17,21 +24,35 @@ import { IPhoto, PhotoApiService } from '@shared/photo-context';
     InfiniteScrollDirective,
     MatProgressSpinnerModule,
     MatProgressSpinner,
+    DetailedViewComponent,
+    OverlayComponent,
   ],
   templateUrl: './gallery.component.html',
 })
-export class GalleryComponent implements OnInit {
-  photos$ = new BehaviorSubject<IPhoto[]>([]);
-  isLoading = signal<boolean>(false);
+export class GalleryComponent implements OnInit, OnDestroy {
+  readonly photos$ = new BehaviorSubject<IPhoto[]>([]);
+  readonly isLoading = signal<boolean>(false);
+  readonly selectedPhoto = signal<IPhoto | undefined>(undefined);
+  readonly showDetailedView = signal<boolean>(false);
 
-  private size = 3;
+  private size = 6;
   private from = 1;
   private hasMoreToLoad = true;
+  private readonly subs: Subscription[] = [];
 
-  constructor(private readonly photoApiService: PhotoApiService) {}
+  constructor(
+    private readonly photoApiService: PhotoApiService,
+    @Inject(PHOTO_SELECTOR_SERVICE_TOKEN)
+    private readonly photoSelectorService: IPhotoSelector
+  ) {}
 
   ngOnInit() {
     void this.loadPhotos();
+    this.subToSelectedPhoto();
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach((sub) => sub.unsubscribe());
   }
 
   async loadPhotos() {
@@ -73,5 +94,27 @@ export class GalleryComponent implements OnInit {
   private updatePhotos(photosToAdd: IPhoto[]): void {
     const photos = this.photos$.getValue().concat(photosToAdd);
     this.photos$.next(photos);
+  }
+
+  private subToSelectedPhoto(): void {
+    const selectedPhotoSub = this.photoSelectorService.selectedPhoto.subscribe(
+      (photo) => this.onSelectedPhotoChange(photo)
+    );
+    this.subs.push(selectedPhotoSub);
+  }
+
+  private onSelectedPhotoChange(photo: IPhoto | undefined) {
+    this.selectedPhoto.set(photo);
+    this.showDetailedView.set(!!photo);
+    console.log('new selected photo', this.selectedPhoto());
+  }
+
+  closeDetailedView(): void {
+    this.showDetailedView.set(false);
+    this.resetSelectedPhoto();
+  }
+
+  resetSelectedPhoto(): void {
+    this.photoSelectorService.selectedPhoto.next(undefined);
   }
 }

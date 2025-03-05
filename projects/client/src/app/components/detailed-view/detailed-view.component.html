@@ -1,0 +1,41 @@
+<article class="detailed-view">
+    <div class="detailed-view__image-container">
+        <app-photo-image
+            [photo]="photo()"
+            class="detailed-view__image"
+        >
+        </app-photo-image>
+        <button
+            class="detailed-view__fullscreen-btn"
+            type="button"
+            (click)="goFullscreen()"
+        >
+            <lib-material-icon>fullscreen</lib-material-icon>
+        </button>
+    </div>
+    <div class="detailed-view__sidebar">
+        <app-photo-metadata
+            class="detailed-view__metadata"
+            [photoMetadata]="photo()?.metadata"
+        >
+        </app-photo-metadata>
+        <app-photo-selection
+            class="detailed-view__selection"
+            [photos]="photos()"
+            [(selectedPhoto)]="photo"
+        >
+        </app-photo-selection>
+    </div>
+    <button
+        class="detailed-view__close-btn"
+        type="button"
+        (click)="closeDetailedView()"
+    >
+        <lib-material-icon>close</lib-material-icon>
+    </button>
+</article>
+<app-photo-fullscreen
+    [(show)]="showFullscreen"
+    [imageBuffer]="photo()?.imageBuffer"
+>
+</app-photo-fullscreen>

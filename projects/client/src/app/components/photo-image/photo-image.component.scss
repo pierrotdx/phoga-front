@@ -2,6 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  backdrop-filter: brightness(20%);
 }
 
 .photo-image {
@@ -15,7 +16,6 @@
 @media only screen and (width > 600px) {
   :host {
     height: 100%;
-    backdrop-filter: brightness(20%);
   }
 
   .photo-image {

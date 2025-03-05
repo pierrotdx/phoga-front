@@ -2,8 +2,13 @@
     <app-overlay [(show)]="show">
         <div class="photo-fullscreen">
             <img class="photo-fullscreen__image"
-                [src]="imageBuffer | bufferToImage$ | async"
-                alt="image not available"/>
+                 [src]="imageBuffer | bufferToImage$ | async"
+                 alt="image not available"/>
+                <button class="photo-fullscreen__close-btn"
+                        type="button"
+                        (click)="close()">
+                    <lib-material-icon>close</lib-material-icon>
+                </button>
         </div>
     </app-overlay>
 }
