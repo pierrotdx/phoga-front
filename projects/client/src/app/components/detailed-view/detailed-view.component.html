@@ -5,13 +5,12 @@
             class="detailed-view__image"
         >
         </app-photo-image>
-        <button
+        <app-overlay-mat-icon-btn
             class="detailed-view__fullscreen-btn"
-            type="button"
             (click)="goFullscreen()"
         >
-            <lib-material-icon>fullscreen</lib-material-icon>
-        </button>
+            fullscreen
+        </app-overlay-mat-icon-btn>
     </div>
     <div class="detailed-view__sidebar">
         <app-photo-metadata

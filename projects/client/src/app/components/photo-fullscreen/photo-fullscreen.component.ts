@@ -3,7 +3,7 @@ import { Component, Input, model } from '@angular/core';
 import { Photo } from '@shared/photo-context';
 import { BufferToImagePipe } from '@shared/pipes';
 import { OverlayPanelComponent } from '../overlay-panel/overlay-panel.component';
-import { MaterialIconComponent } from '../../../../../shared/src/material-icon-component/material-icon.component';
+import { OverlayMatIconBtnComponent } from '../overlay-mat-icon-btn/overlay-mat-icon-btn.component';
 
 @Component({
   selector: 'app-photo-fullscreen',
@@ -11,7 +11,7 @@ import { MaterialIconComponent } from '../../../../../shared/src/material-icon-c
     AsyncPipe,
     BufferToImagePipe,
     OverlayPanelComponent,
-    MaterialIconComponent,
+    OverlayMatIconBtnComponent
   ],
   templateUrl: './photo-fullscreen.component.html',
   styleUrl: './photo-fullscreen.component.scss',

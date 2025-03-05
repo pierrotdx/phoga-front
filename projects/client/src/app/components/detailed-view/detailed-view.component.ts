@@ -12,6 +12,7 @@ import { PhotoMetadataComponent } from '../photo-metadata/photo-metadata.compone
 import { PhotoImageComponent } from '../photo-image/photo-image.component';
 import { PhotoFullscreenComponent } from '../photo-fullscreen/photo-fullscreen.component';
 import { MaterialIconComponent } from '@shared/material-icon-component';
+import { OverlayMatIconBtnComponent } from '../overlay-mat-icon-btn/overlay-mat-icon-btn.component';
 
 @Component({
   selector: 'app-detailed-view',
@@ -21,6 +22,7 @@ import { MaterialIconComponent } from '@shared/material-icon-component';
     PhotoImageComponent,
     PhotoFullscreenComponent,
     MaterialIconComponent,
+    OverlayMatIconBtnComponent,
   ],
   templateUrl: './detailed-view.component.html',
   styleUrl: './detailed-view.component.scss',

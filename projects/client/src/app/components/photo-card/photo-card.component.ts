@@ -6,11 +6,15 @@ import {
 } from '@shared/photo-context';
 import { PhotoMetadataComponent } from '../photo-metadata/photo-metadata.component';
 import { PhotoImageComponent } from '../photo-image/photo-image.component';
-import { MaterialIconComponent } from '@shared/material-icon-component';
+import { OverlayMatIconBtnComponent } from '../overlay-mat-icon-btn/overlay-mat-icon-btn.component';
 
 @Component({
   selector: 'app-photo-card',
-  imports: [PhotoMetadataComponent, PhotoImageComponent, MaterialIconComponent],
+  imports: [
+    PhotoMetadataComponent,
+    PhotoImageComponent,
+    OverlayMatIconBtnComponent,
+  ],
   templateUrl: './photo-card.component.html',
   styleUrl: './photo-card.component.scss',
 })

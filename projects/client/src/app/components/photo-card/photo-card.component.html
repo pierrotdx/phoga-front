@@ -4,12 +4,10 @@
             <app-photo-image [photo]="photo"
                             class="photo-card__image">
             </app-photo-image>
-            <button
-                type="button"
-                (click)="seeDetails()"
-                class="photo-card__image-btn">
-                <lib-material-icon>expand_content</lib-material-icon>
-            </button>
+            <app-overlay-mat-icon-btn class="photo-card__image-btn"
+                                      (click)="seeDetails()">
+                expand_content
+            </app-overlay-mat-icon-btn>
         </div>
         <app-photo-metadata [photoMetadata]="photo.metadata"
                             class="photo-card__metadata">
