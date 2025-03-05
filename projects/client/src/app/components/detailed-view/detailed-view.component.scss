@@ -48,7 +48,7 @@
     margin: var(--spacing-01);
 
     lib-material-icon {
-      --material-icon-fs: 1rem;
+      --material-icon-fs: 1.2rem;
     }
   }
 }
@@ -68,6 +68,12 @@
       flex: 0 0 25%;
       overflow: auto;
       padding: 0 var(--spacing-02);
+    }
+
+    &__close-btn {
+      lib-material-icon {
+        --material-icon-fs: 1.5rem;
+      }
     }
   }
 }
