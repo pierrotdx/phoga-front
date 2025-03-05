@@ -1,0 +1,24 @@
+.photo-selection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 5rem);
+  grid-gap: var(--spacing-01);
+}
+
+.photo-option {
+  border: none;
+  background: unset;
+  display: flex;
+  padding: 0;
+
+  img {
+    object-fit: cover;
+    width: 5rem;
+    height: 5rem;
+  }
+
+  &--selected {
+    & img {
+      border: var(--spacing-01) solid var(--clr-secondary);
+    }
+  }
+}

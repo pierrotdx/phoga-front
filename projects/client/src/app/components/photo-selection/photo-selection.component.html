@@ -1,0 +1,14 @@
+@if(photos) {
+    <div class="photo-selection">
+        @for (photo of photos; track photo._id;) {
+            @if(photo.imageBuffer; as imageBuffer) {
+                <button class="photo-option"
+                        [class.photo-option--selected]="photo._id === selectedPhoto()?._id"
+                         (click)="togglePhotoSelection(photo._id)">
+                    <img [src]="imageBuffer | bufferToImage$ | async"
+                         alt="{{ photo.metadata?.titles?.[0] || 'photo' }}"/>
+                </button>
+            }
+        }
+    </div>
+}
