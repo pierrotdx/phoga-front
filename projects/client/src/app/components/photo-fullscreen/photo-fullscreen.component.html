@@ -1,5 +1,5 @@
 @if(imageBuffer) {
-    <app-overlay [(show)]="show">
+    <app-overlay-panel [(show)]="show">
         <div class="photo-fullscreen">
             <img class="photo-fullscreen__image"
                  [src]="imageBuffer | bufferToImage$ | async"
@@ -10,5 +10,5 @@
                     <lib-material-icon>close</lib-material-icon>
                 </button>
         </div>
-    </app-overlay>
+    </app-overlay-panel>
 }

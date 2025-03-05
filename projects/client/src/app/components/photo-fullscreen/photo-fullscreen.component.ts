@@ -2,7 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { Component, Input, model } from '@angular/core';
 import { Photo } from '@shared/photo-context';
 import { BufferToImagePipe } from '@shared/pipes';
-import { OverlayComponent } from '../overlay/overlay.component';
+import { OverlayPanelComponent } from '../overlay-panel/overlay-panel.component';
 import { MaterialIconComponent } from '../../../../../shared/src/material-icon-component/material-icon.component';
 
 @Component({
@@ -10,7 +10,7 @@ import { MaterialIconComponent } from '../../../../../shared/src/material-icon-c
   imports: [
     AsyncPipe,
     BufferToImagePipe,
-    OverlayComponent,
+    OverlayPanelComponent,
     MaterialIconComponent,
   ],
   templateUrl: './photo-fullscreen.component.html',

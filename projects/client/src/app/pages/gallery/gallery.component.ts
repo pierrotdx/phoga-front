@@ -14,7 +14,7 @@ import {
   PhotoApiService,
 } from '@shared/photo-context';
 import { DetailedViewComponent } from '@client/app/components/detailed-view/detailed-view.component';
-import { OverlayComponent } from '../../components/overlay/overlay.component';
+import { OverlayPanelComponent } from '../../components/overlay-panel/overlay-panel.component';
 
 @Component({
   selector: 'app-gallery',
@@ -25,7 +25,7 @@ import { OverlayComponent } from '../../components/overlay/overlay.component';
     MatProgressSpinnerModule,
     MatProgressSpinner,
     DetailedViewComponent,
-    OverlayComponent,
+    OverlayPanelComponent,
   ],
   templateUrl: './gallery.component.html',
 })

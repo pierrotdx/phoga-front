@@ -3,12 +3,12 @@
     @if(photos$ | async; as photos) {
         <app-collage [photos]="photos"></app-collage>
         @if(selectedPhoto()) {
-            <app-overlay [(show)]="showDetailedView">
+            <app-overlay-panel [(show)]="showDetailedView">
                 <app-detailed-view [photos]="photos"
                                    [(photo)]="selectedPhoto"
                                    (close)="closeDetailedView()">
                 </app-detailed-view>
-            </app-overlay>
+            </app-overlay-panel>
         }
     }
     @if(isLoading()) {
