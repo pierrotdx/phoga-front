@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DetailedViewComponent } from './detailed-view.component';
+import { PhotoDetailedViewComponent } from './photo-detailed-view.component';
 
 describe('DetailedViewComponent', () => {
-  let component: DetailedViewComponent;
-  let fixture: ComponentFixture<DetailedViewComponent>;
+  let component: PhotoDetailedViewComponent;
+  let fixture: ComponentFixture<PhotoDetailedViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DetailedViewComponent]
-    })
-    .compileComponents();
+      imports: [PhotoDetailedViewComponent],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(DetailedViewComponent);
+    fixture = TestBed.createComponent(PhotoDetailedViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

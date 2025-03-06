@@ -15,7 +15,7 @@ import { MaterialIconComponent } from '@shared/material-icon-component';
 import { OverlayMatIconBtnComponent } from '../overlay-mat-icon-btn/overlay-mat-icon-btn.component';
 
 @Component({
-  selector: 'app-detailed-view',
+  selector: 'app-photo-detailed-view',
   imports: [
     PhotoSelectionComponent,
     PhotoMetadataComponent,
@@ -24,10 +24,10 @@ import { OverlayMatIconBtnComponent } from '../overlay-mat-icon-btn/overlay-mat-
     MaterialIconComponent,
     OverlayMatIconBtnComponent,
   ],
-  templateUrl: './detailed-view.component.html',
-  styleUrl: './detailed-view.component.scss',
+  templateUrl: './photo-detailed-view.component.html',
+  styleUrl: './photo-detailed-view.component.scss',
 })
-export class DetailedViewComponent {
+export class PhotoDetailedViewComponent {
   photo = model<IPhoto | undefined>(undefined);
   photos = input<IPhoto[]>([]);
   showFullscreen = signal<boolean>(false);
