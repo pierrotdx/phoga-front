@@ -5,6 +5,7 @@ import {
   OverlayPanelComponent,
   PhotoCollageComponent,
   PhotoDetailedViewComponent,
+  SectionComponent,
 } from '../../../';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { BehaviorSubject, firstValueFrom, Subscription } from 'rxjs';
@@ -24,6 +25,7 @@ import {
     MatProgressSpinner,
     PhotoDetailedViewComponent,
     OverlayPanelComponent,
+    SectionComponent,
   ],
   templateUrl: './gallery.component.html',
 })

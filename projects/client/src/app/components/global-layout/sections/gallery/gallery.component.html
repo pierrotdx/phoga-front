@@ -1,17 +1,22 @@
-<section infiniteScroll (scrolled)="loadPhotos()" id="gallery">
-    <h2 class="page-title">Gallery</h2>
-    @if(photos$ | async; as photos) {
-        <app-photo-collage [photos]="photos"></app-photo-collage>
-        @if(selectedPhoto()) {
-            <app-overlay-panel [(show)]="showDetailedView">
-                <app-photo-detailed-view [photos]="photos"
-                                   [(photo)]="selectedPhoto"
-                                   (close)="closeDetailedView()">
-                </app-photo-detailed-view>
-            </app-overlay-panel>
+<app-section id="gallery"
+             infiniteScroll
+             (scrolled)="loadPhotos()">
+    <ng-container ngProjectAs="section-title">Gallery</ng-container>
+    <ng-container ngProjectAs="section-body">
+        @if(photos$ | async; as photos) {
+            <app-photo-collage [photos]="photos"></app-photo-collage>
+            @if(selectedPhoto()) {
+                <app-overlay-panel [(show)]="showDetailedView">
+                    <app-photo-detailed-view [photos]="photos"
+                                       [(photo)]="selectedPhoto"
+                                       (close)="closeDetailedView()">
+                    </app-photo-detailed-view>
+                </app-overlay-panel>
+            }
         }
-    }
-    @if(isLoading()) {
-        <mat-spinner></mat-spinner>
-    }
-</section>
+        @if(isLoading()) {
+            <mat-spinner></mat-spinner>
+        }
+    </ng-container>
+</app-section>
+
