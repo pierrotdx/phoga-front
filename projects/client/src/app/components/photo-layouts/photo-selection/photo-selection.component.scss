@@ -10,15 +10,15 @@
   display: flex;
   padding: 0;
 
-  img {
-    object-fit: cover;
-    width: 5rem;
-    height: 5rem;
+  app-photo-image {
+    --photo-image-object-fit: cover;
+    --photo-image-img-width: 5rem;
+    --photo-image-img-height: 5rem;
   }
 
   &--selected {
-    & img {
-      border: var(--spacing-01) solid var(--clr-secondary);
+    & app-photo-image {
+      --photo-image-img-border: var(--spacing-01) solid var(--clr-secondary);
     }
   }
 }

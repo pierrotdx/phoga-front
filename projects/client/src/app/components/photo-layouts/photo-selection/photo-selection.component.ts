@@ -1,11 +1,10 @@
-import { AsyncPipe } from '@angular/common';
 import { Component, Input, model } from '@angular/core';
 import { IPhoto } from '@shared/photo-context';
-import { BufferToImagePipe } from '@shared/pipes';
+import { PhotoImageComponent } from '../photo-image/photo-image.component';
 
 @Component({
   selector: 'app-photo-selection',
-  imports: [AsyncPipe, BufferToImagePipe],
+  imports: [PhotoImageComponent],
   templateUrl: './photo-selection.component.html',
   styleUrl: './photo-selection.component.scss',
 })

@@ -7,8 +7,10 @@
 
 .photo-image {
   &__image {
-    width: 100%;
+    width: var(--photo-image-img-width, 100%);
     object-fit: var(--photo-image-object-fit, contain);
+    height: var(--photo-image-img-height, auto);
+    border: var(--photo-image-img-border, none);
   }
 }
 
