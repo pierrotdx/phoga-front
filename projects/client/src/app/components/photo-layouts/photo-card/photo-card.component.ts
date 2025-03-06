@@ -6,7 +6,7 @@ import {
 } from '@shared/photo-context';
 import { PhotoMetadataComponent } from '../photo-metadata/photo-metadata.component';
 import { PhotoImageComponent } from '../photo-image/photo-image.component';
-import { OverlayMatIconBtnComponent } from '../overlay-mat-icon-btn/overlay-mat-icon-btn.component';
+import { OverlayMatIconBtnComponent } from '../../utils/overlay-mat-icon-btn/overlay-mat-icon-btn.component';
 
 @Component({
   selector: 'app-photo-card',

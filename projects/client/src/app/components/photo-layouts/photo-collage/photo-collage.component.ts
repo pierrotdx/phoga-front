@@ -1,14 +1,14 @@
 import { Component, Input, signal } from '@angular/core';
 import { IPhoto } from '@shared/photo-context';
-import { PhotosStripComponent } from '../photos-strip/photos-strip.component';
+import { PhotoStripComponent } from '../photo-strip/photo-strip.component';
 
 @Component({
-  selector: 'app-collage',
-  imports: [PhotosStripComponent],
-  templateUrl: './collage.component.html',
-  styleUrl: './collage.component.scss',
+  selector: 'app-photo-collage',
+  imports: [PhotoStripComponent],
+  templateUrl: './photo-collage.component.html',
+  styleUrl: './photo-collage.component.scss',
 })
-export class CollageComponent {
+export class PhotoCollageComponent {
   private _photos: IPhoto[] = [];
   @Input() set photos(value: IPhoto[]) {
     this._photos = value || [];

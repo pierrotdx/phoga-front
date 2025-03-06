@@ -4,7 +4,11 @@ import {
   MatProgressSpinner,
   MatProgressSpinnerModule,
 } from '@angular/material/progress-spinner';
-import { CollageComponent } from '@client/app/components';
+import {
+  OverlayPanelComponent,
+  PhotoCollageComponent,
+  PhotoDetailedViewComponent,
+} from '../../../';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { BehaviorSubject, firstValueFrom, Subscription } from 'rxjs';
 import {
@@ -13,14 +17,12 @@ import {
   PHOTO_SELECTOR_SERVICE_TOKEN,
   PhotoApiService,
 } from '@shared/photo-context';
-import { PhotoDetailedViewComponent } from '@client/app/components/photo-detailed-view/photo-detailed-view.component';
-import { OverlayPanelComponent } from '../../components/overlay-panel/overlay-panel.component';
 
 @Component({
   selector: 'app-gallery',
   imports: [
     AsyncPipe,
-    CollageComponent,
+    PhotoCollageComponent,
     InfiniteScrollDirective,
     MatProgressSpinnerModule,
     MatProgressSpinner,

@@ -2,8 +2,8 @@ import { AsyncPipe } from '@angular/common';
 import { Component, Input, model } from '@angular/core';
 import { Photo } from '@shared/photo-context';
 import { BufferToImagePipe } from '@shared/pipes';
-import { OverlayPanelComponent } from '../overlay-panel/overlay-panel.component';
-import { OverlayMatIconBtnComponent } from '../overlay-mat-icon-btn/overlay-mat-icon-btn.component';
+import { OverlayPanelComponent } from '../../utils/overlay-panel/overlay-panel.component';
+import { OverlayMatIconBtnComponent } from '../../utils/overlay-mat-icon-btn/overlay-mat-icon-btn.component';
 
 @Component({
   selector: 'app-photo-fullscreen',
@@ -11,7 +11,7 @@ import { OverlayMatIconBtnComponent } from '../overlay-mat-icon-btn/overlay-mat-
     AsyncPipe,
     BufferToImagePipe,
     OverlayPanelComponent,
-    OverlayMatIconBtnComponent
+    OverlayMatIconBtnComponent,
   ],
   templateUrl: './photo-fullscreen.component.html',
   styleUrl: './photo-fullscreen.component.scss',

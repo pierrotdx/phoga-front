@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CollageComponent } from './collage.component';
+import { PhotoCollageComponent } from './photo-collage.component';
 
 describe('CollageComponent', () => {
-  let component: CollageComponent;
-  let fixture: ComponentFixture<CollageComponent>;
+  let component: PhotoCollageComponent;
+  let fixture: ComponentFixture<PhotoCollageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CollageComponent],
+      imports: [PhotoCollageComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CollageComponent);
+    fixture = TestBed.createComponent(PhotoCollageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

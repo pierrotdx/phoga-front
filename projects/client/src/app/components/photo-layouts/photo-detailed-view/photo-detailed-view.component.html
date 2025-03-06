@@ -1,32 +1,32 @@
-<article class="detailed-view">
-    <div class="detailed-view__image-container">
+<article class="photo-detailed-view">
+    <div class="photo-detailed-view__image-container">
         <app-photo-image
             [photo]="photo()"
-            class="detailed-view__image"
+            class="photo-detailed-view__image"
         >
         </app-photo-image>
         <app-overlay-mat-icon-btn
-            class="detailed-view__fullscreen-btn"
+            class="photo-detailed-view__fullscreen-btn"
             (click)="goFullscreen()"
         >
             fullscreen
         </app-overlay-mat-icon-btn>
     </div>
-    <div class="detailed-view__sidebar">
+    <div class="photo-detailed-view__sidebar">
         <app-photo-metadata
-            class="detailed-view__metadata"
+            class="photo-detailed-view__metadata"
             [photoMetadata]="photo()?.metadata"
         >
         </app-photo-metadata>
         <app-photo-selection
-            class="detailed-view__selection"
+            class="photo-detailed-view__selection"
             [photos]="photos()"
             [(selectedPhoto)]="photo"
         >
         </app-photo-selection>
     </div>
     <button
-        class="detailed-view__close-btn"
+        class="photo-detailed-view__close-btn"
         type="button"
         (click)="closeDetailedView()"
     >

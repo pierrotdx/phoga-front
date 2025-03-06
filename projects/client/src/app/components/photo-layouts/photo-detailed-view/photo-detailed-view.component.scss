@@ -4,7 +4,7 @@
   height: 100vh;
 }
 
-.detailed-view {
+.photo-detailed-view {
   display: flex;
   gap: var(--spacing-02);
   flex-direction: column;
@@ -18,7 +18,7 @@
     flex: 0 0 auto;
     &:focus,
     &:hover {
-      .detailed-view__fullscreen-btn {
+      .photo-detailed-view__fullscreen-btn {
         display: revert;
       }
     }
@@ -55,7 +55,7 @@
 
 /* For tablets: */
 @media only screen and (width > 600px) {
-  .detailed-view {
+  .photo-detailed-view {
     flex-direction: row;
     overflow: hidden;
 
