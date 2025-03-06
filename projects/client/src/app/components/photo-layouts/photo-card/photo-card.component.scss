@@ -32,6 +32,10 @@
   &__metadata {
     display: block;
     padding: var(--spacing-02);
+
+    --photo-metadata-overflow: hidden;
+    --photo-metadata-white-space: nowrap;
+    --photo-metadata-text-overflow: ellipsis;
   }
 
   /* For tablets and above */

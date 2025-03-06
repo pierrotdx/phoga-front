@@ -19,6 +19,10 @@
   }
 
   &__description {
+    overflow: var(--photo-metadata-overflow, auto);
+    white-space: var(--photo-metadata-white-space, normal);
+    text-overflow: var(--photo-metadata-text-overflow, clip);
+
     &:not(:last-child) {
       margin-bottom: var(--spacing-02);
     }
@@ -34,14 +38,6 @@
       display: flex;
       align-items: center;
       gap: calc(0.5 * var(--spacing-01));
-    }
-  }
-
-  :host-context(.photo-card) & {
-    &__description {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
     }
   }
 }
