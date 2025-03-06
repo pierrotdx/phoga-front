@@ -6,6 +6,7 @@ import { MaterialIconComponent } from '@shared/material-icon-component';
 import { BufferToImagePipe } from '@shared/pipes';
 import { PhotoFullscreenComponent } from '../photo-fullscreen/photo-fullscreen.component';
 import { PhotoMetadataComponent } from '../photo-metadata/photo-metadata.component';
+import { PHOTO_SELECTOR_SERVICE_TOKEN } from '@shared/photo-context';
 
 describe('PhotoCardComponent', () => {
   let component: PhotoCardComponent;
@@ -20,6 +21,12 @@ describe('PhotoCardComponent', () => {
         PhotoMetadataComponent,
         MaterialIconComponent,
         PhotoFullscreenComponent,
+      ],
+      providers: [
+        {
+          provide: PHOTO_SELECTOR_SERVICE_TOKEN,
+          useValue: {},
+        },
       ],
     }).compileComponents();
 

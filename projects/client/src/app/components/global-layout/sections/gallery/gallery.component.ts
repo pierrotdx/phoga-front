@@ -1,9 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit, signal } from '@angular/core';
-import {
-  MatProgressSpinner,
-  MatProgressSpinnerModule,
-} from '@angular/material/progress-spinner';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import {
   OverlayPanelComponent,
   PhotoCollageComponent,
@@ -24,7 +21,6 @@ import {
     AsyncPipe,
     PhotoCollageComponent,
     InfiniteScrollDirective,
-    MatProgressSpinnerModule,
     MatProgressSpinner,
     PhotoDetailedViewComponent,
     OverlayPanelComponent,
