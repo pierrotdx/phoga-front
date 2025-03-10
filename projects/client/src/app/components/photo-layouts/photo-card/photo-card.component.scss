@@ -11,13 +11,11 @@
     app-photo-image {
       --photo-image-object-fit: cover;
     }
-  }
 
-  &__image {
     &:hover,
     &:focus {
-      + .photo-card__image-btn {
-        display: inline-block;
+      .photo-card__image-btn {
+        display: revert;
       }
     }
   }
