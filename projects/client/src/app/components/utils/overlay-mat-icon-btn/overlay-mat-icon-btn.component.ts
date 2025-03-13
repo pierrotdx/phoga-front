@@ -7,10 +7,4 @@ import { MaterialIconComponent } from '@shared/material-icon-component';
   templateUrl: './overlay-mat-icon-btn.component.html',
   styleUrl: './overlay-mat-icon-btn.component.scss',
 })
-export class OverlayMatIconBtnComponent {
-  @Output() click = new EventEmitter<void>();
-
-  onClick() {
-    this.click.emit();
-  }
-}
+export class OverlayMatIconBtnComponent {}
