@@ -38,12 +38,12 @@ export class Slider<T> implements ISlider<T> {
 
   private async setSlideItemIndices(startItemIndex: number = 0): Promise<void> {
     this.slideItemIndices = [];
-    for (
-      let itemIndex = startItemIndex;
-      itemIndex < this.sliderSize;
-      itemIndex++
-    ) {
-      this.slideItemIndices.push(itemIndex);
+    let index = startItemIndex;
+    let size = 0;
+    while (size < this.sliderSize) {
+      this.slideItemIndices.push(index);
+      index++;
+      size++;
     }
     this.emitSlides();
   }
@@ -68,7 +68,7 @@ export class Slider<T> implements ISlider<T> {
     };
   }
 
-  next() {
+  swipeToNext() {
     if (this.isNextDisabled()) {
       return;
     }
@@ -85,7 +85,7 @@ export class Slider<T> implements ISlider<T> {
     return isAtEnd;
   }
 
-  previous() {
+  swipeToPrevious() {
     if (this.isPreviousDisabled()) {
       return;
     }
@@ -101,9 +101,10 @@ export class Slider<T> implements ISlider<T> {
     return isOnStartingEdge;
   }
 
-  navToItem(itemIndex: number): void {
-    const slideIndex = this.slideItemIndices.indexOf(itemIndex);
-    const isAlreadyInSlides = slideIndex >= 0;
+  swipeToItem(itemIndex: number): void {
+    const isAlreadyInSlides = this.slideItemIndices.some(
+      (index) => index === itemIndex
+    );
     if (isAlreadyInSlides) {
       return;
     }

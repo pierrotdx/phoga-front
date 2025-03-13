@@ -1,24 +1,25 @@
-import { ISlide } from '../models';
 import { Slider } from './slider';
+import { SliderTestUtils } from './slider.test-utils';
 
 type TItem = string;
 
 describe('slider', () => {
   let slider: Slider<TItem>;
+  let testUtils: SliderTestUtils<TItem>;
   let items: TItem[];
   let nbSlides: number;
 
-  describe('the slider size', () => {
-    items = ['a', 'b', 'c'];
+  beforeEach(() => {
+    items = ['a', 'b', 'c', 'd', 'e'];
+    nbSlides = 3;
+    slider = new Slider({ items, nbSlides });
+    testUtils = new SliderTestUtils<TItem>(slider);
+  });
 
+  describe('the slider size', () => {
     describe('when the nb of slides is less than the nb of items', () => {
-      beforeEach(() => {
-        nbSlides = 2;
-        slider = new Slider({ items, nbSlides });
-      });
       it('should be the nb of slides', () => {
-        const slides = slider.slides$.getValue();
-        expect(slides.length).toEqual(nbSlides);
+        testUtils.expectNbOfSlidesToBe(nbSlides);
       });
     });
 
@@ -26,10 +27,10 @@ describe('slider', () => {
       beforeEach(() => {
         nbSlides = items.length + 1;
         slider = new Slider({ items, nbSlides });
+        testUtils = new SliderTestUtils<TItem>(slider);
       });
       it('should be the nb of items', () => {
-        const slides = slider.slides$.getValue();
-        expect(slides.length).toEqual(items.length);
+        testUtils.expectNbOfSlidesToBe(items.length);
       });
     });
 
@@ -37,61 +38,36 @@ describe('slider', () => {
       beforeEach(() => {
         nbSlides = items.length;
         slider = new Slider({ items, nbSlides });
+        testUtils = new SliderTestUtils<TItem>(slider);
       });
       it('should be the nb of items', () => {
-        const slides = slider.slides$.getValue();
-        expect(slides.length).toEqual(nbSlides);
-        expect(slides.length).toEqual(items.length);
+        testUtils.expectNbOfSlidesToBe(items.length);
+        testUtils.expectNbOfSlidesToBe(nbSlides);
       });
     });
   });
 
   describe('the slides', () => {
     it('should initially be filled with the first items', () => {
-      items = ['item 1', 'item 2', 'item 3'];
-      nbSlides = 2;
-      slider = new Slider({ items, nbSlides });
-      const slides = slider.slides$.getValue();
-      slides.forEach((slide, index) => {
-        const item = items[index];
-        expect(slide.value).toEqual(item);
-        expect(slide.itemIndex).toEqual(index);
-      });
+      const expectedSlideValues = items.slice(0, nbSlides);
+      testUtils.expectSlideValuesToMatch(expectedSlideValues);
     });
   });
 
-  describe('the `next()` function', () => {
-    let initSlides: ISlide<TItem>[];
-
+  describe('the `swipeToNext()` function', () => {
     it('should not modify the active item', () => {
-      items = ['a', 'b', 'c'];
-      nbSlides = 2;
-      slider = new Slider({ items, nbSlides });
-      const activeSlideIndexBefore = getActiveItemIndex(slider);
-      slider.next();
-      const activeSlideIndexAfter = getActiveItemIndex(slider);
-      expect(activeSlideIndexBefore).toBeDefined();
-      expect(activeSlideIndexAfter).toBeDefined();
-      expect(activeSlideIndexAfter).toBe(activeSlideIndexBefore);
+      const initActiveItemIndex = testUtils.getActiveItemIndex();
+      slider.swipeToNext();
+      testUtils.expectActiveItemIndexToEqual(initActiveItemIndex);
     });
 
     describe('when there are more items to show on the right side', () => {
-      beforeEach(() => {
-        items = ['a', 'b', 'c'];
-        nbSlides = 2;
-        slider = new Slider({ items, nbSlides });
-      });
-
       it('should shift the slides to the right', () => {
-        const expectedInitSlideValues = [...items].splice(0, nbSlides);
-        initSlides = slider.slides$.getValue();
-        expectSlidesValuesToMatchArray(initSlides, expectedInitSlideValues);
-
-        slider.next();
-
-        const expectedSlidesAfter = [...items].splice(1, nbSlides);
-        const slidesAfter = slider.slides$.getValue();
-        expectSlidesValuesToMatchArray(slidesAfter, expectedSlidesAfter);
+        const expectedInitSlides = items.slice(0, nbSlides);
+        testUtils.expectSlideValuesToMatch(expectedInitSlides);
+        slider.swipeToNext();
+        const expectedSlidesAfter = items.slice(1, nbSlides + 1);
+        testUtils.expectSlideValuesToMatch(expectedSlidesAfter);
       });
     });
 
@@ -100,129 +76,86 @@ describe('slider', () => {
         items = ['a', 'b', 'c'];
         nbSlides = 3;
         slider = new Slider({ items, nbSlides });
+        testUtils = new SliderTestUtils<TItem>(slider);
       });
 
       it('should do nothing to the slides', () => {
-        const expectedInitSlides = [...items].splice(0, nbSlides);
-        initSlides = slider.slides$.getValue();
-        expectSlidesValuesToMatchArray(initSlides, expectedInitSlides);
-
-        slider.next();
-
-        const slidesAfter = slider.slides$.getValue();
-        expectSlidesValuesToMatchArray(slidesAfter, expectedInitSlides);
+        const expectedInitSlides = items.slice(0, nbSlides);
+        testUtils.expectSlideValuesToMatch(expectedInitSlides);
+        slider.swipeToNext();
+        testUtils.expectSlideValuesToMatch(expectedInitSlides);
       });
     });
   });
 
-  describe('the `previous()` function', () => {
-    let initSlides: ISlide<TItem>[];
-
+  describe('the `swipeToPrevious()` function', () => {
     it('should not modify the active item', () => {
-      items = ['a', 'b', 'c'];
-      nbSlides = 2;
-      slider = new Slider({ items, nbSlides });
       const activeSlideIndex = 1;
       slider.activateItem(activeSlideIndex);
-
-      const activeSlideIndexBefore = getActiveItemIndex(slider);
-      slider.previous();
-      const activeSlideIndexAfter = getActiveItemIndex(slider);
-      expect(activeSlideIndexBefore).toBeDefined();
-      expect(activeSlideIndexAfter).toBeDefined();
-      expect(activeSlideIndexAfter).toBe(activeSlideIndexBefore);
-      expect(activeSlideIndexAfter).toBe(activeSlideIndex);
+      testUtils.expectActiveItemIndexToEqual(activeSlideIndex);
+      slider.swipeToPrevious();
+      testUtils.expectActiveItemIndexToEqual(activeSlideIndex);
     });
 
     describe('when there are more items to show on the left side', () => {
       beforeEach(() => {
-        items = ['a', 'b', 'c'];
-        nbSlides = 2;
-        slider = new Slider({ items, nbSlides });
-        slider.next();
+        slider.swipeToNext();
       });
 
       it('should shift the slides to the left', () => {
-        const expectedInitSlides = [...items].splice(1, nbSlides);
-        initSlides = slider.slides$.getValue();
-        expectSlidesValuesToMatchArray(initSlides, expectedInitSlides);
-
-        slider.previous();
-
-        const expectedSlidesAfter = [...items].splice(0, nbSlides);
-        const slidesAfter = slider.slides$.getValue();
-        expectSlidesValuesToMatchArray(slidesAfter, expectedSlidesAfter);
+        const expectedInitSlides = items.slice(1, nbSlides + 1);
+        testUtils.expectSlideValuesToMatch(expectedInitSlides);
+        slider.swipeToPrevious();
+        const expectedSlidesAfter = items.slice(0, nbSlides);
+        testUtils.expectSlideValuesToMatch(expectedSlidesAfter);
       });
     });
 
     describe('when there are no more items to show on the left side', () => {
-      beforeEach(() => {
-        items = ['a', 'b', 'c'];
-        nbSlides = 3;
-        slider = new Slider({ items, nbSlides });
-      });
-
       it('should do nothing to the slides', () => {
-        const expectedInitSlides = [...items].splice(0, nbSlides);
-        initSlides = slider.slides$.getValue();
-        expectSlidesValuesToMatchArray(initSlides, expectedInitSlides);
-
-        slider.previous();
-
-        const slidesAfter = slider.slides$.getValue();
-        expectSlidesValuesToMatchArray(slidesAfter, expectedInitSlides);
+        const expectedInitSlides = items.slice(0, nbSlides);
+        testUtils.expectSlideValuesToMatch(expectedInitSlides);
+        slider.swipeToPrevious();
+        testUtils.expectSlideValuesToMatch(expectedInitSlides);
       });
     });
   });
 
-  describe('the `navToItem()` function', () => {
-    beforeEach(() => {
-      items = ['t', 'u', 'v', 'w', 'x'];
-      nbSlides = 2;
-      slider = new Slider({ items, nbSlides });
+  describe('the `swipeToItem()` function', () => {
+    let expectedSlidesBefore: TItem[];
+    let inputIndex: number;
+
+    describe('when the input item is before the slides', () => {
+      beforeEach(() => {
+        inputIndex = 0;
+        slider.swipeToNext();
+        expectedSlidesBefore = items.slice(inputIndex + 1, nbSlides + 1);
+      });
+
+      it('should update the slides such that the first one matches the input item', () => {
+        testUtils.expectSlideValuesToMatch(expectedSlidesBefore);
+        slider.swipeToItem(inputIndex);
+        const expectedSlidesAfter = items.slice(inputIndex, nbSlides);
+        testUtils.expectSlideValuesToMatch(expectedSlidesAfter);
+      });
     });
 
-    describe('when the input item is not in the slides', () => {
-      let slidesBefore: ISlide<TItem>[];
-      let expectedSlidesBefore: TItem[];
-      let activatedSlideIndexBefore: number | undefined;
-
+    describe('when the input item is after the slides', () => {
       beforeEach(() => {
-        slider = new Slider({ items, nbSlides });
-        slider.next();
-        expectedSlidesBefore = items.slice(1, nbSlides + 1);
-        slidesBefore = slider.slides$.getValue();
-        activatedSlideIndexBefore = getActiveItemIndex(slider);
+        inputIndex = items.length - 1;
+        expectedSlidesBefore = items.slice(0, nbSlides);
       });
 
-      describe('when it is before the slides', () => {
-        const inputIndex = 0;
-
-        beforeEach(() => {
-          slider.navToItem(inputIndex);
-        });
-
-        it('should update the slides such that the first one matches the input item', () => {
-          expectSlidesValuesToMatchArray(slidesBefore, expectedSlidesBefore);
-          const expectedSlidesAfter = items.slice(inputIndex, nbSlides);
-          const slidesAfter = slider.slides$.getValue();
-          expectSlidesValuesToMatchArray(slidesAfter, expectedSlidesAfter);
-        });
-      });
-
-      describe('when it is after the slides', () => {
-        const inputIndex = 3;
-
-        beforeEach(() => {
-          slider.navToItem(inputIndex);
-        });
-
-        it('should update the slides such that the last one matches the input', () => {
-          expectSlidesValuesToMatchArray(slidesBefore, expectedSlidesBefore);
-          const expectedSlidesAfter = items.slice(inputIndex, nbSlides);
-          const slidesAfter = slider.slides$.getValue();
-          expectSlidesValuesToMatchArray(slidesAfter, expectedSlidesAfter);
-        });
+      it('should update the slides such that the last one matches the input', () => {
+        testUtils.expectSlideValuesToMatch(expectedSlidesBefore);
+        slider.swipeToItem(inputIndex);
+        const items = getItems(slider);
+        const expectedSlidesAfter = testUtils.getItemsSliceEndingWithItem(
+          items,
+          nbSlides,
+          inputIndex
+        );
+        testUtils.expectSlideValuesToMatch(expectedSlidesAfter);
       });
     });
   });
@@ -231,69 +164,43 @@ describe('slider', () => {
     let activeSlideIndexBefore: number | undefined;
 
     beforeEach(() => {
-      items = ['k', 'r', 'z', 'o'];
-      nbSlides = 3;
-      slider = new Slider({ items, nbSlides });
+      activeSlideIndexBefore = testUtils.getActiveItemIndex();
     });
 
     it('should activate the slide according to the input', () => {
-      activeSlideIndexBefore = getActiveItemIndex(slider);
       const targetItemIndex = 2;
       slider.activateItem(targetItemIndex);
-      const activeSlideIndexAfter = getActiveItemIndex(slider);
-      expect(activeSlideIndexBefore).not.toBe(activeSlideIndexAfter);
-      expect(activeSlideIndexAfter).toBe(targetItemIndex);
+      testUtils.expectActiveItemIndexToEqual(targetItemIndex);
     });
 
     it('should not do anything if the input slide index is greater than the total number of items', () => {
-      activeSlideIndexBefore = getActiveItemIndex(slider);
       const targetItemIndex = items.length + 1;
       slider.activateItem(targetItemIndex);
-      const activeSlideIndexAfter = getActiveItemIndex(slider);
-      expect(activeSlideIndexAfter).toBe(activeSlideIndexBefore);
+      testUtils.expectActiveItemIndexToEqual(activeSlideIndexBefore);
     });
 
     it('should not do anything if the input slide index is lesser than 0', () => {
-      activeSlideIndexBefore = getActiveItemIndex(slider);
       const targetedSelectedItemIndex = -1;
       slider.activateItem(targetedSelectedItemIndex);
-      const activeSlideIndexAfter = getActiveItemIndex(slider);
-      expect(activeSlideIndexAfter).toBe(activeSlideIndexBefore);
+      testUtils.expectActiveItemIndexToEqual(activeSlideIndexBefore);
     });
   });
 
   describe('the `addItems()` function', () => {
-    beforeEach(() => {
-      items = ['a', 'z'];
-      nbSlides = 2;
-      slider = new Slider({ items, nbSlides });
-    });
-
     it('should add more items', () => {
-      const itemsToAdd = ['c', 'e'];
-
-      const itemsBefore = slider['items$'].getValue();
-      expect(itemsBefore).toEqual(items);
-
+      const itemsToAdd = ['y', 'z'];
+      const initItems = getItems(slider);
+      testUtils.expectMatchingItemArrays(initItems, items);
       slider.addItems(itemsToAdd);
 
       const expectedItemsAfter = items.concat(itemsToAdd);
-      const itemsAfter = slider['items$'].getValue();
-      expect(itemsAfter).toEqual(expectedItemsAfter);
+      const newItems = getItems(slider);
+
+      testUtils.expectMatchingItemArrays(newItems, expectedItemsAfter);
     });
   });
 });
 
-function getActiveItemIndex(slider: Slider<TItem>): number | undefined {
-  return slider.activeItemIndex$.getValue();
-}
-
-function expectSlidesValuesToMatchArray<T>(
-  slides: ISlide<T>[],
-  expectedValues: T[]
-): void {
-  slides.forEach((slide, index) => {
-    const expectedValue = expectedValues[index];
-    expect(slide.value).toEqual(expectedValue);
-  });
+function getItems(slider: Slider<TItem>): TItem[] {
+  return slider['items$'].getValue();
 }
