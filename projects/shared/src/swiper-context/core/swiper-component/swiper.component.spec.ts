@@ -1,14 +1,14 @@
-import { SliderComponentTestUtils } from './slider-component-tests/slider.component.test-utils';
 import { ISlide } from '../models';
-import { SliderWrapperComponent, TestItem } from './slider-component-tests';
-import { SliderComponent } from './slider.component';
+import { SwiperComponent } from './swiper.component';
+import { SwiperWrapperComponent, TestItem } from './swiper-component-tests';
+import { SwiperComponentTestUtils } from './swiper-component-tests/swiper.component.test-utils';
 
-// Need to test the Slider component,
+// Need to test the swiper component,
 // which has an input being a template ref,
 // via a wrapping component.
 // https://stackoverflow.com/a/57019955/6281776
-describe('SliderComponent', () => {
-  let testUtils: SliderComponentTestUtils;
+describe('SwiperComponent', () => {
+  let testUtils: SwiperComponentTestUtils;
   let nbSlides: number;
   let items: TestItem[];
 
@@ -24,7 +24,7 @@ describe('SliderComponent', () => {
   });
 
   it('should create', () => {
-    testUtils.expectSliderComponentToBeCreated();
+    testUtils.expectSwiperComponentToBeCreated();
   });
 
   describe('the number of slides', () => {
@@ -166,18 +166,18 @@ describe('SliderComponent', () => {
 });
 
 async function restartTestUtils(
-  testUtils: SliderComponentTestUtils,
+  testUtils: SwiperComponentTestUtils,
   inputs: {
     items: TestItem[];
     nbSlides: number;
   }
-): Promise<SliderComponentTestUtils> {
+): Promise<SwiperComponentTestUtils> {
   if (testUtils) {
     testUtils.resetTestingModule();
   }
-  const utils = new SliderComponentTestUtils(
-    SliderWrapperComponent,
-    { imports: [SliderWrapperComponent, SliderComponent<TestItem>] },
+  const utils = new SwiperComponentTestUtils(
+    SwiperWrapperComponent,
+    { imports: [SwiperWrapperComponent, SwiperComponent<TestItem>] },
     inputs
   );
   await utils.globalBeforeEach();

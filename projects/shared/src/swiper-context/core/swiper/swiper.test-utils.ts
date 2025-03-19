@@ -1,10 +1,10 @@
-import { ISlider } from '../models';
+import { ISwiper } from '../models';
 
-export class SliderTestUtils<T> {
-  constructor(private readonly slider: ISlider<T>) {}
+export class SwiperTestUtils<T> {
+  constructor(private readonly swiper: ISwiper<T>) {}
 
   getActiveItemIndex(): number | undefined {
-    return this.slider.activeItemIndex$.getValue();
+    return this.swiper.activeItemIndex$.getValue();
   }
 
   getItemsSliceEndingWithItem(
@@ -23,12 +23,12 @@ export class SliderTestUtils<T> {
   }
 
   expectNbOfSlidesToBe(expectedNbSlides: number): void {
-    const slides = this.slider.slides$.getValue();
+    const slides = this.swiper.slides$.getValue();
     expect(slides.length).toEqual(expectedNbSlides);
   }
 
   expectSlideValuesToMatch(expectedSlideValues: T[]): void {
-    const slides = this.slider.slides$.getValue();
+    const slides = this.swiper.slides$.getValue();
     expect(slides.length).toEqual(expectedSlideValues.length);
     expectedSlideValues.forEach((expectedValue) => {
       const isInSlides = slides.some((s) => s.value === expectedValue);

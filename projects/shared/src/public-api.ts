@@ -8,5 +8,5 @@ export * from './environment-context';
 export * from './material-icon-component';
 export * from './photo-context';
 export * from './pipes';
-export * from './slider-context';
+export * from './swiper-context';
 export * from './subscription-handler-context';

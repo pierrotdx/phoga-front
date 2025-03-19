@@ -1,7 +1,7 @@
 import { BehaviorSubject } from 'rxjs';
 import { ISlide } from './slide';
 
-export interface ISlider<T> {
+export interface ISwiper<T> {
   slides$: BehaviorSubject<ISlide<T>[]>;
   activeItemIndex$: BehaviorSubject<number | undefined>;
   swipeToNext: () => void;

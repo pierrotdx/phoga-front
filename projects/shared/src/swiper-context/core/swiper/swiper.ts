@@ -1,14 +1,14 @@
 import { BehaviorSubject } from 'rxjs';
-import { ISlide, ISlider } from '../models';
+import { ISlide, ISwiper } from '../models';
 
-export class Slider<T> implements ISlider<T> {
+export class Swiper<T> implements ISwiper<T> {
   slides$ = new BehaviorSubject<ISlide<T>[]>([]);
   activeItemIndex$ = new BehaviorSubject<number | undefined>(undefined);
 
   private items$: BehaviorSubject<T[]> = new BehaviorSubject<T[]>([]);
 
   private slideItemIndices: number[] = [];
-  private sliderSize: number = 0;
+  private swiperSize: number = 0;
   private readonly nbSlides: number;
 
   constructor({ items = [], nbSlides }: { items?: T[]; nbSlides: number }) {
@@ -28,7 +28,7 @@ export class Slider<T> implements ISlider<T> {
   }
 
   private onItemsChange(items: T[]): void {
-    this.setSliderSize();
+    this.setSwiperSize();
     const isInit = this.slideItemIndices.length === 0;
     if (isInit) {
       this.setSlideItemIndices();
@@ -40,7 +40,7 @@ export class Slider<T> implements ISlider<T> {
     this.slideItemIndices = [];
     let index = startItemIndex;
     let size = 0;
-    while (size < this.sliderSize) {
+    while (size < this.swiperSize) {
       this.slideItemIndices.push(index);
       index++;
       size++;
@@ -48,8 +48,8 @@ export class Slider<T> implements ISlider<T> {
     this.emitSlides();
   }
 
-  private setSliderSize(): void {
-    this.sliderSize = Math.min(this.items$.getValue().length, this.nbSlides);
+  private setSwiperSize(): void {
+    this.swiperSize = Math.min(this.items$.getValue().length, this.nbSlides);
   }
 
   private emitSlides(): void {
@@ -112,7 +112,7 @@ export class Slider<T> implements ISlider<T> {
     if (isBeforeSlides) {
       this.setSlideItemIndices(itemIndex);
     } else {
-      const startIndex = itemIndex - (this.sliderSize - 1);
+      const startIndex = itemIndex - (this.swiperSize - 1);
       this.setSlideItemIndices(startIndex);
     }
   }

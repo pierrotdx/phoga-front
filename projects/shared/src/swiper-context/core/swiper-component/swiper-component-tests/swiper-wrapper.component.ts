@@ -1,18 +1,18 @@
 import { Component, input, ViewChild } from '@angular/core';
-import { SliderComponent } from '../slider.component';
+import { SwiperComponent } from '../swiper.component';
 
 import { Observable } from 'rxjs';
 import { GetSlideContentFromItem, TestItem } from './models';
 
 @Component({
-  selector: 'slider-wrapper',
+  selector: 'swiper-wrapper',
   template: `<ng-template #slideTemplate let-slide="slide">
       @if(getSlideContent(); as getSlideContent) {
       <div [class]="slideClass()">{{ getSlideContent(slide.value) }}</div>
       }
     </ng-template>
-    <lib-slider
-      class="slider"
+    <lib-swiper
+      class="swiper"
       [slideTemplate]="slideTemplate"
       [nbSlides]="nbSlides()"
       [items]="items()"
@@ -21,10 +21,10 @@ import { GetSlideContentFromItem, TestItem } from './models';
       [activateItem$]="activateItem$()"
       [addItems$]="addItems$()"
     >
-    </lib-slider>`,
-  imports: [SliderComponent],
+    </lib-swiper>`,
+  imports: [SwiperComponent],
 })
-export class SliderWrapperComponent {
+export class SwiperWrapperComponent {
   nbSlides = input<number>(0);
   items = input<TestItem[]>([]);
   swipeToNext$ = input<Observable<void>>();
@@ -34,6 +34,6 @@ export class SliderWrapperComponent {
   getSlideContent = input<GetSlideContentFromItem<TestItem>>();
   slideClass = input<string>();
 
-  @ViewChild(SliderComponent<TestItem>)
-  sliderComponent!: SliderComponent<TestItem>;
+  @ViewChild(SwiperComponent<TestItem>)
+  swiperComponent!: SwiperComponent<TestItem>;
 }

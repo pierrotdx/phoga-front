@@ -12,16 +12,16 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import { Observable } from 'rxjs';
 import { SubscriptionHandler } from '@shared/subscription-handler-context';
-import { ISlide, ISlider } from '../models';
-import { Slider } from '../slider/slider';
+import { ISlide, ISwiper } from '../models';
+import { Swiper } from '../swiper/swiper';
 
 @Component({
-  selector: 'lib-slider',
+  selector: 'lib-swiper',
   imports: [NgTemplateOutlet],
-  templateUrl: './slider.component.html',
-  styleUrl: './slider.component.scss',
+  templateUrl: './swiper.component.html',
+  styleUrl: './swiper.component.scss',
 })
-export class SliderComponent<T extends { _id: string }>
+export class SwiperComponent<T extends { _id: string }>
   implements OnChanges, OnDestroy
 {
   nbSlides = input.required<number>();
@@ -68,7 +68,7 @@ export class SliderComponent<T extends { _id: string }>
 
   slides = signal<ISlide<T>[]>([]);
 
-  private slider!: ISlider<T>;
+  private swiper!: ISwiper<T>;
   private readonly activateItemHandler: SubscriptionHandler<number | undefined>;
   private readonly swipeToNextHandler: SubscriptionHandler<void>;
   private readonly swipeToPreviousHandler: SubscriptionHandler<void>;
@@ -108,16 +108,16 @@ export class SliderComponent<T extends { _id: string }>
   }
 
   ngOnChanges() {
-    this.setSlider();
+    this.setSwiper();
   }
 
-  private setSlider(): void {
-    this.slider = new Slider<T>({
+  private setSwiper(): void {
+    this.swiper = new Swiper<T>({
       items: this.items(),
       nbSlides: this.nbSlides(),
     });
-    this.slidesHandler.subscribeTo(this.slider.slides$);
-    this.activeItemIndexHandler.subscribeTo(this.slider.activeItemIndex$);
+    this.slidesHandler.subscribeTo(this.swiper.slides$);
+    this.activeItemIndexHandler.subscribeTo(this.swiper.activeItemIndex$);
   }
 
   ngOnDestroy(): void {
@@ -131,15 +131,15 @@ export class SliderComponent<T extends { _id: string }>
   };
 
   private onSwipeToNext = (): void => {
-    this.slider.swipeToNext();
+    this.swiper.swipeToNext();
   };
 
   private onSwipeToPrevious = (): void => {
-    this.slider.swipeToPrevious();
+    this.swiper.swipeToPrevious();
   };
 
   private onAddItems = (itemsToAdd: T[]): void => {
-    this.slider.addItems(itemsToAdd);
+    this.swiper.addItems(itemsToAdd);
   };
 
   private onSlides = (slides: ISlide<T>[]): void => {
@@ -152,6 +152,6 @@ export class SliderComponent<T extends { _id: string }>
   };
 
   activateItem(index: number | undefined): void {
-    this.slider.activateItem(index);
+    this.swiper.activateItem(index);
   }
 }
