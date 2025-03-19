@@ -56,6 +56,7 @@ describe('slider', () => {
 
   describe('the `swipeToNext()` function', () => {
     it('should not modify the active item', () => {
+      slider.activateItem(0);
       const initActiveItemIndex = testUtils.getActiveItemIndex();
       slider.swipeToNext();
       testUtils.expectActiveItemIndexToEqual(initActiveItemIndex);
@@ -149,9 +150,9 @@ describe('slider', () => {
       it('should update the slides such that the last one matches the input', () => {
         testUtils.expectSlideValuesToMatch(expectedSlidesBefore);
         slider.swipeToItem(inputIndex);
-        const items = getItems(slider);
+        const sliderItems = slider.getItems();
         const expectedSlidesAfter = testUtils.getItemsSliceEndingWithItem(
-          items,
+          sliderItems,
           nbSlides,
           inputIndex
         );
@@ -189,18 +190,29 @@ describe('slider', () => {
   describe('the `addItems()` function', () => {
     it('should add more items', () => {
       const itemsToAdd = ['y', 'z'];
-      const initItems = getItems(slider);
+      const initItems = slider.getItems();
       testUtils.expectMatchingItemArrays(initItems, items);
       slider.addItems(itemsToAdd);
 
       const expectedItemsAfter = items.concat(itemsToAdd);
-      const newItems = getItems(slider);
+      const newItems = slider.getItems();
 
       testUtils.expectMatchingItemArrays(newItems, expectedItemsAfter);
     });
   });
-});
 
-function getItems(slider: Slider<TItem>): TItem[] {
-  return slider['items$'].getValue();
-}
+  describe('getItem', () => {
+    it("should return the slider's items", () => {
+      const sliderItems = slider.getItems();
+      testUtils.expectMatchingItemArrays(items, sliderItems);
+    });
+
+    it('should return an empty array if there are no items', () => {
+      slider = new Slider({ items: undefined, nbSlides });
+      testUtils = new SliderTestUtils<TItem>(slider);
+      const expectedItems: TItem[] = [];
+      const sliderItems = slider.getItems();
+      testUtils.expectMatchingItemArrays(expectedItems, sliderItems);
+    });
+  });
+});

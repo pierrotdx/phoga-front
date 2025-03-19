@@ -40,8 +40,6 @@ export class SliderTestUtils<T> {
     expectedActiveItemIndex: number | undefined
   ): void {
     const activeIndexItem = this.getActiveItemIndex();
-    expect(expectedActiveItemIndex).toBeDefined();
-    expect(activeIndexItem).toBeDefined();
     expect(activeIndexItem).toBe(expectedActiveItemIndex);
   }
 

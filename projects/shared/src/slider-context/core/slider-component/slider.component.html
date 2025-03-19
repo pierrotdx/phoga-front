@@ -1,0 +1,7 @@
+@for(slide of slides(); track slide.value._id; let slideIndex = $index;) {
+    <div (click)="activateItem(slide.itemIndex)">
+            <ng-container *ngTemplateOutlet="slideTemplate();
+                            context: { slide }">
+            </ng-container>
+    </div>
+}

@@ -7,6 +7,7 @@ export interface ISlider<T> {
   swipeToNext: () => void;
   swipeToPrevious: () => void;
   swipeToItem(itemIndex: number): void;
-  activateItem(slideIndex: number): void;
+  activateItem(slideIndex: number | undefined): void;
   addItems(itemsToAdd: T[]): void;
+  getItems(): T[];
 }

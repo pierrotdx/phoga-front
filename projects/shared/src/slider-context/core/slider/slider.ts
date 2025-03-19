@@ -32,7 +32,7 @@ export class Slider<T> implements ISlider<T> {
     const isInit = this.slideItemIndices.length === 0;
     if (isInit) {
       this.setSlideItemIndices();
-      this.activateItem(0);
+      this.activateItem(undefined);
     }
   }
 
@@ -117,10 +117,18 @@ export class Slider<T> implements ISlider<T> {
     }
   }
 
-  activateItem(itemIndex: number): void {
+  activateItem(itemIndex: number | undefined): void {
     const items = this.items$.getValue();
+    if (itemIndex == undefined) {
+      this.activeItemIndex$.next(undefined);
+      return;
+    }
     if (itemIndex >= 0 && itemIndex < items.length) {
       this.activeItemIndex$.next(itemIndex);
     }
+  }
+
+  getItems(): T[] {
+    return this.items$.getValue() || [];
   }
 }
