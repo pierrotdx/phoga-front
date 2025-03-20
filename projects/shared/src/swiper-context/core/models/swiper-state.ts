@@ -1,6 +1,6 @@
+import { ISlide } from './slide';
+
 export interface ISwiperState<T> {
-  activeSlide?: {
-    itemIndex: number;
-    value: T;
-  };
+  slides: ISlide<T>[];
+  activeItemIndex?: number;
 }

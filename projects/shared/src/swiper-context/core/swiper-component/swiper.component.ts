@@ -1,9 +1,8 @@
 import {
   Component,
+  effect,
   EventEmitter,
   input,
-  Input,
-  OnChanges,
   OnDestroy,
   Output,
   signal,
@@ -12,7 +11,7 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import { Observable } from 'rxjs';
 import { SubscriptionHandler } from '@shared/subscription-handler-context';
-import { ISlide, ISwiper } from '../models';
+import { ISlide, ISwiper, ISwiperState, ISwiperInitOptions } from '../models';
 import { Swiper } from '../swiper/swiper';
 
 @Component({
@@ -21,103 +20,57 @@ import { Swiper } from '../swiper/swiper';
   templateUrl: './swiper.component.html',
   styleUrl: './swiper.component.scss',
 })
-export class SwiperComponent<T extends { _id: string }>
-  implements OnChanges, OnDestroy
-{
-  nbSlides = input.required<number>();
-  items = input.required<T[]>();
-  slideTemplate = input.required<TemplateRef<any>>();
+export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
+  readonly nbSlides = input.required<number>();
+  readonly items = input.required<T[]>();
+  readonly slideTemplate = input.required<TemplateRef<any>>();
+  readonly swiperInitOptions = input<ISwiperInitOptions>();
 
-  private _activateItem$: Observable<number | undefined> | undefined;
-  @Input() set activateItem$(
-    value: Observable<number | undefined> | undefined
-  ) {
-    this._activateItem$ = value;
-    this.activateItemHandler.subscribeTo(value);
-  }
-  get activateItem$() {
-    return this._activateItem$;
-  }
+  readonly activateItem$ = input<Observable<number | undefined>>();
+  readonly swipeToNext$ = input<Observable<void>>();
+  readonly swipeToPrevious$ = input<Observable<void>>();
+  readonly addItems$ = input<Observable<T[]>>();
 
-  private _swipeToNext$: Observable<void> | undefined;
-  @Input() set swipeToNext$(value: Observable<void> | undefined) {
-    this.swipeToNextHandler.subscribeTo(value);
-  }
-  get swipeToNext$() {
-    return this._swipeToNext$;
-  }
-
-  private _swipeToPrevious$: Observable<void> | undefined;
-  @Input() set swipeToPrevious$(value: Observable<void> | undefined) {
-    this.swipeToPreviousHandler.subscribeTo(value);
-  }
-  get swipeToPrevious$() {
-    return this._swipeToPrevious$;
-  }
-
-  private _addItems$: Observable<T[]> | undefined;
-  @Input() set addItems$(value: Observable<T[]> | undefined) {
-    this.addItemHandler.subscribeTo(value);
-  }
-  get addItems$() {
-    return this._addItems$;
-  }
-
-  @Output() slidesChange = new EventEmitter<ISlide<T>[]>();
-  @Output() activeItemIndexChange = new EventEmitter<number | undefined>();
+  @Output() swiperStateChange = new EventEmitter<ISwiperState<T>>();
 
   slides = signal<ISlide<T>[]>([]);
-
   private swiper!: ISwiper<T>;
+
   private readonly activateItemHandler: SubscriptionHandler<number | undefined>;
   private readonly swipeToNextHandler: SubscriptionHandler<void>;
   private readonly swipeToPreviousHandler: SubscriptionHandler<void>;
   private readonly addItemHandler: SubscriptionHandler<T[]>;
-
-  private readonly slidesHandler: SubscriptionHandler<ISlide<T>[]>;
-  private readonly activeItemIndexHandler: SubscriptionHandler<
-    number | undefined
-  >;
+  private readonly swiperStateHandler: SubscriptionHandler<ISwiperState<T>>;
 
   private readonly subs: SubscriptionHandler<any>[] = [];
 
   constructor() {
+    effect(() => this.initSwiper());
+
+    effect(() => this.activateItemEffectFn());
     this.activateItemHandler = new SubscriptionHandler<number | undefined>(
       this.onActivateItem
     );
     this.subs.push(this.activateItemHandler);
 
+    effect(() => this.swipeToNextEffectFn());
     this.swipeToNextHandler = new SubscriptionHandler<void>(this.onSwipeToNext);
     this.subs.push(this.swipeToNextHandler);
 
+    effect(() => this.swipeToPreviousEffectFn());
     this.swipeToPreviousHandler = new SubscriptionHandler<void>(
       this.onSwipeToPrevious
     );
     this.subs.push(this.swipeToPreviousHandler);
 
+    effect(() => this.addItemEffectFn());
     this.addItemHandler = new SubscriptionHandler<T[]>(this.onAddItems);
     this.subs.push(this.addItemHandler);
 
-    this.slidesHandler = new SubscriptionHandler<ISlide<T>[]>(this.onSlides);
-    this.subs.push(this.slidesHandler);
-
-    this.activeItemIndexHandler = new SubscriptionHandler<number | undefined>(
-      this.onActiveItemIndex
+    this.swiperStateHandler = new SubscriptionHandler<ISwiperState<T>>(
+      this.onSwiperStateChange
     );
-    this.subs.push(this.activateItemHandler);
-  }
-
-  ngOnChanges() {
-    this.setSwiper();
-  }
-
-  private setSwiper(): void {
-    this.swiper = new Swiper<T>({
-      items: this.items(),
-      nbSlides: this.nbSlides(),
-    });
-    this.slidesHandler.subscribeTo(this.swiper.slides$);
-    this.activeItemIndexHandler.subscribeTo(this.swiper.activeItemIndex$);
+    this.subs.push(this.swiperStateHandler);
   }
 
   ngOnDestroy(): void {
@@ -126,32 +79,66 @@ export class SwiperComponent<T extends { _id: string }>
     });
   }
 
+  private initSwiper(): void {
+    const nbSlides = this.nbSlides();
+    const items = this.items();
+    this.swiper = new Swiper<T>({
+      items,
+      nbSlides,
+    });
+    this.swiperStateHandler.subscribeTo(this.swiper.stateChange$);
+
+    const swiperInitOptions = this.swiperInitOptions();
+    if (typeof swiperInitOptions?.activeItemIndex === 'number') {
+      this.activateItem(swiperInitOptions.activeItemIndex);
+    }
+    if (typeof swiperInitOptions?.slidesStartAt === 'number') {
+      this.swiper.swipeToItem(swiperInitOptions.slidesStartAt);
+    }
+  }
+
+  private onSwiperStateChange = (swiperState: ISwiperState<T>): void => {
+    this.slides.set(swiperState.slides);
+    this.swiperStateChange.emit(swiperState);
+  };
+
+  private activateItemEffectFn() {
+    const activateItem$ = this.activateItem$();
+    this.activateItemHandler.subscribeTo(activateItem$);
+  }
+
   private onActivateItem = (index: number | undefined): void => {
     this.activateItem(index);
-  };
-
-  private onSwipeToNext = (): void => {
-    this.swiper.swipeToNext();
-  };
-
-  private onSwipeToPrevious = (): void => {
-    this.swiper.swipeToPrevious();
-  };
-
-  private onAddItems = (itemsToAdd: T[]): void => {
-    this.swiper.addItems(itemsToAdd);
-  };
-
-  private onSlides = (slides: ISlide<T>[]): void => {
-    this.slides.set(slides);
-    this.slidesChange.emit(slides);
-  };
-
-  private onActiveItemIndex = (activeItemIndex: number | undefined): void => {
-    this.activeItemIndexChange.emit(activeItemIndex);
   };
 
   activateItem(index: number | undefined): void {
     this.swiper.activateItem(index);
   }
+
+  private swipeToNextEffectFn() {
+    const swipeToNext$ = this.swipeToNext$();
+    this.swipeToNextHandler.subscribeTo(swipeToNext$);
+  }
+
+  private onSwipeToNext = (): void => {
+    this.swiper.swipeToNext();
+  };
+
+  private swipeToPreviousEffectFn(): void {
+    const swipeToPrevious$ = this.swipeToPrevious$();
+    this.swipeToPreviousHandler.subscribeTo(swipeToPrevious$);
+  }
+
+  private onSwipeToPrevious = (): void => {
+    this.swiper.swipeToPrevious();
+  };
+
+  private addItemEffectFn(): void {
+    const addItem$ = this.addItems$();
+    this.addItemHandler.subscribeTo(addItem$);
+  }
+
+  private onAddItems = (itemsToAdd: T[]): void => {
+    this.swiper.addItems(itemsToAdd);
+  };
 }

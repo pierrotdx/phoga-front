@@ -1,12 +1,12 @@
 import { CompTestUtils } from '@shared/comp.test-utils';
-import { DebugElement, ElementRef, Type } from '@angular/core';
+import { DebugElement, Type } from '@angular/core';
 import { TestModuleMetadata } from '@angular/core/testing';
-import { SwiperComponent } from '../swiper.component';
 import { By } from '@angular/platform-browser';
-import { Subject } from 'rxjs';
-import { ISlide } from '../../models';
+import { firstValueFrom, Observable, Subject, Subscription } from 'rxjs';
+import { ISlide, ISwiperInitOptions, ISwiperState } from '../../models';
 import { SwiperWrapperComponent } from './swiper-wrapper.component';
 import { GetSlideContentFromItem, TestItem } from './models';
+import { clone } from 'ramda';
 
 export class SwiperComponentTestUtils extends CompTestUtils<SwiperWrapperComponent> {
   readonly getSlideContentFromItem: GetSlideContentFromItem<TestItem> = (
@@ -21,15 +21,16 @@ export class SwiperComponentTestUtils extends CompTestUtils<SwiperWrapperCompone
   private readonly activateItem$ = new Subject<number | undefined>();
   private readonly addItems$ = new Subject<TestItem[]>();
 
-  private swiperCompInstance!: SwiperComponent<TestItem>;
-  private swiperCompElement!: ElementRef<unknown>;
+  private swiperState!: ISwiperState<TestItem>;
+  private swiperStateSub!: Subscription;
 
   constructor(
     comp: Type<SwiperWrapperComponent>,
     config: TestModuleMetadata,
-    private readonly inputs: {
+    protected readonly inputs: {
       nbSlides: number;
       items: TestItem[];
+      swiperInitOptions?: ISwiperInitOptions;
     }
   ) {
     super(comp, config);
@@ -38,8 +39,8 @@ export class SwiperComponentTestUtils extends CompTestUtils<SwiperWrapperCompone
   async globalBeforeEach(): Promise<void> {
     await this.internalBeforeEach();
     this.setInputs();
-    this.swiperCompInstance = this.getSwiperComponent();
-    this.swiperCompElement = this.getSwiperComponentElement();
+    this.subscribeToSwiperState();
+    await this.initSwiperState();
   }
 
   private setInputs(): void {
@@ -51,6 +52,32 @@ export class SwiperComponentTestUtils extends CompTestUtils<SwiperWrapperCompone
     this.setInput('addItems$', this.addItems$.asObservable());
     this.setInput('getSlideContent', this.getSlideContentFromItem);
     this.setInput('slideClass', this.slideClass);
+    const swiperInitOptions = this.inputs.swiperInitOptions;
+    if (this.inputs.swiperInitOptions) {
+      console.log('setting swiper init options', swiperInitOptions);
+      this.setInput('swiperInitOptions', swiperInitOptions);
+    }
+  }
+
+  private subscribeToSwiperState(): void {
+    const swiperStateChange$ = this.getSwiperStateChange();
+    this.swiperStateSub = swiperStateChange$.subscribe((swiperState) => {
+      this.swiperState = swiperState;
+    });
+  }
+
+  private getSwiperStateChange(): Observable<ISwiperState<TestItem>> {
+    const swiperStateChange$ = this.getSwiperComponent()['swiper'].stateChange$;
+    return swiperStateChange$;
+  }
+
+  private async initSwiperState(): Promise<void> {
+    const swiperStateChange$ = this.getSwiperStateChange();
+    this.swiperState = await firstValueFrom(swiperStateChange$);
+  }
+
+  globalAfterEach(): void {
+    this.swiperStateSub.unsubscribe();
   }
 
   swipeToNext(): void {
@@ -73,94 +100,54 @@ export class SwiperComponentTestUtils extends CompTestUtils<SwiperWrapperCompone
     return this.fixture.componentInstance.swiperComponent!;
   }
 
-  expectSwiperComponentToBeCreated(): void {
-    expect(this.swiperCompInstance).toBeTruthy();
-    expect(this.swiperCompElement).toBeTruthy();
-  }
-
-  expectSlidesNbToBe(expectedSlidesNb: number): void {
-    const slideElements = this.getSwiperComponentElement();
-    expect(slideElements.children.length).toBe(expectedSlidesNb);
-  }
-
-  private getSwiperComponentElement() {
+  protected getSwiperComponentElement() {
     return this.fixture.debugElement.query(By.css('lib-swiper'));
   }
 
-  expectSlidesContentsToBe(expectedContents: string[]): void {
-    const slidesElements = this.getSlideElements();
-    expect(expectedContents.length).toEqual(slidesElements.length);
-    slidesElements.forEach((slide) => {
-      const slideContent = this.extractSlideContent(slide);
-      const isExpected = expectedContents.some(
-        (expectedContent) => expectedContent === slideContent
-      );
-      expect(isExpected).toBeTrue();
-    });
-  }
-
-  private getSlideElements(): DebugElement[] {
+  protected getSlideElements(): DebugElement[] {
     return this.fixture.debugElement.queryAll(By.css('.' + this.slideClass));
   }
 
-  private extractSlideContent(slideElement: DebugElement): string {
+  protected extractSlideContent(slideElement: DebugElement): string {
     return slideElement.childNodes[0].nativeNode.nodeValue;
   }
 
-  expectSlideValuesToMatch(items: TestItem[]): void {
-    const expectedSlides = this.getSlides();
-    expect(items.length).toEqual(expectedSlides.length);
-    items.forEach((item) => {
-      const isExpected = expectedSlides.some((slide) => slide.value === item);
-      expect(isExpected).toBeTrue();
-    });
+  getSlides(): ISlide<TestItem>[] {
+    return this.getSwiperState().slides;
   }
 
-  private getSlides(): ISlide<TestItem>[] {
-    return this.swiperCompInstance.slides();
+  getSwiperState(): ISwiperState<TestItem> {
+    return clone(this.swiperState);
   }
 
-  getActiveItemIndex(): number | undefined {
-    return this.getSwiperComponent()['swiper'].activeItemIndex$.getValue();
+  protected getActiveItemIndex(): number | undefined {
+    return this.getSwiperState().activeItemIndex;
   }
 
-  private getItems(): TestItem[] {
-    return this.getSwiperComponent()['swiper'].getItems();
-  }
-
-  expectItemsToMatch(expectedItems: TestItem[]): void {
-    const items = this.getItems();
-    expect(items.length).toEqual(expectedItems.length);
-    expect(items).toEqual(expectedItems);
+  protected getItems(): TestItem[] {
+    const swiper = this.getSwiperComponent()['swiper'];
+    return swiper.getItems();
   }
 
   getSlideFromItem(item: TestItem, itemIndex: number): ISlide<TestItem> {
     return { itemIndex, value: item };
   }
 
-  expectItemToBeActivated(expectedActiveItemIndex: number): void {
-    const activeItemIndex = this.getActiveItemIndex();
-    expect(activeItemIndex).toEqual(expectedActiveItemIndex);
-  }
-
   activateItem(index: number | undefined): void {
     this.activateItem$.next(index);
   }
 
-  getSlidesChangeSpy() {
-    const swiperComponent = this.getSwiperComponent();
-    return spyOn(swiperComponent.slidesChange, 'emit');
+  getSwiperStateChangeSpy() {
+    const swiperStateChange = this.getSwiperComponent().swiperStateChange;
+    return spyOn(swiperStateChange, 'emit');
   }
 
-  getActiveItemIndexChangeSpy() {
+  startSlidesFromItem(startIndex: number) {
+    let index = 0;
     const swiperComponent = this.getSwiperComponent();
-    return spyOn(swiperComponent.activeItemIndexChange, 'emit');
-  }
-
-  expectActiveItemIndexToBeEmitted(
-    expectedEmittedIndex: number,
-    eventEmitterSpy: jasmine.Spy
-  ): void {
-    expect(eventEmitterSpy).toHaveBeenCalledOnceWith(expectedEmittedIndex);
+    while (index < startIndex) {
+      swiperComponent['swiper'].swipeToNext();
+      index++;
+    }
   }
 }

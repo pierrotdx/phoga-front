@@ -16,6 +16,10 @@ describe('swiper', () => {
     testUtils = new SwiperTestUtils<TItem>(swiper);
   });
 
+  afterEach(() => {
+    testUtils.unsubscribeSwiperState();
+  });
+
   describe('the swiper size', () => {
     describe('when the nb of slides is less than the nb of items', () => {
       it('should be the nb of slides', () => {
@@ -40,6 +44,7 @@ describe('swiper', () => {
         swiper = new Swiper({ items, nbSlides });
         testUtils = new SwiperTestUtils<TItem>(swiper);
       });
+
       it('should be the nb of items', () => {
         testUtils.expectNbOfSlidesToBe(items.length);
         testUtils.expectNbOfSlidesToBe(nbSlides);
@@ -54,11 +59,13 @@ describe('swiper', () => {
     });
   });
 
-  describe('the `swipeToNext()` function', () => {
+  describe('swipeToNext()', () => {
     it('should not modify the active item', () => {
-      swiper.activateItem(0);
-      const initActiveItemIndex = testUtils.getActiveItemIndex();
+      const initActiveItemIndex = 2;
+      swiper.activateItem(initActiveItemIndex);
+
       swiper.swipeToNext();
+
       testUtils.expectActiveItemIndexToEqual(initActiveItemIndex);
     });
 
@@ -66,7 +73,9 @@ describe('swiper', () => {
       it('should shift the slides to the right', () => {
         const expectedInitSlides = items.slice(0, nbSlides);
         testUtils.expectSlideValuesToMatch(expectedInitSlides);
+
         swiper.swipeToNext();
+
         const expectedSlidesAfter = items.slice(1, nbSlides + 1);
         testUtils.expectSlideValuesToMatch(expectedSlidesAfter);
       });
@@ -81,32 +90,38 @@ describe('swiper', () => {
       });
 
       it('should do nothing to the slides', () => {
-        const expectedInitSlides = items.slice(0, nbSlides);
-        testUtils.expectSlideValuesToMatch(expectedInitSlides);
+        const expectedSlides = items.slice(0, nbSlides);
+        testUtils.expectSlideValuesToMatch(expectedSlides);
+
         swiper.swipeToNext();
-        testUtils.expectSlideValuesToMatch(expectedInitSlides);
+
+        testUtils.expectSlideValuesToMatch(expectedSlides);
       });
     });
   });
 
-  describe('the `swipeToPrevious()` function', () => {
+  describe('swipeToPrevious()', () => {
     it('should not modify the active item', () => {
       const activeSlideIndex = 1;
       swiper.activateItem(activeSlideIndex);
       testUtils.expectActiveItemIndexToEqual(activeSlideIndex);
+
       swiper.swipeToPrevious();
+
       testUtils.expectActiveItemIndexToEqual(activeSlideIndex);
     });
 
     describe('when there are more items to show on the left side', () => {
       beforeEach(() => {
-        swiper.swipeToNext();
+        testUtils.startSlidesFromItem(1);
       });
 
       it('should shift the slides to the left', () => {
         const expectedInitSlides = items.slice(1, nbSlides + 1);
         testUtils.expectSlideValuesToMatch(expectedInitSlides);
+
         swiper.swipeToPrevious();
+
         const expectedSlidesAfter = items.slice(0, nbSlides);
         testUtils.expectSlideValuesToMatch(expectedSlidesAfter);
       });
@@ -116,26 +131,30 @@ describe('swiper', () => {
       it('should do nothing to the slides', () => {
         const expectedInitSlides = items.slice(0, nbSlides);
         testUtils.expectSlideValuesToMatch(expectedInitSlides);
+
         swiper.swipeToPrevious();
+
         testUtils.expectSlideValuesToMatch(expectedInitSlides);
       });
     });
   });
 
-  describe('the `swipeToItem()` function', () => {
+  describe('swipeToItem()', () => {
     let expectedSlidesBefore: TItem[];
     let inputIndex: number;
 
     describe('when the input item is before the slides', () => {
       beforeEach(() => {
+        testUtils.startSlidesFromItem(1);
         inputIndex = 0;
-        swiper.swipeToNext();
         expectedSlidesBefore = items.slice(inputIndex + 1, nbSlides + 1);
       });
 
       it('should update the slides such that the first one matches the input item', () => {
         testUtils.expectSlideValuesToMatch(expectedSlidesBefore);
+
         swiper.swipeToItem(inputIndex);
+
         const expectedSlidesAfter = items.slice(inputIndex, nbSlides);
         testUtils.expectSlideValuesToMatch(expectedSlidesAfter);
       });
@@ -149,7 +168,9 @@ describe('swiper', () => {
 
       it('should update the slides such that the last one matches the input', () => {
         testUtils.expectSlideValuesToMatch(expectedSlidesBefore);
+
         swiper.swipeToItem(inputIndex);
+
         const swiperItems = swiper.getItems();
         const expectedSlidesAfter = testUtils.getItemsSliceEndingWithItem(
           swiperItems,
@@ -161,7 +182,7 @@ describe('swiper', () => {
     });
   });
 
-  describe('the `activateItem()` function', () => {
+  describe('activateItem()', () => {
     let activeSlideIndexBefore: number | undefined;
 
     beforeEach(() => {
@@ -170,38 +191,44 @@ describe('swiper', () => {
 
     it('should activate the slide according to the input', () => {
       const targetItemIndex = 2;
+
       swiper.activateItem(targetItemIndex);
+
       testUtils.expectActiveItemIndexToEqual(targetItemIndex);
     });
 
     it('should not do anything if the input slide index is greater than the total number of items', () => {
       const targetItemIndex = items.length + 1;
+
       swiper.activateItem(targetItemIndex);
+
       testUtils.expectActiveItemIndexToEqual(activeSlideIndexBefore);
     });
 
     it('should not do anything if the input slide index is lesser than 0', () => {
       const targetedSelectedItemIndex = -1;
+
       swiper.activateItem(targetedSelectedItemIndex);
+
       testUtils.expectActiveItemIndexToEqual(activeSlideIndexBefore);
     });
   });
 
-  describe('the `addItems()` function', () => {
+  describe('addItems()', () => {
     it('should add more items', () => {
       const itemsToAdd = ['y', 'z'];
       const initItems = swiper.getItems();
       testUtils.expectMatchingItemArrays(initItems, items);
+
       swiper.addItems(itemsToAdd);
 
       const expectedItemsAfter = items.concat(itemsToAdd);
       const newItems = swiper.getItems();
-
       testUtils.expectMatchingItemArrays(newItems, expectedItemsAfter);
     });
   });
 
-  describe('getItem', () => {
+  describe('getItem()', () => {
     it("should return the swiper's items", () => {
       const swiperItems = swiper.getItems();
       testUtils.expectMatchingItemArrays(items, swiperItems);
@@ -211,8 +238,35 @@ describe('swiper', () => {
       swiper = new Swiper({ items: undefined, nbSlides });
       testUtils = new SwiperTestUtils<TItem>(swiper);
       const expectedItems: TItem[] = [];
+
       const swiperItems = swiper.getItems();
+
       testUtils.expectMatchingItemArrays(expectedItems, swiperItems);
+    });
+  });
+
+  describe("swiper's state", () => {
+    it('should initially have no active item', () => {
+      const swiperState = testUtils.getSwiperState();
+      expect(swiperState.activeItemIndex).toBeUndefined();
+    });
+
+    it('should change when the active item changes', () => {
+      const expectedActiveItemIndex = 2;
+
+      swiper.activateItem(expectedActiveItemIndex);
+
+      const swiperState = testUtils.getSwiperState();
+      expect(swiperState.activeItemIndex).toBe(expectedActiveItemIndex);
+    });
+
+    it('should change when the slides change', () => {
+      const swiperStateBefore = testUtils.getSwiperState();
+
+      swiper.swipeToNext();
+
+      const swiperStateAfter = testUtils.getSwiperState();
+      expect(swiperStateAfter.slides).not.toEqual(swiperStateBefore.slides);
     });
   });
 });

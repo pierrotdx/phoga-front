@@ -1,11 +1,18 @@
-import { BehaviorSubject } from 'rxjs';
-import { ISlide, ISwiper } from '../models';
+import { distinctUntilChanged, ReplaySubject } from 'rxjs';
+import { ISlide, ISwiper, ISwiperState } from '../models';
+import { clone, equals } from 'ramda';
 
 export class Swiper<T> implements ISwiper<T> {
-  slides$ = new BehaviorSubject<ISlide<T>[]>([]);
-  activeItemIndex$ = new BehaviorSubject<number | undefined>(undefined);
+  private _stateChange$ = new ReplaySubject<ISwiperState<T>>(1);
+  readonly stateChange$ = this._stateChange$
+    .asObservable()
+    .pipe(distinctUntilChanged(equals<ISwiperState<T>>));
 
-  private items$: BehaviorSubject<T[]> = new BehaviorSubject<T[]>([]);
+  private readonly state: ISwiperState<T> = {
+    slides: [],
+  };
+
+  private items: T[] = [];
 
   private slideItemIndices: number[] = [];
   private swiperSize: number = 0;
@@ -13,52 +20,43 @@ export class Swiper<T> implements ISwiper<T> {
 
   constructor({ items = [], nbSlides }: { items?: T[]; nbSlides: number }) {
     this.nbSlides = nbSlides;
-    this.subToItems();
     this.addItems(items);
   }
 
   addItems(itemsToAdd: T[] = []): void {
-    const currentItems = this.items$.getValue();
-    const items = currentItems.concat(itemsToAdd);
-    this.items$.next(items);
+    this.items = this.items.concat(itemsToAdd);
+    this.onItemsChange();
   }
 
-  private subToItems(): void {
-    this.items$.subscribe((items) => this.onItemsChange(items));
-  }
-
-  private onItemsChange(items: T[]): void {
+  private onItemsChange(): void {
     this.setSwiperSize();
-    const isInit = this.slideItemIndices.length === 0;
-    if (isInit) {
-      this.setSlideItemIndices();
-      this.activateItem(undefined);
-    }
-  }
-
-  private async setSlideItemIndices(startItemIndex: number = 0): Promise<void> {
-    this.slideItemIndices = [];
-    let index = startItemIndex;
-    let size = 0;
-    while (size < this.swiperSize) {
-      this.slideItemIndices.push(index);
-      index++;
-      size++;
-    }
-    this.emitSlides();
+    const startFromItemIndex = this.slideItemIndices[0] || 0;
+    this.setSlideItemIndices(startFromItemIndex);
+    this.updateSlides();
+    this.emitState();
   }
 
   private setSwiperSize(): void {
-    this.swiperSize = Math.min(this.items$.getValue().length, this.nbSlides);
+    this.swiperSize = Math.min(this.items.length, this.nbSlides);
   }
 
-  private emitSlides(): void {
-    const items = this.items$?.getValue();
+  private setSlideItemIndices(startItemIndex: number): void {
+    let index = startItemIndex;
+    this.slideItemIndices = [];
+    let size = 0;
+    while (size < this.swiperSize) {
+      this.slideItemIndices.push(index % this.items.length);
+      index++;
+      size++;
+    }
+  }
+
+  private updateSlides(): void {
     const slides = this.slideItemIndices.map((itemIndex) => {
-      const item = items[itemIndex];
+      const item = this.items[itemIndex];
       return this.buildSlide(item, itemIndex);
     });
-    this.slides$.next(slides);
+    this.state.slides = slides;
   }
 
   private buildSlide(item: T, itemIndex: number): ISlide<T> {
@@ -68,18 +66,24 @@ export class Swiper<T> implements ISwiper<T> {
     };
   }
 
+  private emitState(): void {
+    const stateToEmit = clone(this.state);
+    this._stateChange$.next(stateToEmit);
+  }
+
   swipeToNext() {
     if (this.isNextDisabled()) {
       return;
     }
     this.slideItemIndices = this.slideItemIndices.map(
-      (index) => (index + 1) % this.items$.getValue().length
+      (index) => (index + 1) % this.items.length
     );
-    this.emitSlides();
+    this.updateSlides();
+    this.emitState();
   }
 
   private isNextDisabled(): boolean {
-    const itemsEndIndex = this.items$.getValue().length - 1;
+    const itemsEndIndex = this.items.length - 1;
     const slideEndIndex = this.slideItemIndices[this.nbSlides - 1];
     const isAtEnd = slideEndIndex === itemsEndIndex;
     return isAtEnd;
@@ -90,10 +94,11 @@ export class Swiper<T> implements ISwiper<T> {
       return;
     }
     this.slideItemIndices = this.slideItemIndices.map((index) => {
-      const newIndex = (index - 1) % this.items$.getValue().length;
-      return newIndex < 0 ? this.items$.getValue().length + newIndex : newIndex;
+      const newIndex = (index - 1) % this.items.length;
+      return newIndex < 0 ? this.items.length + newIndex : newIndex;
     });
-    this.emitSlides();
+    this.updateSlides();
+    this.emitState();
   }
 
   private isPreviousDisabled(): boolean {
@@ -115,20 +120,26 @@ export class Swiper<T> implements ISwiper<T> {
       const startIndex = itemIndex - (this.swiperSize - 1);
       this.setSlideItemIndices(startIndex);
     }
+    this.updateSlides();
+    this.emitState();
   }
 
   activateItem(itemIndex: number | undefined): void {
-    const items = this.items$.getValue();
-    if (itemIndex == undefined) {
-      this.activeItemIndex$.next(undefined);
-      return;
-    }
-    if (itemIndex >= 0 && itemIndex < items.length) {
-      this.activeItemIndex$.next(itemIndex);
+    this.updateActiveItem(itemIndex);
+    this.emitState();
+  }
+
+  private updateActiveItem(itemIndex: number | undefined): void {
+    const items = this.items;
+    const isOutRange = itemIndex! < 0 || itemIndex! >= items.length;
+    if (itemIndex === undefined || isOutRange) {
+      delete this.state.activeItemIndex;
+    } else {
+      this.state.activeItemIndex = itemIndex;
     }
   }
 
   getItems(): T[] {
-    return this.items$.getValue() || [];
+    return this.items || [];
   }
 }

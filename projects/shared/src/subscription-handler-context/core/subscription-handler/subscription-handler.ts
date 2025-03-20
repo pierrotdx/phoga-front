@@ -20,16 +20,16 @@ export class SubscriptionHandler<T> implements ISubscriptionHandler<T> {
     }
   }
 
-  subscribeTo(subject: Subscribable<T> | undefined): void {
+  subscribeTo(observable: Subscribable<T> | undefined): void {
     this.unsubscribe();
-    this.observable = subject;
+    this.observable = observable;
     this.subscription = this.observable?.subscribe(this.observer);
   }
 
   unsubscribe(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
-      delete this.subscription;
+      this.subscription = undefined;
     }
   }
 }

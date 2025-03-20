@@ -1,14 +1,14 @@
-import { ISlide } from '../models';
+import { ISlide, ISwiperInitOptions } from '../models';
 import { SwiperComponent } from './swiper.component';
 import { SwiperWrapperComponent, TestItem } from './swiper-component-tests';
-import { SwiperComponentTestUtils } from './swiper-component-tests/swiper.component.test-utils';
+import { SwiperComponentTestExpects } from './swiper-component-tests';
 
-// Need to test the swiper component,
-// which has an input being a template ref,
-// via a wrapping component.
+// Need to test the swiper component
+// via a wrapping component
+// because it has an input being a template ref:
 // https://stackoverflow.com/a/57019955/6281776
 describe('SwiperComponent', () => {
-  let testUtils: SwiperComponentTestUtils;
+  let testUtils: SwiperComponentTestExpects;
   let nbSlides: number;
   let items: TestItem[];
 
@@ -21,6 +21,10 @@ describe('SwiperComponent', () => {
       { _id: 'slide-4' },
     ];
     testUtils = await restartTestUtils(testUtils, { nbSlides, items });
+  });
+
+  afterEach(() => {
+    testUtils.globalAfterEach();
   });
 
   it('should create', () => {
@@ -78,12 +82,14 @@ describe('SwiperComponent', () => {
   });
 
   describe('swipeToPrevious', () => {
+    let startIndex = 1;
+
     beforeEach(() => {
-      testUtils.swipeToNext();
+      testUtils.startSlidesFromItem(startIndex);
     });
 
     it('should swipe to previous when asked to', () => {
-      const initExpectedSlides = items.slice(1, nbSlides + 1);
+      const initExpectedSlides = items.slice(startIndex, startIndex + nbSlides);
       testUtils.expectSlideValuesToMatch(initExpectedSlides);
 
       testUtils.swipeToPrevious();
@@ -94,12 +100,8 @@ describe('SwiperComponent', () => {
   });
 
   describe('activateItem', () => {
-    it('should be `undefined` by default', () => {
-      const initActiveItemIndex = testUtils.getActiveItemIndex();
-      expect(initActiveItemIndex).toBeUndefined();
-    });
-
     const expectedActiveItemIndices = [3, 0, 1];
+
     expectedActiveItemIndices.forEach((itemIndex) => {
       it('should set the active item', () => {
         testUtils.activateItem(itemIndex);
@@ -122,60 +124,137 @@ describe('SwiperComponent', () => {
     });
   });
 
-  describe('slidesChange event', () => {
+  describe('swiperStateChange event', () => {
     let eventEmitterSpy: jasmine.Spy;
-    let allPossibleSlides: ISlide<TestItem>[];
 
     beforeEach(() => {
-      eventEmitterSpy = testUtils.getSlidesChangeSpy();
+      eventEmitterSpy = testUtils.getSwiperStateChangeSpy();
       eventEmitterSpy.calls.reset();
-
-      allPossibleSlides = items.map((item, index) =>
-        testUtils.getSlideFromItem(item, index)
-      );
     });
 
-    it('should emit when the slides are changed', () => {
-      testUtils.swipeToNext();
-      const expectedSlides = allPossibleSlides.slice(1, nbSlides + 1);
+    describe('when the active item changes', () => {
+      const expectedEmittedValues = [3, 1, 2];
 
-      expect(eventEmitterSpy).toHaveBeenCalledOnceWith(expectedSlides);
+      expectedEmittedValues.forEach((expectedValue) => {
+        it('should emit a state with the new active-item index', () => {
+          testUtils.activateItem(expectedValue);
+
+          expect(eventEmitterSpy).toHaveBeenCalledTimes(1);
+          testUtils.expectActiveItemIndexToBe(expectedValue);
+        });
+      });
+    });
+
+    describe('when slides change', () => {
+      let allPossibleSlides: ISlide<TestItem>[];
+
+      beforeEach(() => {
+        eventEmitterSpy.calls.reset();
+
+        allPossibleSlides = items.map((item, index) =>
+          testUtils.getSlideFromItem(item, index)
+        );
+      });
+
+      it('should emit when the slides are changed', () => {
+        testUtils.swipeToNext();
+        const expectedSlides = allPossibleSlides.slice(1, nbSlides + 1);
+
+        expect(eventEmitterSpy).toHaveBeenCalledTimes(1);
+        const slides = testUtils.getSlides();
+        expect(slides).toEqual(expectedSlides);
+      });
     });
   });
 
-  describe('activeItemIndexChange event', () => {
-    let eventEmitterSpy: jasmine.Spy;
+  describe("swiper's initial state", () => {
+    describe('by default', () => {
+      it('should not have an active item', async () => {
+        const expectedActiveItemIndex = undefined;
 
-    beforeEach(() => {
-      eventEmitterSpy = testUtils.getActiveItemIndexChangeSpy();
-      eventEmitterSpy.calls.reset();
+        testUtils = await restartTestUtils(testUtils, {
+          items,
+          nbSlides,
+        });
+
+        testUtils.expectActiveItemIndexToBe(expectedActiveItemIndex);
+      });
+
+      it('should have slides starting with the first item of the list', async () => {
+        const expectedItemIndex = 0;
+
+        testUtils = await restartTestUtils(testUtils, {
+          items,
+          nbSlides,
+        });
+
+        testUtils.expectFirstSlideItemIndexToBe(expectedItemIndex);
+      });
     });
 
-    const expectedEmittedValues = [3, 1, 2];
-    expectedEmittedValues.forEach((expectedValue) => {
-      it('should emit when the active-item index changes', () => {
-        testUtils.activateItem(expectedValue);
+    describe('by init options', () => {
+      let swiperInitOptions: ISwiperInitOptions = {};
 
-        testUtils.expectActiveItemIndexToBeEmitted(
-          expectedValue,
-          eventEmitterSpy
-        );
+      beforeEach(() => {
+        swiperInitOptions = {};
+      });
+
+      it('should activate the item according to the input options', async () => {
+        const expectedActiveItemIndex = 2;
+        swiperInitOptions.activeItemIndex = expectedActiveItemIndex;
+
+        testUtils = await restartTestUtils(testUtils, {
+          items,
+          nbSlides,
+          swiperInitOptions,
+        });
+
+        testUtils.expectSwiperStateToMatchInitOptions(swiperInitOptions);
+      });
+
+      it('should have the slides starting from the input-options start item when there is enough items', async () => {
+        const swiperInitOptions: ISwiperInitOptions = {
+          slidesStartAt: 1,
+        };
+
+        testUtils = await restartTestUtils(testUtils, {
+          items,
+          nbSlides,
+          swiperInitOptions,
+        });
+
+        testUtils.expectSwiperStateToMatchInitOptions(swiperInitOptions);
+      });
+
+      it('should have the slides containing the input-options start item when there is not enough items', async () => {
+        const swiperInitOptions: ISwiperInitOptions = {
+          slidesStartAt: nbSlides - 2,
+        };
+
+        testUtils = await restartTestUtils(testUtils, {
+          items,
+          nbSlides,
+          swiperInitOptions,
+        });
+
+        testUtils.expectSwiperStateToMatchInitOptions(swiperInitOptions);
       });
     });
   });
 });
 
 async function restartTestUtils(
-  testUtils: SwiperComponentTestUtils,
+  testUtils: SwiperComponentTestExpects,
   inputs: {
     items: TestItem[];
     nbSlides: number;
+    swiperInitOptions?: ISwiperInitOptions;
   }
-): Promise<SwiperComponentTestUtils> {
+): Promise<SwiperComponentTestExpects> {
   if (testUtils) {
     testUtils.resetTestingModule();
   }
-  const utils = new SwiperComponentTestUtils(
+  const utils = new SwiperComponentTestExpects(
     SwiperWrapperComponent,
     { imports: [SwiperWrapperComponent, SwiperComponent<TestItem>] },
     inputs

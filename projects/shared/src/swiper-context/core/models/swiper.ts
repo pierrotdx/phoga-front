@@ -1,9 +1,8 @@
-import { BehaviorSubject } from 'rxjs';
-import { ISlide } from './slide';
+import { Observable } from 'rxjs';
+import { ISwiperState } from './swiper-state';
 
 export interface ISwiper<T> {
-  slides$: BehaviorSubject<ISlide<T>[]>;
-  activeItemIndex$: BehaviorSubject<number | undefined>;
+  stateChange$: Observable<ISwiperState<T>>;
   swipeToNext: () => void;
   swipeToPrevious: () => void;
   swipeToItem(itemIndex: number): void;

@@ -1,10 +1,22 @@
-import { ISwiper } from '../models';
+import { Subscription } from 'rxjs';
+import { ISwiper, ISwiperState } from '../models';
 
 export class SwiperTestUtils<T> {
-  constructor(private readonly swiper: ISwiper<T>) {}
+  private swiperState!: ISwiperState<T>;
+  private readonly swiperStateSub: Subscription;
+
+  constructor(private readonly swiper: ISwiper<T>) {
+    this.swiperStateSub = this.swiper.stateChange$.subscribe((swiperState) => {
+      this.swiperState = swiperState;
+    });
+  }
+
+  unsubscribeSwiperState(): void {
+    this.swiperStateSub.unsubscribe();
+  }
 
   getActiveItemIndex(): number | undefined {
-    return this.swiper.activeItemIndex$.getValue();
+    return this.swiperState?.activeItemIndex;
   }
 
   getItemsSliceEndingWithItem(
@@ -23,12 +35,12 @@ export class SwiperTestUtils<T> {
   }
 
   expectNbOfSlidesToBe(expectedNbSlides: number): void {
-    const slides = this.swiper.slides$.getValue();
+    const slides = this.swiperState?.slides;
     expect(slides.length).toEqual(expectedNbSlides);
   }
 
   expectSlideValuesToMatch(expectedSlideValues: T[]): void {
-    const slides = this.swiper.slides$.getValue();
+    const slides = this.swiperState.slides;
     expect(slides.length).toEqual(expectedSlideValues.length);
     expectedSlideValues.forEach((expectedValue) => {
       const isInSlides = slides.some((s) => s.value === expectedValue);
@@ -50,5 +62,17 @@ export class SwiperTestUtils<T> {
       const isInItemA = itemsA.some((aItem) => aItem === bItem);
       expect(isInItemA).toBeTrue();
     });
+  }
+
+  getSwiperState(): ISwiperState<T> {
+    return this.swiperState;
+  }
+
+  startSlidesFromItem(startIndex: number) {
+    let index = 0;
+    while (index < startIndex) {
+      this.swiper.swipeToNext();
+      index++;
+    }
   }
 }

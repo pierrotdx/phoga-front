@@ -3,6 +3,7 @@ import { SwiperComponent } from '../swiper.component';
 
 import { Observable } from 'rxjs';
 import { GetSlideContentFromItem, TestItem } from './models';
+import { ISwiperInitOptions } from '@shared/public-api';
 
 @Component({
   selector: 'swiper-wrapper',
@@ -12,7 +13,6 @@ import { GetSlideContentFromItem, TestItem } from './models';
       }
     </ng-template>
     <lib-swiper
-      class="swiper"
       [slideTemplate]="slideTemplate"
       [nbSlides]="nbSlides()"
       [items]="items()"
@@ -20,6 +20,7 @@ import { GetSlideContentFromItem, TestItem } from './models';
       [swipeToPrevious$]="swipeToPrevious$()"
       [activateItem$]="activateItem$()"
       [addItems$]="addItems$()"
+      [swiperInitOptions]="swiperInitOptions()"
     >
     </lib-swiper>`,
   imports: [SwiperComponent],
@@ -33,6 +34,7 @@ export class SwiperWrapperComponent {
   addItems$ = input<Observable<TestItem[]>>();
   getSlideContent = input<GetSlideContentFromItem<TestItem>>();
   slideClass = input<string>();
+  swiperInitOptions = input<ISwiperInitOptions>();
 
   @ViewChild(SwiperComponent<TestItem>)
   swiperComponent!: SwiperComponent<TestItem>;
