@@ -11,7 +11,7 @@ import { BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
 })
 export class GalleryService {
   readonly photos$ = new BehaviorSubject<IPhoto[]>([]);
-  readonly isLoading$ = new Subject<boolean>();
+  readonly isLoading$ = new BehaviorSubject<boolean>(false);
 
   private from: number = 0;
   private defaultSize: number = 2;
@@ -22,7 +22,9 @@ export class GalleryService {
   constructor(private readonly photoApiService: PhotoApiService) {}
 
   async loadMore(size?: number): Promise<IPhoto[]> {
-    if (!this.hasMoreToLoad) {
+    // 1 query at a time (might need queue?)
+    const isAlreadyLoading = this.isLoading$.getValue();
+    if (!this.hasMoreToLoad || isAlreadyLoading) {
       return [];
     }
     this.isLoading$.next(true);
@@ -70,6 +72,7 @@ export class GalleryService {
   }
 
   private updateFrom(step: number): void {
+    const fromBefore = this.from;
     this.from += step;
   }
 

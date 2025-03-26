@@ -115,26 +115,34 @@ describe('GalleryService', () => {
 
     describe('isLoading', () => {
       let isLoadingSub: Subscription;
-      const isLoadingValues: boolean[] = [];
-      const addIsLoadingValue = (value: boolean) => isLoadingValues.push(value);
+      const isLoadingSuccessiveValues: boolean[] = [];
+      const appendIsLoadingValue = (value: boolean) =>
+        isLoadingSuccessiveValues.push(value);
 
       beforeEach(() => {
         const isLoading$ = testUtils.getService().isLoading$;
-        isLoadingSub = isLoading$.subscribe(addIsLoadingValue);
+        isLoadingSub = isLoading$.subscribe(appendIsLoadingValue);
       });
 
       afterEach(() => {
         isLoadingSub.unsubscribe();
       });
 
+      it('should be false by default', () => {
+        expect(isLoadingSuccessiveValues[0]).toBeFalse();
+      });
+
       it('should emit true when the loading is starting', async () => {
         await galleryService.loadMore();
-        expect(isLoadingValues[0]).toBeTrue();
+        expect(isLoadingSuccessiveValues[0]).toBeFalse();
+        expect(isLoadingSuccessiveValues[1]).toBeTrue();
       });
 
       it('should emit false when the loading returns photos', async () => {
         await galleryService.loadMore();
-        expect(isLoadingValues[1]).toBeFalse();
+        expect(isLoadingSuccessiveValues[0]).toBeFalse();
+        expect(isLoadingSuccessiveValues[1]).toBeTrue();
+        expect(isLoadingSuccessiveValues[2]).toBeFalse();
       });
 
       it('should emit false in case of loading error', async () => {
@@ -145,7 +153,9 @@ describe('GalleryService', () => {
         } catch (err) {
           expect(err).toEqual(stubError);
         } finally {
-          expect(isLoadingValues[1]).toBeFalse();
+          expect(isLoadingSuccessiveValues[0]).toBeFalse();
+          expect(isLoadingSuccessiveValues[1]).toBeTrue();
+          expect(isLoadingSuccessiveValues[2]).toBeFalse();
         }
       });
     });
