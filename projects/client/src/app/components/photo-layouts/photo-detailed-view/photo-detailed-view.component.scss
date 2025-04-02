@@ -4,6 +4,10 @@
   height: 100vh;
 }
 
+.show-on-image-hover {
+  display: none;
+}
+
 .photo-detailed-view {
   display: flex;
   gap: var(--spacing-02);
@@ -18,7 +22,7 @@
     flex: 0 0 auto;
     &:focus,
     &:hover {
-      .photo-detailed-view__fullscreen-btn {
+      .show-on-image-hover {
         display: revert;
       }
     }
@@ -28,6 +32,21 @@
     display: none;
     position: absolute;
     top: 0;
+    right: 0;
+  }
+
+  &__previous-btn,
+  &__next-btn {
+    display: none;
+    position: absolute;
+    top: 50%;
+  }
+
+  &__previous-btn {
+    left: 0;
+  }
+
+  &__next-btn {
     right: 0;
   }
 

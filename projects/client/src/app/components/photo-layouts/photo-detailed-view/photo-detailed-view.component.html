@@ -6,10 +6,22 @@
         >
         </app-photo-image>
         <app-overlay-mat-icon-btn
-            class="photo-detailed-view__fullscreen-btn"
-            (click)="goFullscreen()"
+            class="photo-detailed-view__fullscreen-btn show-on-image-hover"
+            (click)="openFullscreen()"
         >
             fullscreen
+        </app-overlay-mat-icon-btn>
+        <app-overlay-mat-icon-btn
+            class="photo-detailed-view__previous-btn show-on-image-hover"
+            (click)="selectPrevious()"
+        >
+            arrow_back
+        </app-overlay-mat-icon-btn>
+        <app-overlay-mat-icon-btn
+            class="photo-detailed-view__next-btn show-on-image-hover"
+            (click)="selectNext()"
+        >
+            arrow_forward
         </app-overlay-mat-icon-btn>
     </div>
     <div class="photo-detailed-view__sidebar">
@@ -20,10 +32,9 @@
         </app-photo-metadata>
         <app-photo-selection
             class="photo-detailed-view__selection"
-            [photos]="photos()"
-            [(selectedPhoto)]="photo"
-        >
-        </app-photo-selection>
+            [selectNextPhoto$]="selectNext$"
+            [selectPreviousPhoto$]="selectPrevious$"
+        ></app-photo-selection>
     </div>
     <button
         class="photo-detailed-view__close-btn"
