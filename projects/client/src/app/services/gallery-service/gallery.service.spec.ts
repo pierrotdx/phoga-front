@@ -1,7 +1,8 @@
+import { Subscription } from 'rxjs';
 import { IPhoto } from '@shared/photo-context';
 import { GalleryServiceTestUtils } from './gallery.test-utils';
 import { GalleryService } from './gallery.service';
-import { Subscription } from 'rxjs';
+import { IGalleryPhotos } from '../../models';
 
 describe('GalleryService', () => {
   let testUtils: GalleryServiceTestUtils;
@@ -19,7 +20,7 @@ describe('GalleryService', () => {
 
   describe('photos', () => {
     it('should be initialized to an empty array', () => {
-      const expectedPhotos: IPhoto[] = [];
+      const expectedPhotos: IGalleryPhotos = { all: [], lastBatch: [] };
       testUtils.expectServicePhotosToBe(expectedPhotos);
     });
   });
@@ -36,17 +37,14 @@ describe('GalleryService', () => {
       testUtils.stubSearchPhotoResponse(stubLoadedPhotos);
     });
 
-    it('should return loaded photos', async () => {
-      const loadedPhotos = await galleryService.loadMore();
-      expect(loadedPhotos).toEqual(stubLoadedPhotos);
-    });
-
     it("should update the value of service's photos", async () => {
-      let expectedPhotos: IPhoto[] = [];
+      const expectedPhotos: IGalleryPhotos = {
+        all: [],
+        lastBatch: [],
+      };
       testUtils.expectServicePhotosToBe(expectedPhotos);
       testUtils.expectServicePhotosLengthToBe(0);
 
-      let loadedPhotos: IPhoto[];
       const batchSize = defaultSize;
       for (let batchNb = 1; batchNb < 3; batchNb++) {
         const batchStart = (batchNb - 1) * batchSize;
@@ -56,9 +54,10 @@ describe('GalleryService', () => {
         );
         testUtils.stubSearchPhotoResponse(stubLoadedPhotos);
 
-        loadedPhotos = await galleryService.loadMore();
+        await galleryService.loadMore();
 
-        expectedPhotos = expectedPhotos.concat(loadedPhotos);
+        expectedPhotos.all = expectedPhotos.all.concat(stubLoadedPhotos);
+        expectedPhotos.lastBatch = stubLoadedPhotos;
         testUtils.expectServicePhotosToBe(expectedPhotos);
         // for simplicity we consider case where the returned batches are full (= batchSize)
         testUtils.expectServicePhotosLengthToBe(batchNb * batchSize);
@@ -70,11 +69,12 @@ describe('GalleryService', () => {
         testUtils.stubSearchPhotoResponse(stubLoadedPhotos);
 
         let expectedFrom = 0;
-        let loadedPhotos = await galleryService.loadMore();
+        await galleryService.loadMore();
 
         testUtils.expectPhotoRequestFromToBe(expectedFrom);
 
-        expectedFrom += loadedPhotos.length + 1;
+        const photos = galleryService.photos$.getValue();
+        expectedFrom += photos.lastBatch.length + 1;
         await galleryService.loadMore();
 
         testUtils.expectPhotoRequestFromToBe(expectedFrom);
@@ -104,8 +104,13 @@ describe('GalleryService', () => {
         const lastPhotoBatch = stubLoadedPhotos.slice(0, size - 1);
         testUtils.stubSearchPhotoResponse(lastPhotoBatch);
 
-        const loadedPhotos = await galleryService.loadMore(size);
-        testUtils.expectServicePhotosToBe(loadedPhotos);
+        await galleryService.loadMore(size);
+
+        const expectedPhotos: IGalleryPhotos = {
+          all: lastPhotoBatch,
+          lastBatch: lastPhotoBatch,
+        };
+        testUtils.expectServicePhotosToBe(expectedPhotos);
         await galleryService.loadMore(size);
 
         const requestSpy = testUtils.getSearchPhotoSpy();
@@ -163,7 +168,10 @@ describe('GalleryService', () => {
 
   describe('selectPhoto', () => {
     beforeEach(() => {
-      const stubPhotos = testUtils.allStubPhotos;
+      const stubPhotos: IGalleryPhotos = {
+        all: testUtils.allStubPhotos,
+        lastBatch: testUtils.allStubPhotos,
+      };
       testUtils.stubServicePhotos(stubPhotos);
     });
 
@@ -190,7 +198,10 @@ describe('GalleryService', () => {
     let selectedPhoto: IPhoto | undefined;
 
     beforeEach(() => {
-      const stubPhotos = testUtils.allStubPhotos;
+      const stubPhotos: IGalleryPhotos = {
+        all: testUtils.allStubPhotos,
+        lastBatch: testUtils.allStubPhotos,
+      };
       testUtils.stubServicePhotos(stubPhotos);
 
       selectedPhoto = testUtils.allStubPhotos[0];
@@ -209,7 +220,10 @@ describe('GalleryService', () => {
 
   describe('selectedPhoto$', () => {
     beforeEach(() => {
-      const stubPhotos = testUtils.allStubPhotos;
+      const stubPhotos: IGalleryPhotos = {
+        all: testUtils.allStubPhotos,
+        lastBatch: testUtils.allStubPhotos,
+      };
       testUtils.stubServicePhotos(stubPhotos);
     });
 

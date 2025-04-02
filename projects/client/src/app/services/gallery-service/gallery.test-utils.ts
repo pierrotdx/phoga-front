@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { GalleryService } from './gallery.service';
 import { IPhoto, Photo, PhotoApiService } from '@shared/photo-context';
 import { of } from 'rxjs';
+import { IGalleryPhotos } from '../../models';
 
 export class GalleryServiceTestUtils {
   private galleryService!: GalleryService;
@@ -43,12 +44,13 @@ export class GalleryServiceTestUtils {
     expect(this.galleryService).toBeTruthy();
   }
 
-  expectServicePhotosToBe(expectedPhotos: IPhoto[]): void {
+  expectServicePhotosToBe(expectedPhotos: IGalleryPhotos): void {
     const photos = this.getPhotos();
-    expect(expectedPhotos).toEqual(photos);
+    expect(expectedPhotos.all).toEqual(photos.all);
+    expect(expectedPhotos.lastBatch).toEqual(expectedPhotos.lastBatch);
   }
 
-  private getPhotos(): IPhoto[] {
+  private getPhotos(): IGalleryPhotos {
     return this.galleryService.photos$.getValue();
   }
 
@@ -79,7 +81,7 @@ export class GalleryServiceTestUtils {
 
   expectServicePhotosLengthToBe(expectedLength: number): void {
     const photos = this.getPhotos();
-    expect(photos.length).toBe(expectedLength);
+    expect(photos.all.length).toBe(expectedLength);
   }
 
   getLoadedPhotosBatch(from: number, size: number): IPhoto[] {
@@ -101,7 +103,7 @@ export class GalleryServiceTestUtils {
     return selectedPhoto;
   }
 
-  stubServicePhotos(stubPhotos: IPhoto[]): void {
+  stubServicePhotos(stubPhotos: IGalleryPhotos): void {
     this.galleryService.photos$.next(stubPhotos);
   }
 }
