@@ -1,0 +1,13 @@
+@if(imageBuffer) {
+    <app-overlay-panel [(show)]="show">
+        <div class="photo-fullscreen">
+            <img class="photo-fullscreen__image"
+                 [src]="imageBuffer | bufferToImage$ | async"
+                 alt="image not available"/>
+                <app-overlay-mat-icon-btn class="photo-fullscreen__close-btn"
+                                          (click)="close()">
+                    close
+                </app-overlay-mat-icon-btn>
+        </div>
+    </app-overlay-panel>
+}

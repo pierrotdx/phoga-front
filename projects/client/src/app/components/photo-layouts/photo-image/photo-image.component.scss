@@ -1,0 +1,28 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: brightness(20%);
+}
+
+.photo-image {
+  &__image {
+    width: var(--photo-image-img-width, 100%);
+    object-fit: var(--photo-image-object-fit, contain);
+    height: var(--photo-image-img-height, auto);
+    border: var(--photo-image-img-border, none);
+  }
+}
+
+/* For tablets and above */
+@media only screen and (width > 600px) {
+  :host {
+    height: 100%;
+  }
+
+  .photo-image {
+    &__image {
+      height: var(--photo-image-img-height, 100%);
+    }
+  }
+}

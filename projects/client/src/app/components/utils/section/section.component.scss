@@ -1,0 +1,9 @@
+.section {
+  &__title {
+    color: var(--clr-text);
+    font-size: 3em;
+    font-weight: 700;
+    text-align: center;
+    padding: var(--spacing-02);
+  }
+}

@@ -1,0 +1,13 @@
+.overlay-mat-icon-btn {
+  margin: 0.5rem;
+  padding: 0.5rem;
+  color: var(--clr-white);
+  background-color: var(--clr-black);
+  border: none;
+  border-radius: 0.5rem;
+  opacity: 0.65;
+
+  lib-material-icon {
+    --material-icon-fs: 1.2rem;
+  }
+}

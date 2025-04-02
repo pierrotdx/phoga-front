@@ -15,19 +15,9 @@ body {
   @media only screen and (width > 600px) {
     font-size: 1.15em;
   }
-}
 
-lib-material-icon {
-  display: inline-block;
-  span {
-    vertical-align: middle;
+  &:has(.disable-body-scrolling) {
+    overflow: hidden;
+    height: 100%;
   }
-}
-
-.page-title {
-  color: var(--clr-text);
-  font-size: 3em;
-  font-weight: 700;
-  text-align: center;
-  padding: var(--spacing-02);
 }

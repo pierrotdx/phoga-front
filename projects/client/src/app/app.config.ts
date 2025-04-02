@@ -7,7 +7,10 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
-import { PhotoApiService } from '@shared/photo-context';
+import {
+  PhotoApiService,
+  PhotoUtilsServiceProvider,
+} from '@shared/photo-context';
 import { ENVIRONMENT_TOKEN, EnvironmentProvider } from '../environment-context';
 
 const PhotoApiServiceProvider: Provider = {
@@ -21,6 +24,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(),
     PhotoApiServiceProvider,
+    PhotoUtilsServiceProvider,
     EnvironmentProvider,
   ],
 };

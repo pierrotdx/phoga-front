@@ -1,0 +1,27 @@
+@if(photoMetadata) {
+    <div class="photo-metadata">
+        @if(title(); as title ) {
+            <h3 class="photo-metadata__title">{{ title }}</h3>
+        }
+        @if(description(); as description) {
+            <p class="photo-metadata__description">{{ description }}</p>
+        }
+        @if(location() || date()) {
+            <ul class="photo-metadata__additional">
+                @if(location(); as location) {
+                    <li>
+                        <lib-material-icon>location_on</lib-material-icon>
+                        {{ location }}
+                    </li>
+                }
+                @if(date(); as date) {
+                    <li>
+                        <lib-material-icon>calendar_month</lib-material-icon>
+                        {{ date }}
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+}
+

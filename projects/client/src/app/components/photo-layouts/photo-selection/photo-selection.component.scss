@@ -1,0 +1,26 @@
+.photo-selection {
+  &__swiper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 5rem);
+    grid-gap: var(--spacing-01);
+  }
+}
+
+.photo-option {
+  border: none;
+  background: unset;
+  display: flex;
+  padding: 0;
+
+  app-photo-image {
+    --photo-image-object-fit: cover;
+    --photo-image-img-width: 5rem;
+    --photo-image-img-height: 5rem;
+  }
+
+  &--active {
+    app-photo-image {
+      --photo-image-img-border: var(--spacing-01) solid var(--clr-secondary);
+    }
+  }
+}
