@@ -1,12 +1,9 @@
-import { Component, Inject, Input } from '@angular/core';
-import {
-  IPhoto,
-  IPhotoSelector,
-  PHOTO_SELECTOR_SERVICE_TOKEN,
-} from '@shared/photo-context';
+import { Component, Input } from '@angular/core';
+import { IPhoto } from '@shared/photo-context';
 import { PhotoMetadataComponent } from '../photo-metadata/photo-metadata.component';
 import { PhotoImageComponent } from '../photo-image/photo-image.component';
 import { OverlayMatIconBtnComponent } from '../../utils/overlay-mat-icon-btn/overlay-mat-icon-btn.component';
+import { GalleryService } from '@client/app/services';
 
 @Component({
   selector: 'app-photo-card',
@@ -21,12 +18,9 @@ import { OverlayMatIconBtnComponent } from '../../utils/overlay-mat-icon-btn/ove
 export class PhotoCardComponent {
   @Input() photo: IPhoto | undefined;
 
-  constructor(
-    @Inject(PHOTO_SELECTOR_SERVICE_TOKEN)
-    private readonly photoSelectorService: IPhotoSelector
-  ) {}
+  constructor(private readonly galleryService: GalleryService) {}
 
   seeDetails = () => {
-    this.photoSelectorService.selectedPhoto.next(this.photo);
+    this.galleryService.selectedPhoto$.next(this.photo);
   };
 }

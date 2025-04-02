@@ -1,7 +1,9 @@
 .photo-selection {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 5rem);
-  grid-gap: var(--spacing-01);
+  &__swiper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 5rem);
+    grid-gap: var(--spacing-01);
+  }
 }
 
 .photo-option {
@@ -16,8 +18,8 @@
     --photo-image-img-height: 5rem;
   }
 
-  &--selected {
-    & app-photo-image {
+  &--active {
+    app-photo-image {
       --photo-image-img-border: var(--spacing-01) solid var(--clr-secondary);
     }
   }

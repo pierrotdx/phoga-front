@@ -22,7 +22,7 @@
 
   .photo-image {
     &__image {
-      height: 100%;
+      height: var(--photo-image-img-height, 100%);
     }
   }
 }

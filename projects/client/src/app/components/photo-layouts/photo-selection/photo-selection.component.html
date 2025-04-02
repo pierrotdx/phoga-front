@@ -1,13 +1,23 @@
-@if(photos) {
-    <div class="photo-selection">
-        @for (photo of photos; track photo._id;) {
-            @if(photo.imageBuffer; as imageBuffer) {
-                <button class="photo-option"
-                        [class.photo-option--selected]="photo._id === selectedPhoto()?._id"
-                        (click)="selectPhoto(photo._id)">
-                         <app-photo-image [photo]="photo"></app-photo-image>
-                </button>
-            }
-        }
-    </div>
+@if(hasInitPhotos()) {
+    <lib-swiper
+        class="photo-selection__swiper"
+        [items]="initPhotos()"
+        [nbSlides]="nbSlides"
+        [slideTemplate]="slideTemplate"
+        [activateItem$]="activateItem$"
+        [swipeToItem$]="swipeToItem$"
+        [addItems$]="addItems$"
+        (swiperStateChange)="onSwiperStateChange($event)">
+    </lib-swiper>
+} @else {
+    <mat-spinner class="photo-selection__loading"></mat-spinner>
 }
+
+<ng-template #slideTemplate
+             let-slide="slide">
+    <div class="photo-option"
+         [class.photo-option--active]="slide.isActive"
+         (click)="selectPhoto(slide.itemIndex)">
+        <app-photo-image [photo]="slide.value"></app-photo-image>
+    </div>
+</ng-template>
