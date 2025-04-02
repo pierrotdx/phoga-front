@@ -4,17 +4,18 @@
     <ng-container ngProjectAs="section-title">Gallery</ng-container>
     <ng-container ngProjectAs="section-body">
         @if(photos$ | async; as photos) {
-            <app-photo-collage [photos]="photos"></app-photo-collage>
+            <app-photo-collage [photos]="photos.all"></app-photo-collage>
+
             @if(selectedPhoto()) {
                 <app-overlay-panel [(show)]="showDetailedView">
-                    <app-photo-detailed-view [photos]="photos"
-                                       [(photo)]="selectedPhoto"
-                                       (close)="closeDetailedView()">
+                    <app-photo-detailed-view
+                        (close)="closeDetailedView()"
+                        [photo]="selectedPhoto()">
                     </app-photo-detailed-view>
                 </app-overlay-panel>
             }
         }
-        @if(isLoading()) {
+        @if((isLoading$ | async) === true) {
             <mat-spinner></mat-spinner>
         }
     </ng-container>

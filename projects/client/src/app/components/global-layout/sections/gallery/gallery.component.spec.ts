@@ -1,11 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GalleryComponent } from './gallery.component';
-import { Component, Input } from '@angular/core';
-import {
-  IPhoto,
-  PHOTO_SELECTOR_SERVICE_TOKEN,
-  PhotoApiService,
-} from '@shared/photo-context';
+import { Component, input, Input } from '@angular/core';
+import { IPhoto, PhotoApiService } from '@shared/photo-context';
 import { AsyncPipe } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BehaviorSubject } from 'rxjs';
@@ -15,8 +11,14 @@ import { BehaviorSubject } from 'rxjs';
   selector: 'app-photo-collage',
 })
 class PhotoCollageDumpComponent {
-  @Input() photos: IPhoto[] | undefined;
+  photos = input<any>();
 }
+
+@Component({
+  template: '',
+  selector: 'app-section',
+})
+class SectionStubComponent {}
 
 describe('GalleryComponent', () => {
   let component: GalleryComponent;
@@ -30,12 +32,6 @@ describe('GalleryComponent', () => {
           provide: PhotoApiService,
           useValue: {},
         },
-        {
-          provide: PHOTO_SELECTOR_SERVICE_TOKEN,
-          useValue: {
-            selectedPhoto: new BehaviorSubject<IPhoto | undefined>(undefined),
-          },
-        },
       ],
     })
       .overrideComponent(GalleryComponent, {
@@ -44,6 +40,7 @@ describe('GalleryComponent', () => {
             PhotoCollageDumpComponent,
             AsyncPipe,
             MatProgressSpinnerModule,
+            SectionStubComponent,
           ],
         },
       })
