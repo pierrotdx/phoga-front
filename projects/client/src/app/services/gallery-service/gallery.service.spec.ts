@@ -120,11 +120,12 @@ describe('GalleryService', () => {
 
     describe('isLoading', () => {
       let isLoadingSub: Subscription;
-      const isLoadingSuccessiveValues: boolean[] = [];
+      let isLoadingSuccessiveValues: boolean[] = [];
       const appendIsLoadingValue = (value: boolean) =>
         isLoadingSuccessiveValues.push(value);
 
       beforeEach(() => {
+        isLoadingSuccessiveValues = [];
         const isLoading$ = testUtils.getService().isLoading$;
         isLoadingSub = isLoading$.subscribe(appendIsLoadingValue);
       });
