@@ -8,7 +8,7 @@ import { SwiperWrapperComponent } from './swiper-wrapper.component';
 import { GetSlideContentFromItem, TestItem } from './models';
 import { clone } from 'ramda';
 
-export class SwiperComponentTestUtils extends CompTestUtils<SwiperWrapperComponent> {
+export class SwiperWrapperComponentTestUtils extends CompTestUtils<SwiperWrapperComponent> {
   readonly getSlideContentFromItem: GetSlideContentFromItem<TestItem> = (
     item: TestItem
   ) => {
@@ -18,11 +18,16 @@ export class SwiperComponentTestUtils extends CompTestUtils<SwiperWrapperCompone
 
   private readonly swipeToNext$ = new Subject<void>();
   private readonly swipeToPrevious$ = new Subject<void>();
+  private readonly swipeToItem$ = new Subject<number>();
   private readonly activateItem$ = new Subject<number | undefined>();
   private readonly addItems$ = new Subject<TestItem[]>();
 
   private swiperState!: ISwiperState<TestItem>;
   private swiperStateSub!: Subscription;
+
+  private onItemsChangeSpy!: jasmine.Spy<
+    typeof SwiperWrapperComponent.prototype.onItemsChange
+  >;
 
   constructor(
     comp: Type<SwiperWrapperComponent>,
@@ -38,6 +43,7 @@ export class SwiperComponentTestUtils extends CompTestUtils<SwiperWrapperCompone
 
   async globalBeforeEach(): Promise<void> {
     await this.internalBeforeEach();
+    this.setOnItemsChangeSpy();
     this.setInputs();
     this.subscribeToSwiperState();
     await this.initSwiperState();
@@ -48,13 +54,13 @@ export class SwiperComponentTestUtils extends CompTestUtils<SwiperWrapperCompone
     this.setInput('items', this.inputs.items);
     this.setInput('swipeToNext$', this.swipeToNext$.asObservable());
     this.setInput('swipeToPrevious$', this.swipeToPrevious$.asObservable());
+    this.setInput('swipeToItem$', this.swipeToItem$.asObservable());
     this.setInput('activateItem$', this.activateItem$.asObservable());
     this.setInput('addItems$', this.addItems$.asObservable());
     this.setInput('getSlideContent', this.getSlideContentFromItem);
     this.setInput('slideClass', this.slideClass);
     const swiperInitOptions = this.inputs.swiperInitOptions;
     if (this.inputs.swiperInitOptions) {
-      console.log('setting swiper init options', swiperInitOptions);
       this.setInput('swiperInitOptions', swiperInitOptions);
     }
   }
@@ -124,13 +130,14 @@ export class SwiperComponentTestUtils extends CompTestUtils<SwiperWrapperCompone
     return this.getSwiperState().activeItemIndex;
   }
 
-  protected getItems(): TestItem[] {
+  getItems(): TestItem[] {
     const swiper = this.getSwiperComponent()['swiper'];
     return swiper.getItems();
   }
 
   getSlideFromItem(item: TestItem, itemIndex: number): ISlide<TestItem> {
-    return { itemIndex, value: item };
+    const activeItemIndex = this.getActiveItemIndex();
+    return { itemIndex, value: item, isActive: itemIndex === activeItemIndex };
   }
 
   activateItem(index: number | undefined): void {
@@ -142,6 +149,14 @@ export class SwiperComponentTestUtils extends CompTestUtils<SwiperWrapperCompone
     return spyOn(swiperStateChange, 'emit');
   }
 
+  private setOnItemsChangeSpy() {
+    this.onItemsChangeSpy = spyOn(this.component, 'onItemsChange');
+  }
+
+  getOnItemsChangeSpy() {
+    return this.onItemsChangeSpy;
+  }
+
   startSlidesFromItem(startIndex: number) {
     let index = 0;
     const swiperComponent = this.getSwiperComponent();
@@ -149,5 +164,14 @@ export class SwiperComponentTestUtils extends CompTestUtils<SwiperWrapperCompone
       swiperComponent['swiper'].swipeToNext();
       index++;
     }
+  }
+
+  swipeToItem(itemIndex: number): void {
+    this.swipeToItem$.next(itemIndex);
+  }
+
+  isItemInSlides(itemIndex: number): boolean {
+    const slides = this.getSlides();
+    return slides.some((slide) => slide.itemIndex === itemIndex);
   }
 }

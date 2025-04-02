@@ -3,10 +3,11 @@ import { TestModuleMetadata } from '@angular/core/testing';
 import { ISwiperInitOptions } from '@shared/public-api';
 import { TestItem } from './models';
 import { SwiperWrapperComponent } from './swiper-wrapper.component';
-import { SwiperComponentTestUtils } from './swiper.component.test-utils';
+import { SwiperWrapperComponentTestUtils } from './swiper-wrapper.component.test-utils';
 import { equals } from 'ramda';
+import { exec } from 'child_process';
 
-export class SwiperComponentTestExpects extends SwiperComponentTestUtils {
+export class SwiperComponentTestExpects extends SwiperWrapperComponentTestUtils {
   constructor(
     comp: Type<SwiperWrapperComponent>,
     config: TestModuleMetadata,
@@ -62,7 +63,7 @@ export class SwiperComponentTestExpects extends SwiperComponentTestUtils {
     const activeItemIndex = this.getActiveItemIndex();
     expect(activeItemIndex).toEqual(expectedActiveItemIndex);
   }
-  
+
   expectSwiperStateToMatchInitOptions(
     swiperInitOptions: ISwiperInitOptions
   ): void {
@@ -83,14 +84,7 @@ export class SwiperComponentTestExpects extends SwiperComponentTestUtils {
       this.expectFirstSlideItemIndexToBe(startingItemIndex);
       return;
     }
-    this.expectItemToBeInSlides(startingItemIndex);
-  }
-
-  private expectItemToBeInSlides(expectedItemIndex: number): void {
-    const isItemInSlides = this.getSlides().some(
-      (slide) => slide.itemIndex === expectedItemIndex
-    );
-    expect(isItemInSlides).toBeTrue();
+    expect(this.isItemInSlides(startingItemIndex)).toBeTrue();
   }
 
   expectActiveItemIndexToBe(expectedItemIndex: number | undefined): void {

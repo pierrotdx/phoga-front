@@ -20,7 +20,9 @@ import { ISwiperInitOptions } from '@shared/public-api';
       [swipeToPrevious$]="swipeToPrevious$()"
       [activateItem$]="activateItem$()"
       [addItems$]="addItems$()"
+      [swipeToItem$]="swipeToItem$()"
       [swiperInitOptions]="swiperInitOptions()"
+      (itemsChange)="onItemsChange($event)"
     >
     </lib-swiper>`,
   imports: [SwiperComponent],
@@ -30,6 +32,7 @@ export class SwiperWrapperComponent {
   items = input<TestItem[]>([]);
   swipeToNext$ = input<Observable<void>>();
   swipeToPrevious$ = input<Observable<void>>();
+  swipeToItem$ = input<Observable<number>>();
   activateItem$ = input<Observable<number | undefined>>();
   addItems$ = input<Observable<TestItem[]>>();
   getSlideContent = input<GetSlideContentFromItem<TestItem>>();
@@ -38,4 +41,6 @@ export class SwiperWrapperComponent {
 
   @ViewChild(SwiperComponent<TestItem>)
   swiperComponent!: SwiperComponent<TestItem>;
+
+  onItemsChange(items: TestItem[]): void {}
 }

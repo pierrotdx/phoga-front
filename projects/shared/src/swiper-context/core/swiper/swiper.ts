@@ -60,9 +60,11 @@ export class Swiper<T> implements ISwiper<T> {
   }
 
   private buildSlide(item: T, itemIndex: number): ISlide<T> {
+    const isActive = itemIndex === this.state.activeItemIndex;
     return {
       itemIndex,
       value: item,
+      isActive,
     };
   }
 
@@ -126,6 +128,7 @@ export class Swiper<T> implements ISwiper<T> {
 
   activateItem(itemIndex: number | undefined): void {
     this.updateActiveItem(itemIndex);
+    this.updateSlides();
     this.emitState();
   }
 

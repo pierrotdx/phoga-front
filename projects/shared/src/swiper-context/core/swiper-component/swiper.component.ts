@@ -3,9 +3,11 @@ import {
   effect,
   EventEmitter,
   input,
+  OnChanges,
   OnDestroy,
   Output,
   signal,
+  SimpleChanges,
   TemplateRef,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
@@ -29,9 +31,11 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
   readonly activateItem$ = input<Observable<number | undefined>>();
   readonly swipeToNext$ = input<Observable<void>>();
   readonly swipeToPrevious$ = input<Observable<void>>();
+  readonly swipeToItem$ = input<Observable<number>>();
   readonly addItems$ = input<Observable<T[]>>();
 
   @Output() swiperStateChange = new EventEmitter<ISwiperState<T>>();
+  @Output() itemsChange = new EventEmitter<T[]>();
 
   slides = signal<ISlide<T>[]>([]);
   private swiper!: ISwiper<T>;
@@ -39,6 +43,7 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
   private readonly activateItemHandler: SubscriptionHandler<number | undefined>;
   private readonly swipeToNextHandler: SubscriptionHandler<void>;
   private readonly swipeToPreviousHandler: SubscriptionHandler<void>;
+  private readonly swipeToItemHandler: SubscriptionHandler<number>;
   private readonly addItemHandler: SubscriptionHandler<T[]>;
   private readonly swiperStateHandler: SubscriptionHandler<ISwiperState<T>>;
 
@@ -62,6 +67,12 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
       this.onSwipeToPrevious
     );
     this.subs.push(this.swipeToPreviousHandler);
+
+    effect(() => this.swipeToItemEffectFn());
+    this.swipeToItemHandler = new SubscriptionHandler<number>(
+      this.onSwipeToItem
+    );
+    this.subs.push(this.swipeToItemHandler);
 
     effect(() => this.addItemEffectFn());
     this.addItemHandler = new SubscriptionHandler<T[]>(this.onAddItems);
@@ -88,12 +99,14 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
     });
     this.swiperStateHandler.subscribeTo(this.swiper.stateChange$);
 
+    this.emitItems();
+
     const swiperInitOptions = this.swiperInitOptions();
     if (typeof swiperInitOptions?.activeItemIndex === 'number') {
       this.activateItem(swiperInitOptions.activeItemIndex);
     }
     if (typeof swiperInitOptions?.slidesStartAt === 'number') {
-      this.swiper.swipeToItem(swiperInitOptions.slidesStartAt);
+      this.swipeToItem(swiperInitOptions.slidesStartAt);
     }
   }
 
@@ -133,6 +146,19 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
     this.swiper.swipeToPrevious();
   };
 
+  private swipeToItemEffectFn(): void {
+    const swipeToItem$ = this.swipeToItem$();
+    this.swipeToItemHandler.subscribeTo(swipeToItem$);
+  }
+
+  private onSwipeToItem = (itemIndex: number): void => {
+    this.swipeToItem(itemIndex);
+  };
+
+  private swipeToItem(itemIndex: number): void {
+    this.swiper.swipeToItem(itemIndex);
+  }
+
   private addItemEffectFn(): void {
     const addItem$ = this.addItems$();
     this.addItemHandler.subscribeTo(addItem$);
@@ -140,5 +166,11 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
 
   private onAddItems = (itemsToAdd: T[]): void => {
     this.swiper.addItems(itemsToAdd);
+    this.emitItems();
   };
+
+  private emitItems(): void {
+    const items = this.swiper.getItems();
+    this.itemsChange.emit(items);
+  }
 }

@@ -99,6 +99,24 @@ describe('SwiperComponent', () => {
     });
   });
 
+  describe('swipeToItem', () => {
+    beforeEach(() => {
+      const startIndex = 0;
+      testUtils.startSlidesFromItem(startIndex);
+    });
+
+    it('should swipe until the input item is displayed', () => {
+      const targetedItemIndex = nbSlides;
+      const isInSlidesBefore = testUtils.isItemInSlides(targetedItemIndex);
+      expect(isInSlidesBefore).toBeFalse();
+
+      testUtils.swipeToItem(targetedItemIndex);
+
+      const isInSlidesAfter = testUtils.isItemInSlides(targetedItemIndex);
+      expect(isInSlidesAfter).toBeTrue();
+    });
+  });
+
   describe('activateItem', () => {
     const expectedActiveItemIndices = [3, 0, 1];
 
@@ -121,6 +139,34 @@ describe('SwiperComponent', () => {
 
       const newItems = items.concat(itemsToAdd);
       testUtils.expectItemsToMatch(newItems);
+    });
+  });
+
+  describe('itemsChange event', () => {
+    let eventEmitterSpy: jasmine.Spy;
+    let initItems: TestItem[];
+
+    beforeEach(async () => {
+      initItems = testUtils.getItems();
+      eventEmitterSpy = testUtils.getOnItemsChangeSpy();
+    });
+
+    afterEach(() => {
+      eventEmitterSpy.calls.reset();
+    });
+
+    it('should be emitted at items initialization', () => {
+      expect(eventEmitterSpy).toHaveBeenCalledWith(initItems);
+    });
+
+    it('should be emitted when items are added', () => {
+      const itemsToAdd: TestItem[] = [{ _id: 'e' }, { _id: 'p' }];
+      const expectedEmittedItems = initItems.concat(itemsToAdd);
+
+      testUtils.addItems(itemsToAdd);
+
+      expect(eventEmitterSpy).toHaveBeenCalledWith(initItems);
+      expect(eventEmitterSpy).toHaveBeenCalledWith(expectedEmittedItems);
     });
   });
 
