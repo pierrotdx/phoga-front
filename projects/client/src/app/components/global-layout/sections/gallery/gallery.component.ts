@@ -64,7 +64,6 @@ export class GalleryComponent implements OnInit, OnDestroy {
   private onSelectedPhotoChange(photo: IPhoto | undefined) {
     this.selectedPhoto.set(photo);
     this.showDetailedView.set(!!photo);
-    console.log('new selected photo', this.selectedPhoto());
   }
 
   closeDetailedView(): void {
