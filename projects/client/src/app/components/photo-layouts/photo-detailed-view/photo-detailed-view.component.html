@@ -24,18 +24,16 @@
             arrow_forward
         </app-overlay-mat-icon-btn>
     </div>
-    <div class="photo-detailed-view__sidebar">
-        <app-photo-metadata
-            class="photo-detailed-view__metadata"
-            [photoMetadata]="photo()?.metadata"
-        >
-        </app-photo-metadata>
-        <app-photo-selection
-            class="photo-detailed-view__selection"
-            [selectNextPhoto$]="selectNext$"
-            [selectPreviousPhoto$]="selectPrevious$"
-        ></app-photo-selection>
-    </div>
+    <app-photo-metadata
+        class="photo-detailed-view__metadata"
+        [photoMetadata]="photo()?.metadata"
+    >
+    </app-photo-metadata>
+    <app-photo-selection
+        class="photo-detailed-view__selection"
+        [selectNextPhoto$]="selectNext$"
+        [selectPreviousPhoto$]="selectPrevious$"
+    ></app-photo-selection>
     <button
         class="photo-detailed-view__close-btn"
         type="button"
