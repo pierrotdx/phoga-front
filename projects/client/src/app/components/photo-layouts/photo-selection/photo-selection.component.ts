@@ -34,7 +34,7 @@ export class PhotoSelectionComponent implements OnInit, OnDestroy {
   private readonly activateItemEmitter = new Subject<number | undefined>();
   activateItem$ = this.activateItemEmitter.asObservable();
 
-  readonly nbSlides = 4;
+  readonly nbSlides = 6;
   readonly initPhotos = signal<IPhoto[]>([]);
   readonly hasInitPhotos = signal<boolean>(false);
 

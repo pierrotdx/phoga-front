@@ -10,7 +10,7 @@ describe('PhotoSelectionComponent', () => {
   let galleryServiceInitState: GalleryServiceState;
 
   beforeEach(async () => {
-    galleryServiceInitState = { nbPhotos: 4 };
+    galleryServiceInitState = { nbPhotos: 10 };
     testUtils = new PhotoSelectionTestUtils();
     await testUtils.globalBeforeEach(galleryServiceInitState);
   });
