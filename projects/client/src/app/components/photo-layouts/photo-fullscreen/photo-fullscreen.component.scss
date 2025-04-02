@@ -1,0 +1,23 @@
+.photo-fullscreen {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+
+  &__image {
+    object-fit: contain;
+    max-width: 100vw;
+    max-height: 100vh;
+  }
+
+  &__close-btn {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    .photo-fullscreen:hover & {
+      display: revert;
+    }
+  }
+}

@@ -1,0 +1,26 @@
+.header {
+  display: flex;
+  background-color: var(--clr-primary);
+  padding: var(--spacing-02) 1.5em;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+
+  /* For tablets and above */
+  @media only screen and (width > 600px) {
+    padding: var(--spacing-02) 3.5em;
+  }
+
+  &__title {
+    img {
+      vertical-align: middle;
+      height: 3em;
+    }
+  }
+
+  &__nav {
+    flex: 1 1 auto;
+    display: flex;
+    font-size: 1.2em;
+  }
+}

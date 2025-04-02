@@ -1,0 +1,67 @@
+.photo-card {
+  background-color: var(--clr-primary);
+  padding: var(--spacing-01);
+  display: flex;
+  flex-direction: column;
+
+  &__image-container {
+    flex: 1 1 auto;
+    position: relative;
+
+    app-photo-image {
+      --photo-image-object-fit: cover;
+    }
+
+    &:hover,
+    &:focus {
+      .photo-card__image-btn {
+        display: revert;
+      }
+    }
+  }
+
+  &__image-btn {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  &__metadata {
+    display: block;
+    padding: var(--spacing-02);
+
+    --photo-metadata-overflow: hidden;
+    --photo-metadata-white-space: nowrap;
+    --photo-metadata-text-overflow: ellipsis;
+  }
+
+  /* For tablets and above */
+  @media only screen and (width > 600px) {
+    height: 500px;
+    background-color: unset;
+    padding: unset;
+    position: relative;
+
+    &__image-container {
+      max-height: 100%;
+    }
+
+    &__image {
+      display: block;
+      height: 100%;
+    }
+
+    &__metadata {
+      display: none;
+      background-color: rgba(var(--clr-primary-rgb), 0.6);
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+
+      .photo-card:hover &:not(:empty) {
+        display: revert;
+      }
+    }
+  }
+}

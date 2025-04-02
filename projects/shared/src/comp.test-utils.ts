@@ -34,7 +34,7 @@ export class CompTestUtils<T> {
     this.fixture.detectChanges();
   }
 
-  private getConfig(): TestModuleMetadata {
+  protected getConfig(): TestModuleMetadata {
     const imports = this.config?.imports
       ? [this.comp, ...this.config?.imports]
       : [this.comp];
@@ -56,5 +56,14 @@ export class CompTestUtils<T> {
 
   getComponent(): T {
     return this.fixture.componentInstance;
+  }
+
+  setInput(name: string, value: unknown): void {
+    this.fixture.componentRef.setInput(name, value);
+    this.fixture.detectChanges();
+  }
+
+  resetTestingModule() {
+    this.testBed.resetTestingModule();
   }
 }

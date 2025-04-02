@@ -1,0 +1,41 @@
+footer {
+  background-color: var(--clr-primary);
+  margin-top: var(--spacing-01);
+  padding: var(--spacing-02);
+}
+
+address {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  grid-template-rows: repeat(2, auto);
+
+  /* For tablets and above */
+  @media only screen and (width > 600px) {
+    grid-template-columns: repeat(3, auto);
+    grid-template-rows: repeat(1, auto);
+    justify-items: center;
+  }
+}
+
+.contact {
+  font-size: 0.85em;
+  padding: calc(0.5 * var(--spacing-01));
+
+  &__prefix {
+    font-weight: 600;
+
+    &::after {
+      content: "\: ";
+    }
+  }
+}
+
+.social-media {
+  grid-column: 2;
+  grid-row: 1 / -1;
+  align-self: center;
+  justify-self: center;
+  display: flex;
+  gap: var(--spacing-01);
+  font-size: 1.5em;
+}

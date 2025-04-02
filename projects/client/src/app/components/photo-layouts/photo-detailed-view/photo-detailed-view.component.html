@@ -1,0 +1,49 @@
+<article class="photo-detailed-view">
+    <div class="photo-detailed-view__image-container">
+        <app-photo-image
+            [photo]="photo()"
+            class="photo-detailed-view__image"
+        >
+        </app-photo-image>
+        <app-overlay-mat-icon-btn
+            class="photo-detailed-view__fullscreen-btn show-on-image-hover"
+            (click)="openFullscreen()"
+        >
+            fullscreen
+        </app-overlay-mat-icon-btn>
+        <app-overlay-mat-icon-btn
+            class="photo-detailed-view__previous-btn show-on-image-hover"
+            (click)="selectPrevious()"
+        >
+            arrow_back
+        </app-overlay-mat-icon-btn>
+        <app-overlay-mat-icon-btn
+            class="photo-detailed-view__next-btn show-on-image-hover"
+            (click)="selectNext()"
+        >
+            arrow_forward
+        </app-overlay-mat-icon-btn>
+    </div>
+    <app-photo-metadata
+        class="photo-detailed-view__metadata"
+        [photoMetadata]="photo()?.metadata"
+    >
+    </app-photo-metadata>
+    <app-photo-selection
+        class="photo-detailed-view__selection"
+        [selectNextPhoto$]="selectNext$"
+        [selectPreviousPhoto$]="selectPrevious$"
+    ></app-photo-selection>
+    <button
+        class="photo-detailed-view__close-btn"
+        type="button"
+        (click)="closeDetailedView()"
+    >
+        <lib-material-icon>close</lib-material-icon>
+    </button>
+</article>
+<app-photo-fullscreen
+    [(show)]="showFullscreen"
+    [imageBuffer]="photo()?.imageBuffer"
+>
+</app-photo-fullscreen>
