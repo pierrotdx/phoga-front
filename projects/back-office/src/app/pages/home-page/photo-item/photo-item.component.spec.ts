@@ -28,7 +28,7 @@ describe('PhotoItemComponent', () => {
   describe('when there is a photo', () => {
     let photo: IPhoto;
 
-    describe('that does not have a thumbnail', () => {
+    describe('that does not have an image', () => {
       beforeEach(() => {
         photo = new Photo('dumb id');
         testUtils.setPhoto(photo);
@@ -40,17 +40,17 @@ describe('PhotoItemComponent', () => {
       });
     });
 
-    describe('that has a thumbnail', () => {
+    describe('that has an image', () => {
       beforeEach(() => {
         photo = new Photo('dumb id', {
-          metadata: { thumbnail: Buffer.from('dumb buffer') },
+          imageBuffer: Buffer.from('dumb buffer'),
         });
         testUtils.setPhoto(photo);
       });
 
-      it('should display the thumbnail', () => {
-        const thumbnailId = 'thumbnail-container';
-        testUtils.expectElementToBeDisplayed(thumbnailId);
+      it('should display the image', () => {
+        const imageId = 'image-container';
+        testUtils.expectElementToBeDisplayed(imageId);
       });
     });
   });

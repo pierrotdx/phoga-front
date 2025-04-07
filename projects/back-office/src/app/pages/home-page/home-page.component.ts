@@ -20,9 +20,7 @@ export class HomePageComponent implements OnInit {
   }
 
   private async searchPhoto() {
-    const photos = await firstValueFrom(
-      this.photoApiService.searchPhoto({ excludeImages: true })
-    );
+    const photos = await firstValueFrom(this.photoApiService.searchPhoto());
     if (photos instanceof Error) {
       return;
     }
