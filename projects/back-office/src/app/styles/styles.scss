@@ -7,3 +7,10 @@
 * {
   box-sizing: border-box;
 }
+
+app-home-page {
+  img {
+    max-width: 100px;
+    max-height: 100px;
+  }
+}

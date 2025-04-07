@@ -43,10 +43,6 @@ export class PhotoApiService {
     if (!photo.metadata) {
       return;
     }
-    if (photo.metadata.thumbnail) {
-      const thumbnail = Buffer.from(photo.metadata?.thumbnail);
-      photo.metadata.thumbnail = thumbnail;
-    }
     const titles = photo.metadata.titles;
     if (titles) {
       photo.metadata.titles = titles[0].split(',');

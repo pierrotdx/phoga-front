@@ -17,10 +17,7 @@ export class PhotoMetadataComponent {
   private _photoMetadata: IPhoto['metadata'] | undefined;
 
   @Input() set photoMetadata(value: IPhoto['metadata'] | undefined) {
-    const metadataToDisplay = value ? omit(['thumbnail'], value) : undefined;
-    this._photoMetadata = isEmpty(metadataToDisplay)
-      ? undefined
-      : metadataToDisplay;
+    this._photoMetadata = value || undefined;
     this.updateTitle();
     this.updateDescription();
     this.updateLocation();
