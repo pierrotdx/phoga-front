@@ -10,3 +10,4 @@ export * from './photo-context';
 export * from './pipes';
 export * from './swiper-context';
 export * from './subscription-handler-context';
+export * from './tag-context';
