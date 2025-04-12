@@ -5,7 +5,7 @@ import {
   Routes,
   withComponentInputBinding,
 } from '@angular/router';
-import { HomePageComponent, LoginPageComponent } from './pages';
+import { HomePageComponent, LoginPageComponent } from '../pages';
 import { authGuard, Scope } from '@back-office/auth-context';
 import {
   EndpointId,
@@ -13,7 +13,8 @@ import {
   IEndpoints,
 } from '@back-office/endpoints-context';
 import { inject, Provider } from '@angular/core';
-import { EditPhotoComponent } from './components/edit-photo/edit-photo.component';
+import { getAdminPhotoRoute } from './photo.router';
+import { getAdminTagRoute } from './tag.router';
 
 const routesFactory = (): Routes => {
   const endpoints = inject(ENDPOINTS_TOKEN);
@@ -39,31 +40,10 @@ function getRestrictedRoute(endpoints: IEndpoints): Route {
         loadComponent: () => HomePageComponent,
       },
       getAdminPhotoRoute(endpoints),
+      getAdminTagRoute(endpoints),
     ],
   };
   return restrictedRouter;
-}
-
-function getAdminPhotoRoute(endpoints: IEndpoints): Route {
-  return {
-    path: endpoints.getRelativePath(EndpointId.AdminPhoto),
-    data: { scopes: [Scope.PhotosRead] },
-    canActivate: [authGuard],
-    loadChildren: () => [
-      {
-        path: endpoints.getRelativePath(EndpointId.EditPhoto),
-        loadComponent: () => EditPhotoComponent,
-        canActivate: [authGuard],
-        data: { scopes: [Scope.PhotosWrite] },
-      },
-      {
-        path: endpoints.getRelativePath(EndpointId.AddPhoto),
-        loadComponent: () => EditPhotoComponent,
-        canActivate: [authGuard],
-        data: { scopes: [Scope.PhotosWrite] },
-      },
-    ],
-  };
 }
 
 const routesProvider: Provider = {

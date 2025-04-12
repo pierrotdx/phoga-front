@@ -1,0 +1,14 @@
+<a [routerLink]="addTagUrl" class="tags__add-tag">
+    <mat-icon>add</mat-icon>
+    Add tag
+</a>
+
+@if(tags().length > 0) {
+    <ul class="tags__list">
+        @for(tag of tags(); track tag._id) {
+            <li>
+                <a [routerLink]="[editTagBaseUrl, tag._id]">{{ tag.name || tag._id }}</a>
+            </li>
+        }
+    </ul>
+}
