@@ -60,7 +60,7 @@
                 "input": "projects/client/public"
               }
             ],
-            "styles": ["projects/client/src/app/styles/styles.scss"],
+            "styles": ["projects/client/src/styles/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -131,7 +131,7 @@
                 "input": "projects/client/public"
               }
             ],
-            "styles": ["projects/client/src/app/styles/styles.scss"],
+            "styles": ["projects/client/src/styles/styles.scss"],
             "scripts": []
           }
         }
