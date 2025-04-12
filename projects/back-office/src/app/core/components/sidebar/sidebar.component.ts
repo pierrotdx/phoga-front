@@ -1,5 +1,5 @@
-import { Component, signal } from '@angular/core';
-import { AuthComponent } from '@back-office/auth-context';
+import { Component } from '@angular/core';
+import { AuthComponent } from '../../../../auth-context';
 import { NavigationComponent } from '../navigation/navigation.component';
 
 @Component({

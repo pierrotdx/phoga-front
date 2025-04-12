@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { AuthProviderFake } from '../../../auth-context';
+import { AuthProviderFake } from '../../../../auth-context';
 
 describe('AppComponent', () => {
   beforeEach(async () => {

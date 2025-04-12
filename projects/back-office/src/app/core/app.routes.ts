@@ -6,7 +6,7 @@ import {
   withComponentInputBinding,
 } from '@angular/router';
 import { inject, Provider } from '@angular/core';
-import { HomePageComponent, LoginPageComponent } from '../pages';
+import { HomePageComponent, LoginPageComponent } from './components';
 import { authGuard, Scope } from '../../auth-context';
 import {
   EndpointId,

@@ -9,17 +9,17 @@ import {
   provideZoneChangeDetection,
 } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { RouteProviders } from './routers';
 import { PhotoApiService } from '@shared/photo-context';
+import { authHttpInterceptor, AuthProvidersAuth0 } from '../../../auth-context';
+import { EndpointsProvider } from '../../../endpoints-context';
 import {
-  authHttpInterceptor,
-  AuthProvidersAuth0,
-} from '@back-office/auth-context';
-import { EndpointsProvider } from '@back-office/endpoints-context';
-import { ENVIRONMENT_TOKEN, EnvironmentProvider } from '../environment-context';
+  ENVIRONMENT_TOKEN,
+  EnvironmentProvider,
+} from '../../../environment-context';
 
 import { UuidProvider } from '@shared/uuid-context/adapters/primary/uuid-provider';
 import { TagApiServiceProvider } from '@shared/tag-context';
+import { RouteProviders } from '../../core';
 
 const PhotoApiServiceProvider: Provider = {
   provide: PhotoApiService,

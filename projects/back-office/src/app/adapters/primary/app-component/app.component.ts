@@ -1,8 +1,7 @@
 import { Component, OnDestroy, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { EventType, Router, RouterOutlet } from '@angular/router';
-import { LoginPageComponent } from '@back-office/app/pages';
-import { SidebarComponent } from '../sidebar/sidebar.component';
+import { SidebarComponent, LoginPageComponent } from '../../../core';
 import { filter, Subscription } from 'rxjs';
 
 @Component({

@@ -167,7 +167,7 @@
             "stylePreprocessorOptions": {
               "includePaths": ["node_modules/normalize-scss/sass"]
             },
-            "styles": ["projects/back-office/src/app/styles/styles.scss"],
+            "styles": ["projects/back-office/src/styles/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -247,7 +247,7 @@
             "stylePreprocessorOptions": {
               "includePaths": ["node_modules/normalize-scss/sass"]
             },
-            "styles": ["projects/back-office/src/app/styles/styles.scss"],
+            "styles": ["projects/back-office/src/styles/styles.scss"],
             "scripts": []
           }
         }

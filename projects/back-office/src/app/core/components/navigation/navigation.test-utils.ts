@@ -3,7 +3,7 @@ import { NavigationComponent } from './navigation.component';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { AuthProviderFake, AuthService } from '@back-office/auth-context';
-import { EndpointsProvider } from '@back-office/endpoints-context';
+import { EndpointsProvider } from '../../../../endpoints-context';
 import { RouterModule } from '@angular/router';
 
 export class NavigationTestUtils {
