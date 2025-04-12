@@ -1,8 +1,7 @@
 import { Route } from '@angular/router';
 import { Scope, authGuard } from '@back-office/auth-context';
 import { IEndpoints, EndpointId } from '@back-office/endpoints-context';
-import { EditTagComponent } from '../components/edit-tag/edit-tag.component';
-import { TagsPageComponent } from '../pages/';
+import { TagsPageComponent, EditTagComponent } from '../components';
 
 export function getAdminTagRoute(endpoints: IEndpoints): Route {
   return {

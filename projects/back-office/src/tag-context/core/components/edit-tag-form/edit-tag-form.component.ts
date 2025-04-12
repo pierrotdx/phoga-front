@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ITagVM } from '@back-office/app/models';
+import { ITagVM } from '../../models';
 import { ITag } from '@shared/public-api';
 
 @Component({

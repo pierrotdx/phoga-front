@@ -1,20 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { UuidProvider } from '@shared/uuid-context/adapters/primary/uuid-provider';
+import { provideRouter, Router } from '@angular/router';
+import { DebugElement } from '@angular/core';
+import { By } from '@angular/platform-browser';
+import { BehaviorSubject } from 'rxjs';
 import {
   EndpointId,
   ENDPOINTS_TOKEN,
   EndpointsProvider,
-  IEndpoint,
-  IEndpoints,
-} from '@back-office/endpoints-context';
+} from '../../../../endpoints-context';
 import { ITag, TagApiService } from '@shared/public-api';
 import { UUID_PROVIDER_TOKEN } from '@shared/uuid-context';
 import { EditTagComponent } from './edit-tag.component';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
-import { ITagVM } from '@back-office/app/models';
-import { BehaviorSubject } from 'rxjs';
-import { UuidProvider } from '@shared/uuid-context/adapters/primary/uuid-provider';
-import { provideRouter, Router } from '@angular/router';
+import { ITagVM } from '../../models';
 
 export class EditTagTestUtils {
   private testedComponent!: EditTagComponent;

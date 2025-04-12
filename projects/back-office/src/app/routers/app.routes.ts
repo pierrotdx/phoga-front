@@ -5,16 +5,16 @@ import {
   Routes,
   withComponentInputBinding,
 } from '@angular/router';
+import { inject, Provider } from '@angular/core';
 import { HomePageComponent, LoginPageComponent } from '../pages';
-import { authGuard, Scope } from '@back-office/auth-context';
+import { authGuard, Scope } from '../../auth-context';
 import {
   EndpointId,
   ENDPOINTS_TOKEN,
   IEndpoints,
-} from '@back-office/endpoints-context';
-import { inject, Provider } from '@angular/core';
+} from '../../endpoints-context';
 import { getAdminPhotoRoute } from './photo.router';
-import { getAdminTagRoute } from './tag.router';
+import { AdminTagRouteFactory } from '../../tag-context';
 
 const routesFactory = (): Routes => {
   const endpoints = inject(ENDPOINTS_TOKEN);
@@ -40,7 +40,7 @@ function getRestrictedRoute(endpoints: IEndpoints): Route {
         loadComponent: () => HomePageComponent,
       },
       getAdminPhotoRoute(endpoints),
-      getAdminTagRoute(endpoints),
+      AdminTagRouteFactory(endpoints),
     ],
   };
   return restrictedRouter;

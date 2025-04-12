@@ -1,15 +1,15 @@
 import { Component, effect, Inject, input, signal } from '@angular/core';
-import { EditTagFormComponent } from './edit-tag-form/edit-tag-form.component';
-import { ITagVM } from '@back-office/app/models';
+import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { ITag, TagApiService } from '@shared/tag-context';
 import { UUID_PROVIDER_TOKEN, UuidGenerator } from '@shared/uuid-context';
-import { firstValueFrom } from 'rxjs';
-import { Router } from '@angular/router';
+import { ITagVM } from '../../models';
+import { EditTagFormComponent } from '../edit-tag-form/edit-tag-form.component';
 import {
   EndpointId,
   ENDPOINTS_TOKEN,
   IEndpoints,
-} from '@back-office/endpoints-context';
+} from '../../../../endpoints-context';
 
 @Component({
   selector: 'app-edit-tag',

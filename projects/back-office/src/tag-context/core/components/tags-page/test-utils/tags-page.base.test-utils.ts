@@ -1,15 +1,19 @@
 import { DebugElement } from '@angular/core';
-import { RouterLink, RouterLinkWithHref } from '@angular/router';
+import {
+  provideRouter,
+  RouterLink,
+  RouterLinkWithHref,
+  withComponentInputBinding,
+} from '@angular/router';
 import { TagsPageComponent } from '../tags-page.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatIcon } from '@angular/material/icon';
 import { By } from '@angular/platform-browser';
-import { RouteProviders } from '@back-office/app/routers';
 import {
   EndpointsProvider,
   ENDPOINTS_TOKEN,
   EndpointId,
-} from '@back-office/endpoints-context';
+} from '../../../../../endpoints-context';
 import { TagApiService } from '@shared/public-api';
 
 export class TagsPageBaseTestUtils {
@@ -24,7 +28,7 @@ export class TagsPageBaseTestUtils {
     TestBed.configureTestingModule({
       imports: [TagsPageComponent, RouterLink, MatIcon],
       providers: [
-        RouteProviders,
+        provideRouter([]),
         EndpointsProvider,
         {
           provide: TagApiService,

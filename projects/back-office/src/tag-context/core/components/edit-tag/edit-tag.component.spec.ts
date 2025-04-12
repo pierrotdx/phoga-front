@@ -1,10 +1,9 @@
 import { ITag } from '@shared/public-api';
+import { EndpointId } from '../../../../endpoints-context';
 import { EditTagTestUtils } from './edit-tag.test-utils';
-import { ITagVM } from '@back-office/app/models';
-import { Endpoint, EndpointId } from '@back-office/endpoints-context';
-import { test } from 'ramda';
+import { ITagVM } from '../../models';
 
-fdescribe('EditTagComponent', () => {
+describe('EditTagComponent', () => {
   let testUtils: EditTagTestUtils;
 
   beforeEach(async () => {
