@@ -31,20 +31,31 @@ export class EditTagComponent {
     effect(() => this.onIdInput());
   }
 
-  private onIdInput() {
+  private async onIdInput() {
     const id = this.id();
-    if (id) {
-      this.isTagCreation = false;
+    this.isTagCreation = !id;
+    if (!id) {
+      return;
     }
-    console.log('received id', id);
+    const inputTag = await this.fetchTag(id);
+    this.tagToEdit.set(inputTag);
+  }
+
+  private async fetchTag(id: ITag['_id']): Promise<ITag> {
+    const result = await firstValueFrom(this.tagApiService.get(id));
+    if (result instanceof Error) {
+      throw result;
+    }
+    return result;
   }
 
   async onSave(viewModel: ITagVM): Promise<void> {
     if (this.isTagCreation) {
       await this.createTag(viewModel);
     } else {
-      this.updateTag(viewModel);
+      await this.updateTag(viewModel);
     }
+    await this.navigateToTagsPage();
   }
 
   private async createTag(viewModel: ITagVM): Promise<void> {
@@ -60,13 +71,21 @@ export class EditTagComponent {
     await firstValueFrom(updateTag$);
   }
 
-  onCancel(): void {
-    this.navigateToHome();
+  async onCancel(): Promise<void> {
+    await this.navigateToTagsPage();
   }
 
-  private navigateToHome() {
-    this.router.navigate([
-      this.endpoints.getRelativePath(EndpointId.Restricted),
-    ]);
+  private async navigateToTagsPage(): Promise<void> {
+    const tagsPageUrl = this.endpoints.getFullPath(EndpointId.AdminTag);
+    await this.router.navigate([tagsPageUrl]);
+  }
+
+  async delete(): Promise<void> {
+    const id = this.tagToEdit()?._id;
+    if (!id) {
+      return;
+    }
+    await firstValueFrom(this.tagApiService.delete(id));
+    await this.navigateToTagsPage();
   }
 }

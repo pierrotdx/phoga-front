@@ -7,4 +7,5 @@ export enum EndpointId {
   AddPhoto = 'add_photo',
   EditTag = 'edit_tag',
   AddTag = 'add_tag',
+  AllTags = 'all_tags',
 }

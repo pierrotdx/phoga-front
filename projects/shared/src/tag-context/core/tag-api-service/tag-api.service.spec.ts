@@ -128,7 +128,7 @@ describe('TagApiService', () => {
 
   describe('replace', () => {
     const newTag: ITag = { _id: 'tag-id', name: 'replacing tag' };
-    const relativeUrl = `admin/tag/${newTag._id}`;
+    const relativeUrl = `admin/tag`;
 
     it("should send a PUT request to the API with the new tag value in the request's body", () => {
       firstValueFrom(testedService.replace(newTag));

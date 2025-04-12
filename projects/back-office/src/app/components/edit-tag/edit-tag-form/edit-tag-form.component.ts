@@ -39,12 +39,10 @@ export class EditTagFormComponent {
   }
 
   onSubmit(): void {
-    console.log('emitting viewModel', this.viewModel);
     this.save.emit(this.viewModel);
   }
 
   onCancel(): void {
-    console.log('cancelled');
     this.cancel.emit();
   }
 }

@@ -69,7 +69,7 @@ export class TagApiService implements ITagApiService {
 
   replace(tag: ITag): Observable<void | Error> {
     return this.httpClient
-      .put<void>(`${this.adminBaseUrl}/${tag._id}`, tag)
+      .put<void>(`${this.adminBaseUrl}`, tag)
       .pipe(catchError(this.handleError));
   }
 }

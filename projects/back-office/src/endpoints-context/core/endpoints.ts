@@ -26,6 +26,7 @@ export class Endpoints implements IEndpoints {
     'tag',
     this.restrictedEndpoint
   );
+  private readonly allTagEndpoint = new Endpoint('', this.adminTagEndpoint);
   private readonly addTagEndpoint = new Endpoint('add', this.adminTagEndpoint);
   private readonly editTagEndpoint = new Endpoint(
     'edit/:id',
@@ -43,6 +44,7 @@ export class Endpoints implements IEndpoints {
       [EndpointId.EditPhoto]: this.editPhotoEndpoint,
 
       [EndpointId.AdminTag]: this.adminTagEndpoint,
+      [EndpointId.AllTags]: this.allTagEndpoint,
       [EndpointId.AddTag]: this.addTagEndpoint,
       [EndpointId.EditTag]: this.editTagEndpoint,
     };

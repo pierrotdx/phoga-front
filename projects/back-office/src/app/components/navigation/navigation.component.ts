@@ -14,13 +14,13 @@ import {
 })
 export class NavigationComponent {
   readonly addPhotoUrl: string;
-  readonly addTagUrl: string;
+  readonly tagsPageUrl: string;
 
   readonly restrictedUrl: string;
 
   constructor(@Inject(ENDPOINTS_TOKEN) private readonly endpoints: IEndpoints) {
     this.restrictedUrl = this.endpoints.getFullPath(EndpointId.Restricted);
     this.addPhotoUrl = this.endpoints.getFullPath(EndpointId.AddPhoto);
-    this.addTagUrl = this.endpoints.getFullPath(EndpointId.AddTag);
+    this.tagsPageUrl = this.endpoints.getFullPath(EndpointId.AdminTag);
   }
 }
