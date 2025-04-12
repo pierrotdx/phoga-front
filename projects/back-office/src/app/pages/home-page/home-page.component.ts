@@ -3,7 +3,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { firstValueFrom } from 'rxjs';
 
 import { IPhoto, PhotoApiService } from '@shared/photo-context';
-import { PhotoItemComponent } from './photo-item/photo-item.component';
+import { PhotoItemComponent } from '../../../photo-context';
 
 @Component({
   selector: 'app-home-page',

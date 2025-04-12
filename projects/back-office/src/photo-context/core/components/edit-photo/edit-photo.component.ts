@@ -1,6 +1,6 @@
 import { Component, Inject, Input, signal } from '@angular/core';
 import { EditPhotoFormComponent } from './edit-photo-form/edit-photo-form.component';
-import { IPhotoVM } from '@back-office/app/models';
+import { IPhotoVM } from '@back-office/photo-context/core/models';
 import {
   IPhoto,
   PhotoApiService,

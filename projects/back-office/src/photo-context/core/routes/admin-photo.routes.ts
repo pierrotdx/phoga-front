@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
-import { Scope, authGuard } from '@back-office/auth-context';
-import { IEndpoints, EndpointId } from '@back-office/endpoints-context';
+import { Scope, authGuard } from '../../../auth-context';
+import { IEndpoints, EndpointId } from '../../../endpoints-context';
 import { EditPhotoComponent } from '../components/edit-photo/edit-photo.component';
 
 export function getAdminPhotoRoute(endpoints: IEndpoints): Route {

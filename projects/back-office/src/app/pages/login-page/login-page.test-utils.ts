@@ -3,7 +3,7 @@ import {
   EndpointId,
   ENDPOINTS_TOKEN,
   EndpointsProvider,
-} from '@back-office/endpoints-context';
+} from '../../../endpoints-context';
 import { LoginPageComponent } from './login-page.component';
 import { CompTestUtils } from '@shared/comp.test-utils';
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';

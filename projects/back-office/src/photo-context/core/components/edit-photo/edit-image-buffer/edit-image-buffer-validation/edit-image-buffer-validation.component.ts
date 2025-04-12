@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
-import { IPhotoVM } from '@back-office/app/models';
+import { IPhotoVM } from '@back-office/photo-context/core/models';
 import { Buffer } from 'buffer';
 
 @Component({

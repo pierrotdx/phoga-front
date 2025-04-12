@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Inject, Output, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthComponent } from '@back-office/auth-context';
+import { AuthComponent } from '../../../auth-context';
 import {
   EndpointId,
   ENDPOINTS_TOKEN,
   IEndpoints,
-} from '@back-office/endpoints-context';
+} from '../../../endpoints-context';
 
 @Component({
   selector: 'app-login-page',

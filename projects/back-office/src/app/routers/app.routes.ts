@@ -13,8 +13,8 @@ import {
   ENDPOINTS_TOKEN,
   IEndpoints,
 } from '../../endpoints-context';
-import { getAdminPhotoRoute } from './photo.router';
 import { AdminTagRouteFactory } from '../../tag-context';
+import { AdminPhotoRoute } from '../../photo-context';
 
 const routesFactory = (): Routes => {
   const endpoints = inject(ENDPOINTS_TOKEN);
@@ -39,7 +39,7 @@ function getRestrictedRoute(endpoints: IEndpoints): Route {
         path: '',
         loadComponent: () => HomePageComponent,
       },
-      getAdminPhotoRoute(endpoints),
+      AdminPhotoRoute(endpoints),
       AdminTagRouteFactory(endpoints),
     ],
   };
