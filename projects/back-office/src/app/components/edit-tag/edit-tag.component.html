@@ -1,0 +1,13 @@
+<app-edit-tag-form
+    [tag]="tagToEdit()"
+    (save)="onSave($event)"
+    (cancel)="onCancel()"
+></app-edit-tag-form>
+
+@if(tagToEdit()) {
+    <button type="button"
+        class="edit-tag__delete"
+        (click)="delete()"
+        style="background-color: red;"
+        >Delete</button>
+}

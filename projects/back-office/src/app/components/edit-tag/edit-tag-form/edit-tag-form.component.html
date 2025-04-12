@@ -1,0 +1,31 @@
+@if(viewModel) {
+    <form
+         #editTagForm="ngForm"
+        (ngSubmit)="onSubmit()"
+        >
+        <label for="name">
+            Name
+            <input
+                type="text"
+                name="name"
+                [(ngModel)]="viewModel.name"
+            >
+        </label>
+        <div>
+            <button
+                id="submit-btn"
+                type="submit"
+                [disabled]="!editTagForm.valid"
+            >
+                Save
+            </button>
+            <button
+                id="cancel-btn"
+                type="button"
+                (click)="onCancel()"
+            >
+                Cancel
+            </button>
+        </div>
+    </form>
+}
