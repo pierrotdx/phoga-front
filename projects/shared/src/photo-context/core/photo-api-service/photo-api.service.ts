@@ -11,6 +11,7 @@ import { Buffer } from 'buffer';
 import {
   ImageSize,
   IPhoto,
+  IPhotoBase,
   IPhotoMetadata,
   ISearchPhotoOptions,
 } from '@shared/photo-context/core/models';
@@ -28,13 +29,14 @@ export class PhotoApiService {
     this.apiUrl = this.env.phogaApiUrl;
   }
 
-  getPhotoMetadata(
-    id: IPhoto['_id']
-  ): Observable<IPhotoMetadata | undefined | Error> {
-    const url = new URL(`${this.apiUrl}/photo/${id}/metadata`);
+  getPhotoBase(id: IPhoto['_id']): Observable<IPhotoBase | undefined | Error> {
+    const url = new URL(`${this.apiUrl}/photo/${id}/base`);
     const reqUrl = url.toString();
-    return this.httpClient.get<IPhoto>(reqUrl).pipe(
-      map((photo) => this.getPhotoMetadataFromServerPhoto(photo)),
+    return this.httpClient.get<IPhotoBase>(reqUrl).pipe(
+      map((photo) => {
+        photo.metadata = this.getPhotoMetadataFromServerPhoto(photo);
+        return photo;
+      }),
       catchError(this.handleError)
     );
   }

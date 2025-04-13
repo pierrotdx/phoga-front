@@ -6,6 +6,7 @@ import {
   PhotoApiService,
   Photo,
   IPhotoMetadata,
+  IPhotoBase,
 } from '@shared/photo-context';
 import { UUID_PROVIDER_TOKEN, IUuidGenerator } from '@shared/uuid-context';
 import { firstValueFrom } from 'rxjs';
@@ -55,17 +56,20 @@ export class EditPhotoComponent {
   }
 
   private async fetchPhoto(): Promise<void> {
-    const metadata = await this.getMetadata();
+    const photoBase = await this.getPhotoBase();
+    if (!photoBase) {
+      return;
+    }
     const imageBuffer = await this.getImageBuffer();
-    const photo = new Photo(this.photoId!, { metadata, imageBuffer });
+    const photo: IPhoto = { imageBuffer, ...photoBase };
     this.photo.set(photo);
   }
 
-  private async getMetadata(): Promise<IPhoto['metadata']> {
-    const metadata = await firstValueFrom(
-      this.photoApiService.getPhotoMetadata(this.photoId!)
+  private async getPhotoBase(): Promise<IPhotoBase | undefined> {
+    const result = await firstValueFrom(
+      this.photoApiService.getPhotoBase(this.photoId!)
     );
-    return metadata instanceof Error ? undefined : metadata;
+    return result instanceof Error ? undefined : result;
   }
 
   private async getImageBuffer(): Promise<IPhoto['imageBuffer']> {
