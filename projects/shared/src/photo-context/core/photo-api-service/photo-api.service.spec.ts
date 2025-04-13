@@ -7,7 +7,13 @@ import {
 } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { ENVIRONMENT_TOKEN } from '@shared/environment-context';
-import { IPhoto, IPhotoMetadata, Photo, SortDirection } from '../models';
+import {
+  IPhoto,
+  IPhotoBase,
+  IPhotoMetadata,
+  Photo,
+  SortDirection,
+} from '../models';
 import { Buffer } from 'buffer';
 
 describe('PhotoApiService', () => {
@@ -50,18 +56,18 @@ describe('PhotoApiService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe(`getPhotoMetadata`, () => {
-    const getPhotoMetadataUrl = `${apiBaseUrl}/photo/${photo._id}/metadata`;
+  describe(`getPhotoBase`, () => {
+    const getPhotoBaseUrl = `${apiBaseUrl}/photo/${photo._id}/base`;
 
     beforeEach(() => {
-      expectedUrl = new URL(getPhotoMetadataUrl);
+      expectedUrl = new URL(getPhotoBaseUrl);
     });
 
     it('should send a GET request to the api', () => {
-      const expectCallback = (result: IPhotoMetadata | undefined | Error) => {
+      const expectCallback = (result: IPhotoBase | undefined | Error) => {
         expect(req.request.method).toEqual('GET');
       };
-      service.getPhotoMetadata(photo._id).subscribe(expectCallback);
+      service.getPhotoBase(photo._id).subscribe(expectCallback);
       const req = httpTestingController.expectOne(
         expectedUrl.toString(),
         'get-photo fake request'
@@ -71,12 +77,12 @@ describe('PhotoApiService', () => {
     });
 
     describe('in case of successful request', () => {
-      it('should return a photo metadata', () => {
-        const expectCallback = (result: IPhotoMetadata | undefined | Error) => {
+      it('should return a photo base data', () => {
+        const expectCallback = (result: IPhotoBase | undefined | Error) => {
           expect(result).toBeDefined();
-          expect(result).toEqual(photo.metadata!);
+          expect(result).toEqual(photo);
         };
-        service.getPhotoMetadata(photo._id).subscribe(expectCallback);
+        service.getPhotoBase(photo._id).subscribe(expectCallback);
         const req = httpTestingController.expectOne(
           expectedUrl.toString(),
           'get-photo fake request'
@@ -90,7 +96,7 @@ describe('PhotoApiService', () => {
     describe('in case of failed request', () => {
       it('should log the error in the console and return a more user friendly error', () => {
         const consoleSpy = spyOn(console, 'error');
-        service.getPhotoMetadata(photo._id).subscribe({
+        service.getPhotoBase(photo._id).subscribe({
           error: (err) => {
             expect(err).toBeInstanceOf(Error);
             expect(consoleSpy).toHaveBeenCalledTimes(1);
