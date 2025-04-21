@@ -6,7 +6,7 @@ import {
   PhotoApiService,
   Photo,
   IPhotoMetadata,
-  IPhotoBase,
+  IPhotoData,
 } from '@shared/photo-context';
 import { UUID_PROVIDER_TOKEN, IUuidGenerator } from '@shared/uuid-context';
 import { firstValueFrom } from 'rxjs';
@@ -65,7 +65,7 @@ export class EditPhotoComponent {
     this.photo.set(photo);
   }
 
-  private async getPhotoBase(): Promise<IPhotoBase | undefined> {
+  private async getPhotoBase(): Promise<IPhotoData | undefined> {
     const result = await firstValueFrom(
       this.photoApiService.getPhotoBase(this.photoId!)
     );

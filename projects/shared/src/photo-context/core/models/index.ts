@@ -1,6 +1,6 @@
 export * from './image-size';
 export * from './photo';
-export * from './photo-base';
+export * from './photo-data';
 export * from './photo-metadata';
 export * from './photo-utils-service';
 export * from './rendering';

@@ -7,13 +7,7 @@ import {
 } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { ENVIRONMENT_TOKEN } from '@shared/environment-context';
-import {
-  IPhoto,
-  IPhotoBase,
-  IPhotoMetadata,
-  Photo,
-  SortDirection,
-} from '../models';
+import { IPhoto, IPhotoData, Photo, SortDirection } from '../models';
 import { Buffer } from 'buffer';
 
 describe('PhotoApiService', () => {
@@ -24,11 +18,13 @@ describe('PhotoApiService', () => {
 
   const photo = new Photo('c46c9afa-ff43-427e-bec2-4f07d77d99d1', {
     imageBuffer: Buffer.from('fake buffer'),
-    metadata: {
-      date: new Date(),
-      description: 'fake description',
-      titles: ['title 1', 'title 2'],
-      location: 'New Zealand',
+    photoData: {
+      metadata: {
+        date: new Date(),
+        description: 'fake description',
+        titles: ['title 1', 'title 2'],
+        location: 'New Zealand',
+      },
     },
   });
   let expectedUrl: URL;
@@ -64,7 +60,7 @@ describe('PhotoApiService', () => {
     });
 
     it('should send a GET request to the api', () => {
-      const expectCallback = (result: IPhotoBase | undefined | Error) => {
+      const expectCallback = (result: IPhotoData | undefined | Error) => {
         expect(req.request.method).toEqual('GET');
       };
       service.getPhotoBase(photo._id).subscribe(expectCallback);
@@ -78,7 +74,7 @@ describe('PhotoApiService', () => {
 
     describe('in case of successful request', () => {
       it('should return a photo base data', () => {
-        const expectCallback = (result: IPhotoBase | undefined | Error) => {
+        const expectCallback = (result: IPhotoData | undefined | Error) => {
           expect(result).toBeDefined();
           expect(result).toEqual(photo);
         };
@@ -176,11 +172,13 @@ describe('PhotoApiService', () => {
     const getPhotoImageUrl = `${apiBaseUrl}/photo`;
     const photo2 = new Photo('e703ac39-5f29-46b6-8fa7-b65f40ae58b4', {
       imageBuffer: Buffer.from('fake buffer 2'),
-      metadata: {
-        date: new Date('2041-05-12'),
-        description: 'fake description 2',
-        titles: ['title 3', 'title 4'],
-        location: 'Japan',
+      photoData: {
+        metadata: {
+          date: new Date('2041-05-12'),
+          description: 'fake description 2',
+          titles: ['title 3', 'title 4'],
+          location: 'Japan',
+        },
       },
     });
     const photos = [photo, photo2];
