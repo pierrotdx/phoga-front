@@ -1,0 +1,72 @@
+import { HttpParams, provideHttpClient } from '@angular/common/http';
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+  TestRequest,
+} from '@angular/common/http/testing';
+import { ProviderToken } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { IApiServiceTestUtils } from './models';
+
+export class ApiServiceTestUtils<TService>
+  implements IApiServiceTestUtils<TService>
+{
+  protected baseProviders = [provideHttpClient(), provideHttpClientTesting()];
+
+  constructor(
+    private readonly serviceProviderToken: ProviderToken<TService>,
+    protected readonly apiBaseUrl: string
+  ) {}
+
+  protected testedService!: TService;
+  protected httpTestingController!: HttpTestingController;
+
+  protected requestMock!: TestRequest;
+
+  protected baseOnConfigureTestingModule(): void {
+    this.testedService = TestBed.inject(this.serviceProviderToken);
+    this.httpTestingController = TestBed.inject(HttpTestingController);
+  }
+
+  protected baseGlobalAfterEach(): void {
+    this.verifyNoUnmatchedRequests();
+  }
+
+  private verifyNoUnmatchedRequests(): void {
+    this.httpTestingController.verify();
+  }
+
+  getTestedService(): TService {
+    return this.testedService;
+  }
+
+  setupRequestMock(relativeUrl: string, params?: any): void {
+    const fullUrl = this.getFullUrl(relativeUrl, params);
+    this.requestMock = this.httpTestingController.expectOne(fullUrl);
+  }
+
+  private getFullUrl(relativeUrl: string, params?: any): string {
+    const baseUrl = `${this.apiBaseUrl}/${relativeUrl}`;
+    const stringParams = params ? this.getHttpParams(params) : undefined;
+    return stringParams ? `${baseUrl}?${stringParams}` : baseUrl;
+  }
+
+  private getHttpParams(object: any): HttpParams {
+    let params = new HttpParams();
+    Object.entries(object).forEach(([key, value]) => {
+      params = params.set(key, value as string | boolean | number);
+    });
+    return params;
+  }
+
+  fakeResponseBody(
+    body: Parameters<typeof TestRequest.prototype.flush>[0]
+  ): void {
+    this.requestMock.flush(body);
+  }
+
+  fakeResponseError(): void {
+    const errorEvent = new ProgressEvent('testHttpError');
+    this.requestMock.error(errorEvent);
+  }
+}

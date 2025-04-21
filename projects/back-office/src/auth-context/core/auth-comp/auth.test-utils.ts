@@ -1,4 +1,4 @@
-import { CompTestUtils } from '@shared/comp.test-utils';
+import { CompTestUtils } from '@shared/test-utils-context';
 import {
   ENDPOINTS_TOKEN,
   EndpointsProvider,

@@ -1,4 +1,4 @@
-import { CompTestUtils } from '@shared/comp.test-utils';
+import { CompTestUtils } from '@shared/test-utils-context';
 import { DebugElement, Type } from '@angular/core';
 import { TestModuleMetadata } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
