@@ -12,7 +12,6 @@ import {
   ImageSize,
   IPhoto,
   IPhotoData,
-  IPhotoMetadata,
   ISearchPhotoOptions,
 } from '@shared/photo-context/core/models';
 
@@ -64,13 +63,10 @@ export class PhotoApiService {
     id: IPhoto['_id'],
     options?: { imageSize: ImageSize }
   ): Observable<IPhoto['imageBuffer'] | Error> {
-    const url = new URL(`${this.apiUrl}/photo/${id}/image`);
-    if (options?.imageSize) {
-      this.addParamsToUrl(url, options?.imageSize);
-    }
-    const reqUrl = url.toString();
+    const params = options?.imageSize ? { ...options?.imageSize } : undefined;
     return this.httpClient
-      .get(reqUrl, {
+      .get(`${this.apiUrl}/photo/${id}/image`, {
+        params,
         observe: 'response',
         responseType: 'arraybuffer',
       })
@@ -86,34 +82,30 @@ export class PhotoApiService {
       );
   }
 
-  private addParamsToUrl(url: URL, params: object): void {
-    Object.entries(params).forEach(([key, value]) => {
-      const stringValue = typeof value !== 'string' ? value.toString() : value;
-      url.searchParams.append(key, stringValue);
-    });
+  searchPhoto(options?: ISearchPhotoOptions): Observable<IPhoto[] | Error> {
+    const params = this.getSearchParams(options);
+    return this.httpClient
+      .get<IPhoto[]>(`${this.apiUrl}/photo`, { params })
+      .pipe(
+        map((photos) => {
+          photos.forEach((photo) => {
+            photo.metadata = this.getPhotoMetadataFromServerPhoto(photo);
+            if (photo.imageBuffer) {
+              photo.imageBuffer = Buffer.from(photo.imageBuffer);
+            }
+          });
+          return photos;
+        }),
+        catchError(this.handleError)
+      );
   }
 
-  searchPhoto(options?: ISearchPhotoOptions): Observable<IPhoto[] | Error> {
-    const url = new URL(`${this.apiUrl}/photo`);
+  private getSearchParams(options?: ISearchPhotoOptions) {
+    const params = options?.rendering ? { ...options.rendering } : ({} as any);
     if (options?.excludeImages !== undefined) {
-      url.searchParams.append('excludeImages', String(options.excludeImages));
+      params.excludeImages = options?.excludeImages;
     }
-    if (options?.rendering) {
-      this.addParamsToUrl(url, options.rendering);
-    }
-    const reqUrl = url.toString();
-    return this.httpClient.get<IPhoto[]>(reqUrl).pipe(
-      map((photos) => {
-        photos.forEach((photo) => {
-          photo.metadata = this.getPhotoMetadataFromServerPhoto(photo);
-          if (photo.imageBuffer) {
-            photo.imageBuffer = Buffer.from(photo.imageBuffer);
-          }
-        });
-        return photos;
-      }),
-      catchError(this.handleError)
-    );
+    return params;
   }
 
   addPhoto(photo: IPhoto): Observable<unknown> {

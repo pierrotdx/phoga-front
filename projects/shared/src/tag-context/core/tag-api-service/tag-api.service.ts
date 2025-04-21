@@ -5,13 +5,8 @@ import {
   ENVIRONMENT_TOKEN,
   ISharedEnvironment,
 } from '@shared/environment-context';
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpParams,
-} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable } from 'rxjs';
-import { isEmpty } from 'ramda';
 
 @Injectable({ providedIn: 'root' })
 export class TagApiService implements ITagApiService {
@@ -27,26 +22,14 @@ export class TagApiService implements ITagApiService {
   }
 
   search(filter?: ISearchTagFilter): Observable<ITag[] | Error> {
-    const params = this.getSearchParams(filter);
     return this.httpClient
-      .get<ITag[]>(`${this.baseUrl}/search`, { params })
+      .get<ITag[]>(`${this.baseUrl}/search`, { params: { ...filter } })
       .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse): Observable<Error> {
     console.error('error from request:', error);
     throw new Error('An error occurred on the server');
-  }
-
-  private getSearchParams(filter?: ISearchTagFilter): HttpParams | undefined {
-    if (!filter || isEmpty(filter)) {
-      return;
-    }
-    let params = new HttpParams();
-    Object.entries(filter).forEach(([key, value]) => {
-      params = params.set(key, value);
-    });
-    return params;
   }
 
   get(id: ITag['_id']): Observable<ITag | Error> {

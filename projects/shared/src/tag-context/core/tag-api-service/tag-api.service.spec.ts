@@ -41,7 +41,7 @@ describe('TagApiService', () => {
 
         testUtils.setupRequestMock(relativeUrl, filter);
 
-        testUtils.expectQueryParamsToMatchFilter(filter);
+        testUtils.expectQueryParamsToBe(filter);
       });
     });
 

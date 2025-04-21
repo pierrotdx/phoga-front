@@ -1,26 +1,58 @@
-import { TestBed } from '@angular/core/testing';
 import { PhotoApiService } from './photo-api.service';
-import { EnvironmentProviders, Provider } from '@angular/core';
-import { HttpTestingController } from '@angular/common/http/testing';
-import { HttpClient } from '@angular/common/http';
+import {
+  ApiServiceTestUtils,
+  IApiServiceTestUtils,
+} from '@shared/test-utils-context';
+import { ENVIRONMENT_TOKEN } from '@shared/environment-context';
+import { IPhoto } from '../models';
+import { TestBed } from '@angular/core/testing';
 
-export class PhotoApiTestUtils {
-  readonly photoApiService: PhotoApiService;
-  readonly httpTestingController: HttpTestingController;
-  readonly httpClient: HttpClient;
+export class PhotoApiTestUtils
+  extends ApiServiceTestUtils<PhotoApiService>
+  implements IApiServiceTestUtils<PhotoApiService>
+{
+  private readonly providers = [
+    {
+      provide: ENVIRONMENT_TOKEN,
+      useValue: { phogaApiUrl: this.apiBaseUrl },
+    },
+  ];
+  private readonly consoleErrorSpy = spyOn(console, 'error');
 
-  private readonly testBed: TestBed;
+  constructor() {
+    const apiBaseUrl = 'http://api-domain.com';
+    super(PhotoApiService, apiBaseUrl);
+  }
 
-  constructor(
-    providers: (Provider | EnvironmentProviders)[],
-    imports: (Provider | EnvironmentProviders)[]
-  ) {
-    this.testBed = TestBed.configureTestingModule({
-      imports,
-      providers,
-    });
-    this.httpTestingController = this.testBed.inject(HttpTestingController);
-    this.photoApiService = this.testBed.inject(PhotoApiService);
-    this.httpClient = this.testBed.inject(HttpClient);
+  globalBeforeEach(): void {
+    const providers = [...this.baseProviders, this.providers];
+    TestBed.configureTestingModule({ providers });
+    this.baseOnConfigureTestingModule();
+  }
+
+  globalAfterEach(): void {
+    this.baseGlobalAfterEach();
+  }
+
+  expectEqualPhotos(photo1: IPhoto, photo2: IPhoto): void {
+    expect(photo1).toEqual(photo2);
+  }
+
+  async fakeResponseErrorAndExpectErrorHandling(
+    request$: Promise<unknown>
+  ): Promise<void> {
+    this.fakeResponseError();
+
+    try {
+      await request$;
+    } catch (err) {
+      expect(err).toBeInstanceOf(Error);
+    } finally {
+      this.expectConsoleErrorLog();
+    }
+  }
+
+  private expectConsoleErrorLog(): void {
+    expect(this.consoleErrorSpy).toHaveBeenCalledTimes(1);
   }
 }

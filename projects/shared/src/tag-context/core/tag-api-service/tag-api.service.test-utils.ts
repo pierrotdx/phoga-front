@@ -1,6 +1,4 @@
-import { HttpRequest } from '@angular/common/http';
 import { TagApiService } from './tag-api.service';
-import { ISearchTagFilter } from '../models';
 import {
   ApiServiceTestUtils,
   IApiServiceTestUtils,
@@ -18,13 +16,12 @@ export class TagApiServiceTestUtils
       useValue: { phogaApiUrl: this.apiBaseUrl },
     },
   ];
+  private readonly consoleErrorSpy = spyOn(console, 'error');
 
   constructor() {
-    const apiBaseUrl = 'http://apiDomain.com';
+    const apiBaseUrl = 'http://api-domain.com';
     super(TagApiService, apiBaseUrl);
   }
-
-  private readonly consoleErrorSpy = spyOn(console, 'error');
 
   globalBeforeEach(): void {
     const providers = [...this.baseProviders, this.providers];
@@ -34,25 +31,6 @@ export class TagApiServiceTestUtils
 
   globalAfterEach(): void {
     this.baseGlobalAfterEach();
-  }
-
-  expectRequestMethodToBe(
-    expectedRequestMethod: HttpRequest<any>['method']
-  ): void {
-    expect(this.requestMock.request.method).toBe(expectedRequestMethod);
-  }
-
-  expectRequestBodyToEqual(expectedBody: unknown): void {
-    const requestBody = this.requestMock.request.body;
-    expect(requestBody).toEqual(expectedBody);
-  }
-
-  expectQueryParamsToMatchFilter(filter: ISearchTagFilter) {
-    const queryParams = this.requestMock.request.params;
-    Object.entries(filter).forEach(([key, value]) => {
-      expect(queryParams.has(key)).toBeTrue();
-      expect(queryParams.get(key)).toEqual(value);
-    });
   }
 
   async fakeResponseErrorAndExpectErrorHandling(

@@ -1,4 +1,8 @@
-import { HttpParams, provideHttpClient } from '@angular/common/http';
+import {
+  HttpParams,
+  HttpRequest,
+  provideHttpClient,
+} from '@angular/common/http';
 import {
   HttpTestingController,
   provideHttpClientTesting,
@@ -68,5 +72,24 @@ export class ApiServiceTestUtils<TService>
   fakeResponseError(): void {
     const errorEvent = new ProgressEvent('testHttpError');
     this.requestMock.error(errorEvent);
+  }
+
+  expectRequestMethodToBe(
+    expectedRequestMethod: HttpRequest<any>['method']
+  ): void {
+    expect(this.requestMock.request.method).toBe(expectedRequestMethod);
+  }
+
+  expectRequestBodyToEqual(expectedBody: unknown): void {
+    const requestBody = this.requestMock.request.body;
+    expect(requestBody).toEqual(expectedBody);
+  }
+
+  expectQueryParamsToBe(expectedQueryParams: any) {
+    const queryParams = this.requestMock.request.params;
+    Object.entries(expectedQueryParams).forEach(([key, value]) => {
+      expect(queryParams.has(key)).toBeTrue();
+      expect(queryParams.get(key)).toEqual(value as any);
+    });
   }
 }
