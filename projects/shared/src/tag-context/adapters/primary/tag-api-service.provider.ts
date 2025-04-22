@@ -1,4 +1,4 @@
-import { TagApiService } from '@shared/public-api';
+import { TagApiService } from '../../core';
 import { ITagApiServiceProvider } from '../../core/gateways';
 import { HttpClient } from '@angular/common/http';
 import { ENVIRONMENT_TOKEN } from '@back-office/environment-context';

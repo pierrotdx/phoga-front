@@ -2,8 +2,8 @@ import { TagApiService } from './tag-api.service';
 import {
   ApiServiceTestUtils,
   IApiServiceTestUtils,
-} from '@shared/test-utils-context';
-import { ENVIRONMENT_TOKEN } from '@shared/environment-context';
+} from '../../../test-utils-context';
+import { ENVIRONMENT_TOKEN } from '../../../environment-context';
 import { TestBed } from '@angular/core/testing';
 
 export class TagApiServiceTestUtils

@@ -4,7 +4,7 @@ import { ISearchTagFilter, ITag } from '../models';
 import {
   ENVIRONMENT_TOKEN,
   ISharedEnvironment,
-} from '@shared/environment-context';
+} from '../../../environment-context';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable } from 'rxjs';
 
