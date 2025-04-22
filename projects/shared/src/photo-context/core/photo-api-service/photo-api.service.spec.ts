@@ -74,16 +74,10 @@ describe('PhotoApiService', () => {
     const getPhotoImageRelativeUrl = `photo/${photo._id}/image`;
 
     it('should send a GET request to the api with the input options', () => {
-      const options = {
-        imageSize: { height: 812, width: 4684 },
-      };
-      const expectedQueryParams = { height: '812', width: '4684' };
+      firstValueFrom(testedService.getPhotoImage(photo._id));
 
-      firstValueFrom(testedService.getPhotoImage(photo._id, options));
+      testUtils.setupRequestMock(getPhotoImageRelativeUrl);
 
-      testUtils.setupRequestMock(getPhotoImageRelativeUrl, options.imageSize);
-
-      testUtils.expectQueryParamsToBe(expectedQueryParams);
       testUtils.expectRequestMethodToBe('GET');
     });
 
@@ -130,16 +124,12 @@ describe('PhotoApiService', () => {
       const filter: ISearchPhotoOptions = {
         excludeImages: true,
         rendering: {
-          height: 812,
-          width: 4684,
           size: 78,
           from: 4,
           dateOrder: SortDirection.Ascending,
         },
       };
       const expectedQueryParams = {
-        height: '812',
-        width: '4684',
         size: '78',
         from: '4',
         dateOrder: SortDirection.Ascending,

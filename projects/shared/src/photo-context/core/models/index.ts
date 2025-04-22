@@ -1,4 +1,3 @@
-export * from './image-size';
 export * from './photo';
 export * from './photo-data';
 export * from './photo-metadata';

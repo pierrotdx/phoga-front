@@ -4,16 +4,17 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { ENVIRONMENT_TOKEN } from '../../../environment-context/adapters/primary/environment-provider';
-import { ISharedEnvironment } from '@shared/environment-context';
+import {
+  ENVIRONMENT_TOKEN,
+  ISharedEnvironment,
+} from '../../../environment-context';
 import { catchError, Observable, map, throwError } from 'rxjs';
 import { Buffer } from 'buffer';
 import {
-  ImageSize,
   IPhoto,
   IPhotoData,
   ISearchPhotoOptions,
-} from '@shared/photo-context/core/models';
+} from '../../../photo-context/core/models';
 
 @Injectable({
   providedIn: 'root',
@@ -59,14 +60,9 @@ export class PhotoApiService {
     return throwError(() => new Error('An error occurred on the server'));
   }
 
-  getPhotoImage(
-    id: IPhoto['_id'],
-    options?: { imageSize: ImageSize }
-  ): Observable<IPhoto['imageBuffer'] | Error> {
-    const params = options?.imageSize ? { ...options?.imageSize } : undefined;
+  getPhotoImage(id: IPhoto['_id']): Observable<IPhoto['imageBuffer'] | Error> {
     return this.httpClient
       .get(`${this.apiUrl}/photo/${id}/image`, {
-        params,
         observe: 'response',
         responseType: 'arraybuffer',
       })
