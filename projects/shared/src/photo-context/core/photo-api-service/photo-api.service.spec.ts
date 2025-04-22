@@ -1,6 +1,14 @@
 import { PhotoApiService } from './photo-api.service';
 import { PhotoApiTestUtils } from './photo-api.test-utils';
-import { IPhoto, ISearchPhotoOptions, Photo, SortDirection } from '../models';
+import {
+  IAddPhotoParams,
+  IEditPhotoParams,
+  IPhoto,
+  ISearchPhotoFilter,
+  ISearchPhotoOptions,
+  Photo,
+  SortDirection,
+} from '../models';
 import { Buffer } from 'buffer';
 import { firstValueFrom } from 'rxjs';
 
@@ -59,13 +67,12 @@ describe('PhotoApiService', () => {
     });
 
     describe('when the API responds with an error', () => {
-      it('should log the error in the console and return a more user friendly error', () => {
+      it('should log the error in the console and return a more user friendly error', async () => {
         const request$ = firstValueFrom(testedService.getPhotoBase(photo._id));
 
         testUtils.setupRequestMock(getPhotoRelativeUrl);
-        testUtils.fakeResponseError();
 
-        testUtils.fakeResponseErrorAndExpectErrorHandling(request$);
+        await testUtils.fakeResponseErrorAndExpectErrorHandling(request$);
       });
     });
   });
@@ -94,13 +101,12 @@ describe('PhotoApiService', () => {
     });
 
     describe('when the API responds with an error', () => {
-      it('should log the error in the console and return a more user friendly error', () => {
+      it('should log the error in the console and return a more user friendly error', async () => {
         const request$ = firstValueFrom(testedService.getPhotoImage(photo._id));
 
         testUtils.setupRequestMock(getPhotoImageRelativeUrl);
-        testUtils.fakeResponseError();
 
-        testUtils.fakeResponseErrorAndExpectErrorHandling(request$);
+        await testUtils.fakeResponseErrorAndExpectErrorHandling(request$);
       });
     });
   });
@@ -121,7 +127,8 @@ describe('PhotoApiService', () => {
     const photos = [photo, photo2];
 
     it('should send a GET request to the api with the input options', () => {
-      const filter: ISearchPhotoOptions = {
+      const filter: ISearchPhotoFilter = { tagId: 'tag-id' };
+      const options: ISearchPhotoOptions = {
         excludeImages: true,
         rendering: {
           size: 78,
@@ -130,13 +137,14 @@ describe('PhotoApiService', () => {
         },
       };
       const expectedQueryParams = {
+        tagId: filter.tagId,
         size: '78',
         from: '4',
         dateOrder: SortDirection.Ascending,
         excludeImages: 'true',
       };
 
-      firstValueFrom(testedService.searchPhoto(filter));
+      firstValueFrom(testedService.searchPhoto({ filter, options }));
 
       testUtils.setupRequestMock(searchPhotoRelativeUrl, expectedQueryParams);
 
@@ -161,10 +169,48 @@ describe('PhotoApiService', () => {
         const request$ = firstValueFrom(testedService.searchPhoto());
 
         testUtils.setupRequestMock(searchPhotoRelativeUrl);
-        testUtils.fakeResponseError();
 
-        testUtils.fakeResponseErrorAndExpectErrorHandling(request$);
+        await testUtils.fakeResponseErrorAndExpectErrorHandling(request$);
       });
+    });
+  });
+
+  describe('addPhoto', () => {
+    const addPhotoRelativeUrl = `admin/photo`;
+    const addPhotoParams: IAddPhotoParams = {
+      ...photo,
+      tagIds: ['tag-id-1', 'tag-id-2'],
+    };
+
+    it('should send a POST request with the required data as payload', () => {
+      const expectedBody = testUtils.getFormData(addPhotoParams);
+
+      firstValueFrom(testedService.addPhoto(addPhotoParams));
+
+      testUtils.setupRequestMock(addPhotoRelativeUrl);
+
+      testUtils.expectRequestMethodToBe('POST');
+
+      testUtils.expectBodyFormDataToEqual(expectedBody);
+    });
+  });
+
+  describe('editPhoto', () => {
+    const editPhotoRelativeUrl = `admin/photo`;
+    const editPhotoParams: IEditPhotoParams = {
+      ...photo,
+      tagIds: ['tag-id-1', 'tag-id-2'],
+    };
+
+    it('should send a PUT request with the required data as payload', () => {
+      const expectedBody = testUtils.getFormData(editPhotoParams);
+
+      firstValueFrom(testedService.editPhoto(editPhotoParams));
+
+      testUtils.setupRequestMock(editPhotoRelativeUrl);
+
+      testUtils.expectRequestMethodToBe('PUT');
+      testUtils.expectBodyFormDataToEqual(expectedBody);
     });
   });
 });

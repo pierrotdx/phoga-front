@@ -4,7 +4,7 @@ import {
   IApiServiceTestUtils,
 } from '../../../test-utils-context';
 import { ENVIRONMENT_TOKEN } from '../../../environment-context';
-import { IPhoto } from '../models';
+import { IAddPhotoParams, IPhoto } from '../models';
 import { TestBed } from '@angular/core/testing';
 
 export class PhotoApiTestUtils
@@ -54,5 +54,34 @@ export class PhotoApiTestUtils
 
   private expectConsoleErrorLog(): void {
     expect(this.consoleErrorSpy).toHaveBeenCalledTimes(1);
+  }
+
+  getFormData(addPhotoParams: IAddPhotoParams): FormData {
+    let formData = new FormData();
+    if (addPhotoParams._id) {
+      formData.append('_id', addPhotoParams._id);
+    }
+    if (addPhotoParams.metadata?.date) {
+      formData.append('date', addPhotoParams.metadata.date.toISOString());
+    }
+    if (addPhotoParams.metadata?.description) {
+      formData.append('description', addPhotoParams.metadata.description);
+    }
+    if (addPhotoParams.metadata?.location) {
+      formData.append('location', addPhotoParams.metadata.location);
+    }
+    if (addPhotoParams.metadata?.titles) {
+      formData.append('titles', addPhotoParams.metadata.titles.join(','));
+    }
+    if (addPhotoParams.imageBuffer) {
+      formData.append(
+        'image',
+        new File([addPhotoParams.imageBuffer!.buffer], 'image')
+      );
+    }
+    if (addPhotoParams.tagIds) {
+      formData.append('tagIds', addPhotoParams.tagIds.join(','));
+    }
+    return formData;
   }
 }

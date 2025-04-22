@@ -11,8 +11,11 @@ import {
 import { catchError, Observable, map, throwError } from 'rxjs';
 import { Buffer } from 'buffer';
 import {
+  IAddPhotoParams,
+  IEditPhotoParams,
   IPhoto,
   IPhotoData,
+  ISearchPhotoFilter,
   ISearchPhotoOptions,
 } from '../../../photo-context/core/models';
 
@@ -57,7 +60,7 @@ export class PhotoApiService {
 
   private handleError(error: HttpErrorResponse): Observable<Error> {
     console.error('error from request:', error);
-    return throwError(() => new Error('An error occurred on the server'));
+    throw new Error('An error occurred on the server');
   }
 
   getPhotoImage(id: IPhoto['_id']): Observable<IPhoto['imageBuffer'] | Error> {
@@ -78,10 +81,13 @@ export class PhotoApiService {
       );
   }
 
-  searchPhoto(options?: ISearchPhotoOptions): Observable<IPhoto[] | Error> {
-    const params = this.getSearchParams(options);
+  searchPhoto(params?: {
+    filter?: ISearchPhotoFilter;
+    options?: ISearchPhotoOptions;
+  }): Observable<IPhoto[] | Error> {
+    const searchParams = params ? this.getSearchParams(params) : undefined;
     return this.httpClient
-      .get<IPhoto[]>(`${this.apiUrl}/photo`, { params })
+      .get<IPhoto[]>(`${this.apiUrl}/photo`, { params: searchParams })
       .pipe(
         map((photos) => {
           photos.forEach((photo) => {
@@ -96,52 +102,65 @@ export class PhotoApiService {
       );
   }
 
-  private getSearchParams(options?: ISearchPhotoOptions) {
-    const params = options?.rendering ? { ...options.rendering } : ({} as any);
+  private getSearchParams({
+    filter,
+    options,
+  }: {
+    filter?: ISearchPhotoFilter;
+    options?: ISearchPhotoOptions;
+  }) {
+    let params: any = {};
+
+    if (filter) {
+      params = { ...filter };
+    }
+    if (options?.rendering) {
+      params = { ...params, ...options?.rendering };
+    }
     if (options?.excludeImages !== undefined) {
       params.excludeImages = options?.excludeImages;
     }
     return params;
   }
 
-  addPhoto(photo: IPhoto): Observable<unknown> {
+  addPhoto(addPhotoParams: IAddPhotoParams): Observable<unknown> {
     const url = new URL(`${this.apiUrl}/admin/photo`);
-    const formData = this.getFormDataFromPhoto(photo);
+    const formData = this.getFormDataFromPhoto(addPhotoParams);
     return this.httpClient.post(url.toString(), formData, {
       responseType: 'arraybuffer',
     });
   }
 
-  editPhoto(photo: IPhoto): Observable<unknown> {
+  editPhoto(editPhotoParams: IEditPhotoParams): Observable<unknown> {
     const url = new URL(`${this.apiUrl}/admin/photo`);
-    const formData = this.getFormDataFromPhoto(photo);
+    const formData = this.getFormDataFromPhoto(editPhotoParams);
     return this.httpClient.put(url.toString(), formData, {
       responseType: 'arraybuffer',
     });
   }
 
-  private getFormDataFromPhoto(photo: IPhoto): FormData {
+  private getFormDataFromPhoto(addPhotoParams: IAddPhotoParams): FormData {
     const formData = new FormData();
-    formData.append('_id', photo._id);
-    if (photo.imageBuffer) {
-      const file = new File([photo.imageBuffer!.buffer], 'image');
+    formData.append('_id', addPhotoParams._id);
+    if (addPhotoParams.imageBuffer) {
+      const file = new File([addPhotoParams.imageBuffer!.buffer], 'image');
       formData.append('image', file);
     }
-    if (!photo.metadata) {
-      return formData;
-    }
-    if (photo.metadata.date) {
-      const isoString = photo.metadata.date.toISOString();
+    if (addPhotoParams.metadata?.date) {
+      const isoString = addPhotoParams.metadata.date.toISOString();
       formData.append('date', isoString);
     }
-    if (photo.metadata.description) {
-      formData.append('description', photo.metadata.description);
+    if (addPhotoParams.metadata?.description) {
+      formData.append('description', addPhotoParams.metadata.description);
     }
-    if (photo.metadata.location) {
-      formData.append('location', photo.metadata.location);
+    if (addPhotoParams.metadata?.location) {
+      formData.append('location', addPhotoParams.metadata.location);
     }
-    if (photo.metadata.titles) {
-      formData.append('titles', photo.metadata.titles.join(','));
+    if (addPhotoParams.metadata?.titles) {
+      formData.append('titles', addPhotoParams.metadata.titles.join(','));
+    }
+    if (addPhotoParams.tagIds) {
+      formData.append('tagIds', addPhotoParams.tagIds.join(','));
     }
     return formData;
   }

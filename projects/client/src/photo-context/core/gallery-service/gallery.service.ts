@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   IPhoto,
+  ISearchPhotoFilter,
   ISearchPhotoOptions,
   PhotoApiService,
 } from '@shared/photo-context';
@@ -34,9 +35,9 @@ export class GalleryService {
     }
     this.isLoading$.next(true);
     try {
-      const searchPhotoOptions = this.getSearchPhotoOptions(size);
-      const loadedPhotos = await this.fetchPhotos(searchPhotoOptions);
-      this.onPhotoLoading(searchPhotoOptions, loadedPhotos);
+      const searchOptions = this.getSearchPhotoOptions(size);
+      const loadedPhotos = await this.fetchPhotos({ options: searchOptions });
+      this.onPhotoLoading(searchOptions, loadedPhotos);
     } catch (err) {
       console.error(err);
       throw err;
@@ -55,8 +56,17 @@ export class GalleryService {
     return options;
   }
 
-  private fetchPhotos = async (searchPhotoOptions?: ISearchPhotoOptions) => {
-    const loadRequest$ = this.photoApiService.searchPhoto(searchPhotoOptions);
+  private fetchPhotos = async ({
+    filter,
+    options,
+  }: {
+    filter?: ISearchPhotoFilter;
+    options?: ISearchPhotoOptions;
+  }) => {
+    const loadRequest$ = this.photoApiService.searchPhoto({
+      filter,
+      options,
+    });
     const result = await firstValueFrom(loadRequest$);
     if (result instanceof Error) {
       throw result;

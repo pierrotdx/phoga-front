@@ -67,8 +67,8 @@ export class GalleryServiceTestUtils {
     const searchPhotoSpy = this.getSearchPhotoSpy();
     expect(searchPhotoSpy).toHaveBeenCalled();
 
-    const searchPhotoOptions = searchPhotoSpy.calls.mostRecent()?.args?.[0];
-    expect(searchPhotoOptions?.rendering?.from).toBe(expectedFrom);
+    const searchParams = searchPhotoSpy.calls.mostRecent()?.args?.[0];
+    expect(searchParams?.options?.rendering?.from).toBe(expectedFrom);
   }
 
   expectPhotoRequestSizeToBe(expectedSize: number): void {
@@ -76,7 +76,7 @@ export class GalleryServiceTestUtils {
     expect(searchPhotoSpy).toHaveBeenCalled();
 
     const searchOptions = searchPhotoSpy.calls.mostRecent()?.args?.[0];
-    expect(searchOptions?.rendering?.size).toBe(expectedSize);
+    expect(searchOptions?.options?.rendering?.size).toBe(expectedSize);
   }
 
   expectServicePhotosLengthToBe(expectedLength: number): void {
