@@ -8,6 +8,7 @@
         <app-edit-metadata id="edit-metadata"
             [viewModel]="viewModel.metadata">
         </app-edit-metadata>
+        <app-edit-photo-tags [(viewModel)]="viewModel.tagIds"></app-edit-photo-tags>
         <div>
             <button id="submit-btn" type="submit" [disabled]="!isValid()">Save</button>
             <button id="cancel-btn" type="button" (click)="cancel.emit()">Cancel</button>

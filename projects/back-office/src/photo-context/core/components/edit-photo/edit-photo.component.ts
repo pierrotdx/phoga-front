@@ -1,22 +1,24 @@
 import { Component, Inject, Input, signal } from '@angular/core';
 import { EditPhotoFormComponent } from './edit-photo-form/edit-photo-form.component';
-import { IPhotoVM } from '@back-office/photo-context/core/models';
+import { IPhotoVM } from '../../../../photo-context/core/models';
 import {
   IPhoto,
   PhotoApiService,
   Photo,
   IPhotoMetadata,
   IPhotoData,
+  IAddPhotoParams,
+  IEditPhotoParams,
 } from '@shared/photo-context';
 import { UUID_PROVIDER_TOKEN, IUuidGenerator } from '@shared/uuid-context';
 import { firstValueFrom } from 'rxjs';
-import { isEmpty } from 'ramda';
+import { isEmpty, view } from 'ramda';
 import { Router } from '@angular/router';
 import {
   EndpointId,
   ENDPOINTS_TOKEN,
   IEndpoints,
-} from '@back-office/endpoints-context';
+} from '../../../../endpoints-context';
 
 @Component({
   selector: 'app-edit-photo',
@@ -80,12 +82,13 @@ export class EditPhotoComponent {
   }
 
   async onSave(viewModel: IPhotoVM): Promise<void> {
-    const newPhoto = this.getPhotoFromVM(viewModel);
-    this.photo.set(newPhoto);
+    const newPhotoParams: IAddPhotoParams | IEditPhotoParams =
+      this.getPhotoFromVM(viewModel);
+    this.photo.set(newPhotoParams);
     if (this.isCreation) {
-      await firstValueFrom(this.photoApiService.addPhoto(newPhoto));
+      await firstValueFrom(this.photoApiService.addPhoto(newPhotoParams));
     } else {
-      await firstValueFrom(this.photoApiService.editPhoto(newPhoto));
+      await firstValueFrom(this.photoApiService.editPhoto(newPhotoParams));
     }
     this.navigateOut();
   }
@@ -96,17 +99,22 @@ export class EditPhotoComponent {
     ]);
   }
 
-  private getPhotoFromVM(viewModel: IPhotoVM): IPhoto {
+  private getPhotoFromVM(
+    viewModel: IPhotoVM
+  ): IAddPhotoParams | IEditPhotoParams {
     const _id = this.photo()?._id || this.uuidGenerator.generate();
-    const newPhoto = new Photo(_id);
+    const params: IAddPhotoParams | IEditPhotoParams = { _id };
     const metadata = this.getPhotoMetadataFromVM(viewModel.metadata);
     if (metadata) {
-      newPhoto.metadata = metadata;
+      params.metadata = metadata;
+    }
+    if (viewModel.tagIds) {
+      params.tagIds = viewModel.tagIds;
     }
     if (viewModel.imageBuffer) {
-      newPhoto.imageBuffer = viewModel.imageBuffer;
+      params.imageBuffer = viewModel.imageBuffer;
     }
-    return newPhoto;
+    return params;
   }
 
   private getPhotoMetadataFromVM(

@@ -1,11 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
-import { ITagApiService } from '../models/tag-api-service';
-import { ISearchTagFilter, ITag } from '../models';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { ISearchTagFilter, ITag, ITagApiService } from '../models';
 import {
   ENVIRONMENT_TOKEN,
   ISharedEnvironment,
 } from '../../../environment-context';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
