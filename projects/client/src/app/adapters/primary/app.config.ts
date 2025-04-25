@@ -15,9 +15,15 @@ import {
   ENVIRONMENT_TOKEN,
   EnvironmentProvider,
 } from '../../../environment-context';
+import { TagApiService } from '@shared/tag-context';
 
 const PhotoApiServiceProvider: Provider = {
   provide: PhotoApiService,
+  deps: [ENVIRONMENT_TOKEN, HttpClient],
+};
+
+export const TagApiServiceProvider = {
+  provide: TagApiService,
   deps: [ENVIRONMENT_TOKEN, HttpClient],
 };
 
@@ -28,6 +34,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     PhotoApiServiceProvider,
     PhotoUtilsServiceProvider,
+    TagApiServiceProvider,
     EnvironmentProvider,
   ],
 };
