@@ -1,6 +1,11 @@
-import { BehaviorSubject } from 'rxjs';
-import { IPhoto, Photo } from '@shared/photo-context';
-import { GalleryService,IGalleryPhotos } from '../../../';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import {
+  GalleryService,
+  IGalleryPhotos,
+  IPhoto,
+  ISelectedPhoto,
+  Photo,
+} from '@shared/photo-context';
 import { UuidGenerator } from '@shared/uuid-context';
 
 export interface GalleryServiceState {
@@ -9,12 +14,20 @@ export interface GalleryServiceState {
 }
 
 export class FakeGalleryService {
+  readonly fakeGalleryPhotos$ = new BehaviorSubject<IGalleryPhotos>({
+    all: [],
+    lastBatch: [],
+  });
+  readonly fakeSelectedPhoto$ = new BehaviorSubject<ISelectedPhoto>(
+    undefined
+  );
+
   private readonly galleryServiceSpy = jasmine.createSpyObj<GalleryService>(
     'GalleryService',
     ['loadMore', 'selectPhoto', 'deselectPhoto', 'hasMorePhotosToLoad'],
     {
-      photos$: new BehaviorSubject<IGalleryPhotos>({ all: [], lastBatch: [] }),
-      selectedPhoto$: new BehaviorSubject<IPhoto | undefined>(undefined),
+      galleryPhotos$: this.fakeGalleryPhotos$,
+      selectedPhoto$: this.fakeSelectedPhoto$,
     }
   );
 
@@ -25,17 +38,17 @@ export class FakeGalleryService {
   }
 
   private fakeLoadMorePhotos(): void {
-    this.galleryServiceSpy.loadMore.and.callFake(this.dumbLoadMorePhotos);
+    this.galleryServiceSpy.loadMore.and.callFake(this.loadPhotosBatch);
   }
 
-  private dumbLoadMorePhotos = async (size: number = 0): Promise<void> => {
-    const loadedPhotos = this.generateStubPhotos(size);
-    const currentPhotos = this.galleryServiceSpy.photos$.getValue();
-    const newPhotos: IGalleryPhotos = {
-      all: currentPhotos.all.concat(loadedPhotos),
-      lastBatch: loadedPhotos,
+  private loadPhotosBatch = async (size: number = 0): Promise<void> => {
+    const photosToLoad = this.generateStubPhotos(size);
+    const currentGalleryPhotos = this.fakeGalleryPhotos$.getValue();
+    const newGalleryPhotos: IGalleryPhotos = {
+      all: currentGalleryPhotos.all.concat(photosToLoad),
+      lastBatch: photosToLoad,
     };
-    this.galleryServiceSpy.photos$.next(newPhotos);
+    this.fakeGalleryPhotos$.next(newGalleryPhotos);
   };
 
   private generateStubPhotos(nbPhotos: number): IPhoto[] {
@@ -50,19 +63,19 @@ export class FakeGalleryService {
   async setupGalleryServiceState(state: GalleryServiceState): Promise<void> {
     const dumbPhotos = this.generateStubPhotos(state.nbPhotos);
     const photos: IGalleryPhotos = { all: dumbPhotos, lastBatch: dumbPhotos };
-    this.galleryServiceSpy.photos$.next(photos);
+    this.fakeGalleryPhotos$.next(photos);
 
     this.setSelectedPhoto(state.selectedPhotoIndex);
   }
 
   private setSelectedPhoto(photoIndex: number | undefined): void {
     if (photoIndex === undefined) {
-      this.galleryServiceSpy.selectedPhoto$.next(undefined);
+      this.fakeSelectedPhoto$.next(undefined);
       return;
     }
-    const photos = this.galleryServiceSpy.photos$.getValue();
+    const photos = this.fakeGalleryPhotos$.getValue();
     const selectedPhoto = photos.all[photoIndex];
-    this.galleryServiceSpy.selectedPhoto$.next(selectedPhoto);
+    this.fakeSelectedPhoto$.next(selectedPhoto);
   }
 
   getSpy() {

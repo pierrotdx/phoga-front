@@ -1,8 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { IPhoto } from '@shared/photo-context';
+import { GalleryService, IPhoto } from '@shared/photo-context';
 import { PhotoMetadataComponent } from '../photo-metadata/photo-metadata.component';
 import { PhotoImageComponent } from '../photo-image/photo-image.component';
-import { GalleryService } from '../../';
 import { OverlayMatIconBtnComponent } from '@shared/overlay-context';
 
 @Component({
@@ -21,6 +20,8 @@ export class PhotoCardComponent {
   constructor(private readonly galleryService: GalleryService) {}
 
   seeDetails = () => {
-    this.galleryService.selectedPhoto$.next(this.photo);
+    if (this.photo?._id) {
+      this.galleryService.selectPhoto(this.photo._id);
+    }
   };
 }

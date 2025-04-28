@@ -1,0 +1,14 @@
+import { Observable } from 'rxjs';
+import { IPhoto } from './photo';
+import { IGalleryPhotos } from './gallery-photos';
+
+export interface IGallery {
+  defaultSize: number;
+  galleryPhotos$: Observable<IGalleryPhotos>;
+  isLoading$: Observable<boolean>;
+  loadMore(size?: number): Promise<void>;
+  hasMorePhotosToLoad(): boolean;
+  selectedPhoto$: Observable<IPhoto | undefined>;
+  selectPhoto(id: IPhoto['_id']): void;
+  deselectPhoto(): void;
+}

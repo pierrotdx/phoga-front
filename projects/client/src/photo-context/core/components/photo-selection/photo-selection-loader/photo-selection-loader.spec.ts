@@ -80,8 +80,8 @@ describe('PhotoSelectionLoader', () => {
             testUtils.stubHasMoreToLoad(true);
           });
 
-          it('should trigger photos preloading', () => {
-            testUtils.onSwiperStateChange(swiperState);
+          it('should trigger photos preloading', async () => {
+            await testUtils.onSwiperStateChange(swiperState);
             expect(loadPhotosSpy).toHaveBeenCalledTimes(1);
           });
         });

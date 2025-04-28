@@ -3,13 +3,11 @@ import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { SectionComponent } from '../section/section.component';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
-import { IPhoto } from '@shared/photo-context';
+import { Observable, Subscription } from 'rxjs';
+import { GalleryService, IGalleryPhotos, IPhoto } from '@shared/photo-context';
 import {
   PhotoCollageComponent,
-  IGalleryPhotos,
   PhotoDetailedViewComponent,
-  GalleryService,
 } from '../../../../photo-context';
 import { OverlayPanelComponent } from '@shared/overlay-context';
 
@@ -27,8 +25,8 @@ import { OverlayPanelComponent } from '@shared/overlay-context';
   templateUrl: './gallery-section.component.html',
 })
 export class GallerySectionComponent implements OnInit, OnDestroy {
-  readonly photos$: BehaviorSubject<IGalleryPhotos>;
-  isLoading$!: Subject<boolean>;
+  readonly photos$: Observable<IGalleryPhotos>;
+  isLoading$!: Observable<boolean>;
 
   readonly selectedPhoto = signal<IPhoto | undefined>(undefined);
   readonly showDetailedView = signal<boolean>(false);
@@ -37,11 +35,11 @@ export class GallerySectionComponent implements OnInit, OnDestroy {
   private readonly initialNbPhotos = 6;
 
   constructor(private readonly galleryService: GalleryService) {
-    this.photos$ = this.galleryService.photos$;
+    this.photos$ = this.galleryService.galleryPhotos$;
+    this.isLoading$ = this.galleryService.isLoading$;
   }
 
   ngOnInit() {
-    this.isLoading$ = this.galleryService.isLoading$;
     void this.loadPhotos(this.initialNbPhotos);
     this.subToSelectedPhoto();
   }
@@ -55,10 +53,10 @@ export class GallerySectionComponent implements OnInit, OnDestroy {
   }
 
   private subToSelectedPhoto(): void {
-    const selectedPhotoSub = this.galleryService.selectedPhoto$.subscribe(
-      (photo) => this.onSelectedPhotoChange(photo)
+    const sub = this.galleryService.selectedPhoto$.subscribe((photo) =>
+      this.onSelectedPhotoChange(photo)
     );
-    this.subs.push(selectedPhotoSub);
+    this.subs.push(sub);
   }
 
   private onSelectedPhotoChange(photo: IPhoto | undefined) {

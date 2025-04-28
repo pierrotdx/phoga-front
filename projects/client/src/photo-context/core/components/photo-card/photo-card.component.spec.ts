@@ -5,8 +5,8 @@ import { PhotoCardComponent } from './photo-card.component';
 import { MaterialIconComponent } from '@shared/material-icon-component';
 import { PhotoFullscreenComponent } from '../photo-fullscreen/photo-fullscreen.component';
 import { PhotoMetadataComponent } from '../photo-metadata/photo-metadata.component';
-import { GalleryService } from '../..';
 import { Provider } from '@angular/core';
+import { GalleryService } from '@shared/photo-context';
 
 describe('PhotoCardComponent', () => {
   let component: PhotoCardComponent;

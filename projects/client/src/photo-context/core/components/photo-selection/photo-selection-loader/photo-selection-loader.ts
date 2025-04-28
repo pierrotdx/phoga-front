@@ -1,6 +1,6 @@
-import { GalleryService, IGalleryPhotos } from '../../../';
-import { IPhoto } from '@shared/photo-context';
+import { GalleryService, IGalleryPhotos, IPhoto } from '@shared/photo-context';
 import { ISlide, ISwiperState } from '@shared/swiper-context';
+import { firstValueFrom } from 'rxjs';
 
 export class PhotoSelectionLoader {
   private nbPreloadPhotos: number = 2;
@@ -11,44 +11,48 @@ export class PhotoSelectionLoader {
   ) {}
 
   async getInitPhotos(): Promise<IGalleryPhotos> {
-    const availablePhotos = this.galleryService.photos$.getValue();
+    const availablePhotos = await firstValueFrom(
+      this.galleryService.galleryPhotos$
+    );
     const nbMissingPhotos = this.nbSlides - availablePhotos.all.length;
     if (nbMissingPhotos <= 0) {
       return availablePhotos;
     }
     await this.loadPhotos(nbMissingPhotos);
-    return this.galleryService.photos$.getValue();
+    return await firstValueFrom(this.galleryService.galleryPhotos$);
   }
 
   private async loadPhotos(size?: number): Promise<void> {
     return this.galleryService.loadMore(size);
   }
 
-  private isLoadMoreEnabled(slides: ISlide<IPhoto>[]): boolean {
-    return (
-      this.galleryService.hasMorePhotosToLoad() &&
-      this.shouldTriggerPreload(slides)
-    );
+  private async isLoadMoreEnabled(slides: ISlide<IPhoto>[]): Promise<boolean> {
+    const shouldTriggerPreload = await this.shouldTriggerPreload(slides);
+    return this.galleryService.hasMorePhotosToLoad() && shouldTriggerPreload;
   }
 
-  private shouldTriggerPreload(slides: ISlide<IPhoto>[]): boolean {
-    const preloadIndex = this.getPhotoPreloadIndex();
+  private async shouldTriggerPreload(
+    slides: ISlide<IPhoto>[]
+  ): Promise<boolean> {
+    const preloadIndex = await this.getPhotoPreloadIndex();
     const lastSlideItemIndex = slides[slides.length - 1].itemIndex;
     return lastSlideItemIndex >= preloadIndex;
   }
 
-  private getPhotoPreloadIndex(): number {
-    const lastPhotoIndex = this.getPhotos().all.length - 1;
+  private async getPhotoPreloadIndex(): Promise<number> {
+    const photos = await this.getPhotos();
+    const lastPhotoIndex = photos.all.length - 1;
     const preloadIndex = lastPhotoIndex - this.nbPreloadPhotos;
     return preloadIndex;
   }
 
-  private getPhotos(): IGalleryPhotos {
-    return this.galleryService.photos$.getValue();
+  private async getPhotos(): Promise<IGalleryPhotos> {
+    return await firstValueFrom(this.galleryService.galleryPhotos$);
   }
 
   async onSwiperStateChange(swiperState: ISwiperState<IPhoto>): Promise<void> {
-    if (!this.isLoadMoreEnabled(swiperState.slides)) {
+    const isLoadMoreEnabled = await this.isLoadMoreEnabled(swiperState.slides);
+    if (!isLoadMoreEnabled) {
       return;
     }
     await this.loadPhotos(this.nbPreloadPhotos);

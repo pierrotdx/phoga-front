@@ -10,11 +10,21 @@ import {
 
 import { ISwiperState, SwiperComponent } from '@shared/swiper-context';
 import { PhotoImageComponent } from '../photo-image/photo-image.component';
-import { IPhoto } from '@shared/photo-context';
+import {
+  GalleryService,
+  IGalleryPhotos,
+  IPhoto,
+  ISelectedPhoto,
+} from '@shared/photo-context';
 import { PhotoSelectionLoader } from './photo-selection-loader/photo-selection-loader';
-import { GalleryService, IGalleryPhotos } from '../../';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import {
+  BehaviorSubject,
+  firstValueFrom,
+  Observable,
+  Subject,
+  Subscription,
+} from 'rxjs';
 import { SubscriptionHandler } from '@shared/subscription-handler-context';
 
 @Component({
@@ -40,12 +50,17 @@ export class PhotoSelectionComponent implements OnInit, OnDestroy {
   private swipeToItemEmitter = new Subject<number>();
   readonly swipeToItem$ = this.swipeToItemEmitter.asObservable();
 
-  private readonly selectedPhoto$: BehaviorSubject<IPhoto | undefined>;
+  private readonly selectedPhoto$ = new BehaviorSubject<ISelectedPhoto>(
+    undefined
+  );
   private readonly selectedPhotoHandler: SubscriptionHandler<
     IPhoto | undefined
   >;
 
-  private readonly photos$: BehaviorSubject<IGalleryPhotos>;
+  private readonly photos$ = new BehaviorSubject<IGalleryPhotos>({
+    all: [],
+    lastBatch: [],
+  });
   private readonly photosHandler: SubscriptionHandler<IGalleryPhotos>;
 
   private readonly addItemsEmitter = new Subject<IPhoto[]>();
@@ -55,11 +70,9 @@ export class PhotoSelectionComponent implements OnInit, OnDestroy {
   private hasSwiperViewInit = false;
 
   private readonly photoLoader: PhotoSelectionLoader;
-  private readonly subs: SubscriptionHandler<any>[] = [];
+  private readonly subs: (Subscription | SubscriptionHandler<any>)[] = [];
 
   constructor(private readonly galleryService: GalleryService) {
-    this.selectedPhoto$ = this.galleryService.selectedPhoto$;
-    this.photos$ = this.galleryService.photos$;
     this.photoLoader = new PhotoSelectionLoader(
       this.galleryService,
       this.nbSlides
@@ -126,10 +139,30 @@ export class PhotoSelectionComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     void this.setInitPhotos();
+    this.subToSelectedPhoto();
+    this.subToGalleryPhotos();
   }
 
   ngOnDestroy(): void {
     this.subs.forEach((sub) => sub.unsubscribe());
+  }
+
+  private subToSelectedPhoto(): void {
+    const sub = this.galleryService.selectedPhoto$.subscribe(
+      (selectedPhoto) => {
+        this.selectedPhoto$.next(selectedPhoto);
+      }
+    );
+    this.subs.push(sub);
+  }
+
+  private subToGalleryPhotos(): void {
+    const sub = this.galleryService.galleryPhotos$.subscribe(
+      (galleryPhotos) => {
+        this.photos$.next(galleryPhotos);
+      }
+    );
+    this.subs.push(sub);
   }
 
   private subToSelectNextInput(): void {
@@ -180,7 +213,7 @@ export class PhotoSelectionComponent implements OnInit, OnDestroy {
   }
 
   private refreshView(): void {
-    const selectedPhoto = this.galleryService.selectedPhoto$.getValue();
+    const selectedPhoto = this.selectedPhoto$.getValue();
     this.onSelectedPhotoChange(selectedPhoto);
   }
 

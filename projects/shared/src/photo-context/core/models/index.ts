@@ -1,5 +1,8 @@
 export * from './add-photo-params';
 export * from './edit-photo-params';
+export * from './gallery';
+export * from './gallery-photos';
+export * from './gallery-service';
 export * from './photo';
 export * from './photo-data';
 export * from './photo-metadata';
@@ -7,3 +10,4 @@ export * from './photo-utils-service';
 export * from './rendering';
 export * from './search-photo';
 export * from './search-photo-filter';
+export * from './selected-photo';

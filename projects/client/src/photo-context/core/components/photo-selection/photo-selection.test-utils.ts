@@ -5,8 +5,7 @@ import {
   TestModuleMetadata,
 } from '@angular/core/testing';
 import { ISwiperState, SwiperComponent } from '@shared/swiper-context';
-import { GalleryService } from '../../';
-import { IPhoto } from '@shared/photo-context';
+import { GalleryService, IPhoto } from '@shared/photo-context';
 import { BehaviorSubject, filter, firstValueFrom, Subject } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { Component, DebugElement, effect, input } from '@angular/core';
@@ -174,8 +173,7 @@ export class PhotoSelectionTestUtils {
   }
 
   getSelectedPhoto(): IPhoto | undefined {
-    const galleryServiceSpy = this.getGalleryServiceSpy();
-    return galleryServiceSpy.selectedPhoto$.getValue();
+    return this.fakeGalleryService.fakeSelectedPhoto$.getValue();
   }
 
   getPhoto(index: number): IPhoto {
@@ -201,9 +199,9 @@ export class PhotoSelectionTestUtils {
   }
 
   selectPhotoByIndex(photoIndex: number): void {
-    const galleryServiceSpy = this.getGalleryServiceSpy();
-    const selectedPhoto = galleryServiceSpy.photos$.getValue().all[photoIndex];
-    galleryServiceSpy.selectedPhoto$.next(selectedPhoto);
+    const photoToSelect =
+      this.fakeGalleryService.fakeGalleryPhotos$.getValue().all[photoIndex];
+    this.fakeGalleryService.fakeSelectedPhoto$.next(photoToSelect);
   }
 
   getPhotoLoaderOnSwiperStateChangeSpy() {

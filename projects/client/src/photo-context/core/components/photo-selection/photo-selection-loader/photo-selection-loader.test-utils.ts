@@ -1,12 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { GalleryService } from '../../../';
 import { PhotoSelectionLoader } from './photo-selection-loader';
 import {
   FakeGalleryService,
   GalleryServiceState,
 } from '../gallery-service.fake';
 import { ISlide, ISwiperState } from '@shared/swiper-context';
-import { IPhoto, Photo } from '@shared/photo-context';
+import { GalleryService, IPhoto, Photo } from '@shared/photo-context';
 
 export class PhotoSelectionLoaderTestUtils {
   private photoSelectionLoader!: PhotoSelectionLoader;
@@ -65,8 +64,8 @@ export class PhotoSelectionLoaderTestUtils {
     return slides;
   }
 
-  onSwiperStateChange(swiperState: ISwiperState<IPhoto>): void {
-    this.photoSelectionLoader.onSwiperStateChange(swiperState);
+  async onSwiperStateChange(swiperState: ISwiperState<IPhoto>): Promise<void> {
+    await this.photoSelectionLoader.onSwiperStateChange(swiperState);
   }
 
   stubHasMoreToLoad(stubValue: boolean): void {

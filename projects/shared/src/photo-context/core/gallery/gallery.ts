@@ -1,31 +1,37 @@
-import { Injectable } from '@angular/core';
+import { PhotoApiService } from '@shared/public-api';
 import {
+  IGallery,
+  IGalleryPhotos,
   IPhoto,
   ISearchPhotoFilter,
   ISearchPhotoOptions,
-  PhotoApiService,
-} from '@shared/photo-context';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+} from '../models';
+import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
+import { ISelectedPhoto } from '../models/selected-photo';
 
-import { IGalleryPhotos } from '../models';
-
-@Injectable({
-  providedIn: 'root',
-})
-export class GalleryService {
-  readonly photos$ = new BehaviorSubject<IGalleryPhotos>({
+export class Gallery implements IGallery {
+  private readonly _galleryPhotos$ = new BehaviorSubject<IGalleryPhotos>({
     all: [],
     lastBatch: [],
   });
+  readonly galleryPhotos$: Observable<IGalleryPhotos> =
+    this._galleryPhotos$.asObservable();
+
   readonly isLoading$ = new BehaviorSubject<boolean>(false);
 
   private from: number = 0;
-  private defaultSize: number = 2;
+  readonly defaultSize: number = 3;
   private hasMoreToLoad: boolean = true;
 
-  readonly selectedPhoto$ = new BehaviorSubject<IPhoto | undefined>(undefined);
+  private readonly _selectedPhoto$ = new BehaviorSubject<ISelectedPhoto>(
+    undefined
+  );
+  readonly selectedPhoto$ = this._selectedPhoto$.asObservable();
 
-  constructor(private readonly photoApiService: PhotoApiService) {}
+  constructor(
+    private readonly photoApiService: PhotoApiService,
+    private readonly filter?: ISearchPhotoFilter
+  ) {}
 
   async loadMore(size?: number): Promise<void> {
     // 1 query at a time (might need queue?)
@@ -36,7 +42,7 @@ export class GalleryService {
     this.isLoading$.next(true);
     try {
       const searchOptions = this.getSearchPhotoOptions(size);
-      const loadedPhotos = await this.fetchPhotos({ options: searchOptions });
+      const loadedPhotos = await this.loadPhotosFromServer(searchOptions);
       this.onPhotoLoading(searchOptions, loadedPhotos);
     } catch (err) {
       console.error(err);
@@ -56,15 +62,11 @@ export class GalleryService {
     return options;
   }
 
-  private fetchPhotos = async ({
-    filter,
-    options,
-  }: {
-    filter?: ISearchPhotoFilter;
-    options?: ISearchPhotoOptions;
-  }) => {
+  private async loadPhotosFromServer(
+    options?: ISearchPhotoOptions
+  ): Promise<IPhoto[]> {
     const loadRequest$ = this.photoApiService.searchPhoto({
-      filter,
+      filter: this.filter,
       options,
     });
     const result = await firstValueFrom(loadRequest$);
@@ -72,14 +74,14 @@ export class GalleryService {
       throw result;
     }
     return result;
-  };
+  }
 
   private onPhotoLoading(
     searchPhotoOptions: ISearchPhotoOptions,
     loadedPhotos: IPhoto[]
   ): void {
     if (loadedPhotos.length > 0) {
-      this.updatePhotos(loadedPhotos);
+      this.updateGalleryPhotos(loadedPhotos);
       this.updateFrom(loadedPhotos.length + 1);
     }
     this.updateHasMoreToLoad(searchPhotoOptions, loadedPhotos);
@@ -89,13 +91,13 @@ export class GalleryService {
     this.from += step;
   }
 
-  private updatePhotos(photosToAdd: IPhoto[]): void {
-    const currentPhotos = this.photos$.getValue();
-    const newPhotos: IGalleryPhotos = {
-      all: currentPhotos.all.concat(photosToAdd),
+  private updateGalleryPhotos(photosToAdd: IPhoto[]): void {
+    const currentGalleryPhotos = this._galleryPhotos$.getValue();
+    const newGalleryPhotos: IGalleryPhotos = {
+      all: currentGalleryPhotos.all.concat(photosToAdd),
       lastBatch: photosToAdd,
     };
-    this.photos$.next(newPhotos);
+    this._galleryPhotos$.next(newGalleryPhotos);
   }
 
   private updateHasMoreToLoad(
@@ -111,16 +113,16 @@ export class GalleryService {
     if (!selectedPhoto) {
       return;
     }
-    this.selectedPhoto$.next(selectedPhoto);
+    this._selectedPhoto$.next(selectedPhoto);
   }
 
   private findPhoto(photoId: IPhoto['_id']): IPhoto | undefined {
-    const photos = this.photos$.getValue();
+    const photos = this._galleryPhotos$.getValue();
     return photos.all.find((p) => p._id === photoId);
   }
 
   deselectPhoto = (): void => {
-    this.selectedPhoto$.next(undefined);
+    this._selectedPhoto$.next(undefined);
   };
 
   hasMorePhotosToLoad(): boolean {
