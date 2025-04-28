@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, effect, OnDestroy, OnInit, signal } from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { SectionComponent } from '../section/section.component';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
@@ -10,6 +10,8 @@ import {
   PhotoDetailedViewComponent,
 } from '../../../../photo-context';
 import { OverlayPanelComponent } from '@shared/overlay-context';
+import { GalleryNavComponent } from './gallery-nav/gallery-nav.component';
+import { ITag } from '@shared/tag-context';
 
 @Component({
   selector: 'app-gallery-section',
@@ -21,6 +23,7 @@ import { OverlayPanelComponent } from '@shared/overlay-context';
     PhotoDetailedViewComponent,
     OverlayPanelComponent,
     SectionComponent,
+    GalleryNavComponent,
   ],
   templateUrl: './gallery-section.component.html',
 })
@@ -34,9 +37,15 @@ export class GallerySectionComponent implements OnInit, OnDestroy {
   private readonly subs: Subscription[] = [];
   private readonly initialNbPhotos = 6;
 
+  selectedTag = signal<ITag['_id'] | undefined>(undefined);
+
   constructor(private readonly galleryService: GalleryService) {
     this.photos$ = this.galleryService.galleryPhotos$;
     this.isLoading$ = this.galleryService.isLoading$;
+    effect(() => {
+      const selectedTag = this.selectedTag();
+      console.log('selectedTag', selectedTag);
+    });
   }
 
   ngOnInit() {

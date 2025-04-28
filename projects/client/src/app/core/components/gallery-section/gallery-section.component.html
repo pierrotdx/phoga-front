@@ -3,6 +3,7 @@
              (scrolled)="loadPhotos()">
     <ng-container ngProjectAs="section-title">Gallery</ng-container>
     <ng-container ngProjectAs="section-body">
+        <app-gallery-nav (selectedTag)="selectedTag.set($event)"></app-gallery-nav>
         @if(photos$ | async; as photos) {
             <app-photo-collage [photos]="photos.all"></app-photo-collage>
 

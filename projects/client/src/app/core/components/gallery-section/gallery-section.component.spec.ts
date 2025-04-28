@@ -11,4 +11,8 @@ describe('GalleryComponent', () => {
   it('should create', () => {
     testUtils.expectTestedComponentToBeCreated();
   });
+
+  it('should display the gallery-navigation component', () => {
+    testUtils.expectGalleryNavigationToBeDisplayed();
+  })
 });

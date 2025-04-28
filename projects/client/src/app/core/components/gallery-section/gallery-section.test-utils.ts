@@ -8,6 +8,7 @@ import { GalleryService, IGalleryPhotos, IPhoto } from '@shared/photo-context';
 import { BehaviorSubject } from 'rxjs';
 import { Component, input } from '@angular/core';
 import { SectionComponent } from '../section/section.component';
+import { By } from '@angular/platform-browser';
 
 @Component({
   template: '',
@@ -22,6 +23,12 @@ class PhotoCollageDumpComponent {
   selector: 'app-photo-detailed-view',
 })
 class PhotoDetailedViewStubComponent {}
+
+@Component({
+  template: '',
+  selector: 'app-gallery-nav',
+})
+class GalleryNavStubComponent {}
 
 export class GallerySectionTestUtils {
   private testedComponent!: GallerySectionComponent;
@@ -65,6 +72,7 @@ export class GallerySectionTestUtils {
           PhotoDetailedViewStubComponent,
           OverlayPanelComponent,
           SectionComponent,
+          GalleryNavStubComponent,
         ],
       },
     });
@@ -78,5 +86,12 @@ export class GallerySectionTestUtils {
 
   expectTestedComponentToBeCreated(): void {
     expect(this.testedComponent).toBeTruthy();
+  }
+
+  expectGalleryNavigationToBeDisplayed(): void {
+    const galleryNavigation = this.fixture.debugElement.query(
+      By.css('app-gallery-nav')
+    );
+    expect(galleryNavigation).toBeTruthy();
   }
 }
