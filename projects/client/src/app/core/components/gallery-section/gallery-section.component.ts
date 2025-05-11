@@ -1,10 +1,22 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, effect, OnDestroy, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  OnDestroy,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { SectionComponent } from '../section/section.component';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { Observable, Subscription } from 'rxjs';
-import { GalleryService, IGalleryPhotos, IPhoto } from '@shared/photo-context';
+import {
+  GalleryService,
+  IGallery,
+  IGalleryPhotos,
+  IPhoto,
+} from '@shared/photo-context';
 import {
   PhotoCollageComponent,
   PhotoDetailedViewComponent,
@@ -38,10 +50,12 @@ export class GallerySectionComponent implements OnInit, OnDestroy {
   private readonly initialNbPhotos = 6;
 
   selectedTag = signal<ITag['_id'] | undefined>(undefined);
+  gallery: WritableSignal<IGallery>;
 
   constructor(private readonly galleryService: GalleryService) {
     this.photos$ = this.galleryService.galleryPhotos$;
     this.isLoading$ = this.galleryService.isLoading$;
+    this.gallery = signal<IGallery>(this.galleryService.gallery);
     effect(() => {
       const selectedTag = this.selectedTag();
       console.log('selectedTag', selectedTag);

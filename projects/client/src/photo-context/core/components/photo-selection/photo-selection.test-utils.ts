@@ -1,20 +1,24 @@
 import { PhotoSelectionComponent } from './photo-selection.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { SwiperComponent } from '@shared/swiper-context';
 import {
-  ComponentFixture,
-  TestBed,
-  TestModuleMetadata,
-} from '@angular/core/testing';
-import { ISwiperState, SwiperComponent } from '@shared/swiper-context';
-import { GalleryService, IPhoto } from '@shared/photo-context';
-import { BehaviorSubject, filter, firstValueFrom, Subject } from 'rxjs';
+  Gallery,
+  IGallery,
+  IPhoto,
+  ISearchPhotoOptions,
+  PhotoApiService,
+} from '@shared/photo-context';
+import {
+  BehaviorSubject,
+  filter,
+  firstValueFrom,
+  ReplaySubject,
+  Subject,
+} from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { Component, DebugElement, effect, input } from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { NgClass } from '@angular/common';
-import {
-  FakeGalleryService,
-  GalleryServiceState,
-} from './gallery-service.fake';
 
 @Component({
   selector: 'app-photo-image',
@@ -25,17 +29,15 @@ export class PhotoImageStubComponent {
 }
 
 export class PhotoSelectionTestUtils {
-  private readonly fakeGalleryService = new FakeGalleryService();
+  private readonly photosToLoad$ = new ReplaySubject<IPhoto[] | Error>(1);
 
-  private readonly config: TestModuleMetadata = {
-    imports: [PhotoSelectionComponent, PhotoImageStubComponent],
-    providers: [
-      {
-        provide: GalleryService,
-        useValue: this.fakeGalleryService.getSpy(),
-      },
-    ],
-  };
+  private readonly fakePhotoApiService = jasmine.createSpyObj<PhotoApiService>(
+    'PhotoApiService',
+    { searchPhoto: this.photosToLoad$.asObservable() }
+  );
+  private readonly dumbGallery: IGallery = new Gallery(
+    this.fakePhotoApiService
+  );
 
   private readonly selectNext$ = new Subject<void>();
   private readonly selectPrevious$ = new Subject<void>();
@@ -45,14 +47,14 @@ export class PhotoSelectionTestUtils {
   private hasInit = new BehaviorSubject<boolean>(false);
 
   private selectPhotoSpy!: jasmine.Spy;
+  private selectNextPhotoSpy!: jasmine.Spy;
+  private selectPreviousPhotoSpy!: jasmine.Spy;
+  private readonly addItemsEmittedValues: IPhoto[][] = [];
   private swipeToItemSpy!: jasmine.Spy;
-  private photoLoaderOnSwiperStateChangeSpy!: jasmine.Spy;
-  private addItemsEmitterSpy!: jasmine.Spy;
+  private hasMorePhotosToLoadSpy!: jasmine.Spy;
 
-  private async internalBeforeEach(
-    galleryServiceInitState?: GalleryServiceState
-  ): Promise<void> {
-    TestBed.configureTestingModule(this.config);
+  async globalBeforeEach(): Promise<void> {
+    TestBed.configureTestingModule({});
     TestBed.overrideComponent(PhotoSelectionComponent, {
       set: {
         imports: [
@@ -63,40 +65,56 @@ export class PhotoSelectionTestUtils {
         ],
       },
     });
-    if (galleryServiceInitState) {
-      await this.fakeGalleryService.setupGalleryServiceState(
-        galleryServiceInitState
-      );
-    }
     await TestBed.compileComponents();
+  }
+
+  createComponent(): void {
     this.fixture = TestBed.createComponent(PhotoSelectionComponent);
+    this.setInput('gallery', this.dumbGallery);
     this.component = this.fixture.componentInstance;
     this.setSpies();
-    this.detectChanges();
+    this.setSubs();
+  }
+
+  private setInput<T>(name: string, value: T): void {
+    this.fixture.componentRef.setInput(name, value);
   }
 
   private setSpies(): void {
-    this.selectPhotoSpy = spyOn(this.component, 'selectPhoto');
-    this.swipeToItemSpy = spyOn(this.component as any, 'swipeToItem');
-    this.photoLoaderOnSwiperStateChangeSpy = spyOn(
-      this.component['photoLoader'],
-      'onSwiperStateChange'
-    );
-    this.addItemsEmitterSpy = spyOn(this.component['addItemsEmitter'], 'next');
+    this.selectNextPhotoSpy = spyOn(
+      this.dumbGallery,
+      'selectNextPhoto'
+    ).and.callThrough();
+    this.selectPreviousPhotoSpy = spyOn(
+      this.dumbGallery,
+      'selectPreviousPhoto'
+    ).and.callThrough();
+    this.selectPhotoSpy = spyOn(
+      this.component,
+      'selectPhoto'
+    ).and.callThrough();
+    this.hasMorePhotosToLoadSpy = spyOn(
+      this.dumbGallery,
+      'hasMorePhotosToLoad'
+    ).and.callThrough();
+    this.swipeToItemSpy = spyOn(
+      this.component as any,
+      'swipeToItem'
+    ).and.callThrough();
   }
 
-  detectChanges(): void {
-    this.fixture.detectChanges();
+  private setSubs(): void {
+    this.subToAddItems();
+    this.subToHasInitPhotos();
   }
 
-  async globalBeforeEach(
-    galleryServiceInitState?: GalleryServiceState
-  ): Promise<void> {
-    await this.internalBeforeEach(galleryServiceInitState);
-    this.subscribeToHasInitPhotos();
+  private subToAddItems(): void {
+    this.component.addItems$.subscribe((items) => {
+      this.addItemsEmittedValues.push(items);
+    });
   }
 
-  private subscribeToHasInitPhotos(): void {
+  private subToHasInitPhotos(): void {
     TestBed.runInInjectionContext(() => {
       effect(this.onHasInitPhotos);
     });
@@ -107,28 +125,20 @@ export class PhotoSelectionTestUtils {
     this.hasInit.next(hasInitPhotos);
   };
 
-  getGalleryServiceSpy() {
-    return this.fakeGalleryService.getSpy();
-  }
-
   expectComponentToBeCreated(): void {
     expect(this.component).toBeTruthy();
   }
 
-  getInitPhotos(): IPhoto[] {
-    return this.component.initPhotos();
-  }
-
-  getNbSlides(): number {
-    return this.component.nbSlides;
-  }
-
-  getLoadingPlaceHolderElement(): DebugElement {
+  getLoadingPlaceHolder(): DebugElement {
     return this.getElementByClass('photo-selection__loading');
   }
 
   private getElementByClass(className: string): DebugElement {
     return this.fixture.debugElement.query(By.css(`.${className}`));
+  }
+
+  getNoPhotosPlaceHolder(): DebugElement {
+    return this.getElementByClass('photo-selection__no-photos');
   }
 
   getSwiperElement(): DebugElement {
@@ -143,80 +153,105 @@ export class PhotoSelectionTestUtils {
     this.detectChanges();
   }
 
-  getSlideElement(slideIndex: number): DebugElement {
-    const swiperElement = this.getSwiperElement();
-    return swiperElement.children[slideIndex].children[0];
+  detectChanges(): void {
+    this.fixture.detectChanges();
+  }
+
+  async whenStable(): Promise<void> {
+    await this.fixture.whenStable();
   }
 
   getSelectPhotoSpy() {
     return this.selectPhotoSpy;
   }
 
-  private setInput<T>(name: string, value: T): void {
-    this.fixture.componentRef.setInput(name, value);
+  getSelectNextPhotoSpy() {
+    return this.selectNextPhotoSpy;
+  }
+
+  getSelectPreviousSpy() {
+    return this.selectPreviousPhotoSpy;
   }
 
   setSelectNextInput(): void {
     this.setInput('selectNextPhoto$', this.selectNext$.asObservable());
   }
 
-  setSelectPreviousInput(): void {
-    this.setInput('selectPreviousPhoto$', this.selectPrevious$.asObservable());
-  }
-
   emitSelectNext(): void {
     this.selectNext$.next();
+  }
+
+  setSelectPreviousInput(): void {
+    this.setInput('selectPreviousPhoto$', this.selectPrevious$.asObservable());
   }
 
   emitSelectPrevious(): void {
     this.selectPrevious$.next();
   }
 
-  getSelectedPhoto(): IPhoto | undefined {
-    return this.fakeGalleryService.fakeSelectedPhoto$.getValue();
-  }
-
-  getPhoto(index: number): IPhoto {
-    const photos = this.component['photos$'].getValue();
-    return photos.all[index];
-  }
-
-  getSelectedPhotoIndex(): number | undefined {
-    const selectedPhoto = this.getSelectedPhoto();
-    if (!selectedPhoto) {
-      return undefined;
-    }
-    const selectedPhotoIndex = this.component['getPhotoIndex'](selectedPhoto);
-    return selectedPhotoIndex;
-  }
-
-  resetTestingModule(): void {
-    TestBed.resetTestingModule();
-  }
-
   getSwipeToItemSpy() {
     return this.swipeToItemSpy;
   }
 
-  selectPhotoByIndex(photoIndex: number): void {
-    const photoToSelect =
-      this.fakeGalleryService.fakeGalleryPhotos$.getValue().all[photoIndex];
-    this.fakeGalleryService.fakeSelectedPhoto$.next(photoToSelect);
+  getLoadPhotosFromServerSpy() {
+    return this.fakePhotoApiService.searchPhoto;
   }
 
-  getPhotoLoaderOnSwiperStateChangeSpy() {
-    return this.photoLoaderOnSwiperStateChangeSpy;
+  selectPhoto(id: IPhoto['_id']): void {
+    this.component.selectPhoto(id);
   }
 
-  onSwiperStateChange(swiperState: ISwiperState<IPhoto>): void {
-    this.component.onSwiperStateChange(swiperState);
+  async tmp(photos: IPhoto[] | Error): Promise<void> {
+    this.photosToLoad$.next(photos);
+    await this.dumbGallery.loadMore();
   }
 
-  async loadMorePhotos(size?: number): Promise<void> {
-    await this.fakeGalleryService.getSpy().loadMore(size);
+  async simulatePhotosLoading(photos: IPhoto[] | Error): Promise<void> {
+    this.photosToLoad$.next(photos);
+    await this.dumbGallery.loadMore();
+    this.detectChanges();
   }
 
-  getAddItemsEmitterSpy() {
-    return this.addItemsEmitterSpy;
+  getHasMorePhotosToLoadSpy() {
+    return this.hasMorePhotosToLoadSpy;
+  }
+
+  expectEmittedAddItemsToBe(expectedValue: IPhoto[]): void {
+    expect(expectedValue).toEqual(
+      this.addItemsEmittedValues[this.addItemsEmittedValues.length - 1]
+    );
+  }
+
+  clickOnSlide(slideIndex: number): void {
+    const slideElt = this.getSlideElement(slideIndex);
+    (slideElt.nativeElement as HTMLElement).click();
+  }
+
+  private getSlideElement(slideIndex: number): DebugElement {
+    const swiperElement = this.getSwiperElement();
+    return swiperElement.children[slideIndex].children[0];
+  }
+
+  getRequiredSlidesNb(): number {
+    return this.component.nbSlides;
+  }
+
+  expectPhotosLoadToHaveBeenCalledWith(
+    expectedOptions: ISearchPhotoOptions
+  ): void {
+    const loadPhotosSpy = this.getLoadPhotosFromServerSpy();
+    expect(loadPhotosSpy).toHaveBeenCalled();
+    const options: ISearchPhotoOptions | undefined =
+      loadPhotosSpy.calls.mostRecent().args[0]?.options;
+    const expectedSize = expectedOptions?.rendering?.size;
+    if (expectedSize) {
+      const size = options?.rendering?.size;
+      expect(size).toBe(expectedSize);
+    }
+    const expectedFrom = expectedOptions?.rendering?.from;
+    if (expectedFrom) {
+      const from = options?.rendering?.from;
+      expect(from).toBe(expectedFrom);
+    }
   }
 }

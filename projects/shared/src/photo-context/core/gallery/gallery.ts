@@ -36,7 +36,7 @@ export class Gallery implements IGallery {
   async loadMore(size?: number): Promise<void> {
     // 1 query at a time (might need queue?)
     const isAlreadyLoading = this.isLoading$.getValue();
-    if (!this.hasMoreToLoad || isAlreadyLoading) {
+    if (!this.hasMorePhotosToLoad() || isAlreadyLoading) {
       return;
     }
     this.isLoading$.next(true);
@@ -125,7 +125,43 @@ export class Gallery implements IGallery {
     this._selectedPhoto$.next(undefined);
   };
 
-  hasMorePhotosToLoad(): boolean {
-    return this.hasMoreToLoad;
+  hasMorePhotosToLoad = (): boolean => this.hasMoreToLoad;
+
+  async selectNextPhoto(): Promise<void> {
+    const allPhotos = this._galleryPhotos$.getValue().all;
+    const currentSelectedPhoto = this._selectedPhoto$.getValue();
+
+    if (!currentSelectedPhoto) {
+      const firstPhoto = allPhotos[0];
+      this.selectPhoto(firstPhoto._id);
+      return;
+    }
+
+    const selectedPhotoIndex = allPhotos.findIndex(
+      (p) => p._id === currentSelectedPhoto._id
+    );
+    const photoToSelect: IPhoto | undefined = allPhotos[selectedPhotoIndex + 1];
+    if (photoToSelect) {
+      this.selectPhoto(photoToSelect._id);
+      return;
+    } else if (this.hasMorePhotosToLoad()) {
+      await this.loadMore();
+      await this.selectNextPhoto();
+    }
+  }
+
+  selectPreviousPhoto(): void {
+    const allPhotos = this._galleryPhotos$.getValue().all;
+    const currentSelectedPhoto = this._selectedPhoto$.getValue();
+    const selectedPhotoIndex = allPhotos.findIndex(
+      (p) => p._id === currentSelectedPhoto?._id
+    );
+    if (selectedPhotoIndex === undefined) {
+      return;
+    }
+    const photoToSelect: IPhoto | undefined = allPhotos[selectedPhotoIndex - 1];
+    if (photoToSelect) {
+      this.selectPhoto(photoToSelect._id);
+    }
   }
 }

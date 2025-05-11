@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs';
-import { IGalleryPhotos, IPhoto, Photo } from '../models';
+import { IGalleryPhotos, IPhoto, ISelectedPhoto, Photo } from '../models';
 import { Gallery } from './gallery';
 import { GalleryTestUtils } from './gallery.test-utils';
 
@@ -287,6 +287,154 @@ describe('Gallery', () => {
         const hasMoreToLoad = testedClass.hasMorePhotosToLoad();
         expect(hasMoreToLoad).toBeFalse();
       });
+    });
+  });
+
+  describe('selectNextPhoto', () => {
+    const galleryPhotos: IGalleryPhotos = {
+      all: dumbPhotos,
+      lastBatch: [],
+    };
+
+    beforeEach(() => {
+      testUtils.simulateGalleryPhotos(galleryPhotos);
+    });
+
+    describe('when no photo is selected', () => {
+      it('should select the first photo', async () => {
+        const expectedSelectedPhoto = dumbPhotos[0];
+
+        await testedClass.selectNextPhoto();
+
+        await testUtils.expectSelectedPhotoToBe(expectedSelectedPhoto._id);
+      });
+    });
+
+    describe('when the last photo is selected', () => {
+      const initSelectedPhoto = galleryPhotos.all[galleryPhotos.all.length - 1];
+
+      beforeEach(() => {
+        testedClass.selectPhoto(initSelectedPhoto._id);
+      });
+
+      describe('when there are no more photos to load', () => {
+        beforeEach(() => {
+          testUtils.simulateHasMorePhotos(false);
+        });
+
+        it('should not change the selected photo', async () => {
+          const expectedSelectedPhoto = initSelectedPhoto;
+
+          await testedClass.selectNextPhoto();
+
+          await testUtils.expectSelectedPhotoToBe(expectedSelectedPhoto._id);
+        });
+      });
+
+      describe('when there are more photos to load', () => {
+        let additionalPhotosToLoad: IPhoto[];
+
+        it('should try to load more photos', async () => {
+          const loadMoreSpy = testUtils.getServerRequestSpy();
+          loadMoreSpy.calls.reset();
+          const dumbServerResponse: IPhoto[] = [];
+          testUtils.simulateNextServerResponse(dumbServerResponse);
+
+          await testedClass.selectNextPhoto();
+
+          expect(loadMoreSpy).toHaveBeenCalledTimes(1);
+        });
+
+        describe('when the loaded-photos batch is not empty', () => {
+          beforeEach(() => {
+            additionalPhotosToLoad = [
+              new Photo('additional-1'),
+              new Photo('additional-2'),
+            ];
+            testUtils.simulateNextServerResponse(additionalPhotosToLoad);
+          });
+
+          it('should select the first photo of the freshly loaded batch', async () => {
+            const expectedSelectedPhoto = additionalPhotosToLoad[0];
+
+            await testedClass.selectNextPhoto();
+
+            await testUtils.expectSelectedPhotoToBe(expectedSelectedPhoto._id);
+          });
+        });
+
+        describe('when the loaded-photos batch is empty', () => {
+          beforeEach(() => {
+            additionalPhotosToLoad = [];
+            testUtils.simulateNextServerResponse(additionalPhotosToLoad);
+          });
+
+          it('should not change the current selected photo', async () => {
+            const expectedSelectedPhoto = initSelectedPhoto;
+
+            await testedClass.selectNextPhoto();
+
+            await testUtils.expectSelectedPhotoToBe(expectedSelectedPhoto._id);
+          });
+        });
+      });
+    });
+
+    it('should select the next photo', async () => {
+      const initSelectedPhoto = galleryPhotos.all[0];
+      testedClass.selectPhoto(initSelectedPhoto._id);
+
+      await testedClass.selectNextPhoto();
+
+      const expectedSelectedPhoto = galleryPhotos.all[1];
+      await testUtils.expectSelectedPhotoToBe(expectedSelectedPhoto._id);
+    });
+  });
+
+  describe('selectPreviousPhoto', () => {
+    const galleryPhotos: IGalleryPhotos = {
+      all: dumbPhotos,
+      lastBatch: [],
+    };
+
+    beforeEach(() => {
+      testUtils.simulateGalleryPhotos(galleryPhotos);
+    });
+
+    describe('when no photo was selected', () => {
+      it('should leave the selection empty', async () => {
+        const expectedSelectedPhoto: ISelectedPhoto = undefined;
+
+        testedClass.selectPreviousPhoto();
+
+        await testUtils.expectSelectedPhotoToBe(expectedSelectedPhoto);
+      });
+    });
+
+    describe('when the selected photo was the first one', () => {
+      const initSelectedPhoto = galleryPhotos.all[0];
+
+      beforeEach(() => {
+        testedClass.selectPhoto(initSelectedPhoto._id);
+      });
+
+      it('should not change the selected photo', async () => {
+        const expectedSelectedPhoto: ISelectedPhoto = initSelectedPhoto;
+
+        testedClass.selectPreviousPhoto();
+
+        await testUtils.expectSelectedPhotoToBe(expectedSelectedPhoto._id);
+      });
+    });
+
+    it('should select the previous photo', async () => {
+      const initSelectedPhoto = galleryPhotos.all[1];
+      testedClass.selectPhoto(initSelectedPhoto._id);
+
+      testedClass.selectPreviousPhoto();
+
+      const expectedSelectedPhoto: ISelectedPhoto = galleryPhotos.all[0];
+      await testUtils.expectSelectedPhotoToBe(expectedSelectedPhoto._id);
     });
   });
 });

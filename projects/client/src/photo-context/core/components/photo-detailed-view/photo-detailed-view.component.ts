@@ -1,5 +1,12 @@
-import { Component, EventEmitter, model, Output, signal } from '@angular/core';
-import { IPhoto } from '@shared/photo-context';
+import {
+  Component,
+  EventEmitter,
+  input,
+  model,
+  Output,
+  signal,
+} from '@angular/core';
+import { IGallery, IPhoto } from '@shared/photo-context';
 import { PhotoSelectionComponent } from '../photo-selection/photo-selection.component';
 import { PhotoMetadataComponent } from '../photo-metadata/photo-metadata.component';
 import { PhotoImageComponent } from '../photo-image/photo-image.component';
@@ -22,6 +29,7 @@ import { OverlayMatIconBtnComponent } from '@shared/overlay-context';
   styleUrl: './photo-detailed-view.component.scss',
 })
 export class PhotoDetailedViewComponent {
+  gallery = input.required<IGallery>();
   photo = model<IPhoto | undefined>(undefined);
   showFullscreen = signal<boolean>(false);
 

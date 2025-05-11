@@ -36,6 +36,12 @@ export class GalleryTestUtils {
     this.testedClass['_galleryPhotos$'].next(galleryPhotos);
   }
 
+  simulateHasMorePhotos(expectedValue: boolean): void {
+    spyOn(this.testedClass, 'hasMorePhotosToLoad').and.returnValue(
+      expectedValue
+    );
+  }
+
   getServerRequestSpy(): jasmine.Spy {
     return this.fakePhotoApiService.searchPhoto;
   }

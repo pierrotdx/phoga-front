@@ -20,7 +20,7 @@ export class GalleryService implements IGalleryService {
 
   isLoading$: Observable<boolean>;
 
-  private readonly gallery!: IGallery;
+  readonly gallery!: IGallery;
 
   constructor(private readonly photoApiService: PhotoApiService) {
     this.gallery = new Gallery(this.photoApiService);

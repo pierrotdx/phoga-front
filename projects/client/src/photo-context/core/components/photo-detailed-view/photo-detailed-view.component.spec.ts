@@ -8,12 +8,14 @@ import { PhotoFullscreenComponent } from '../photo-fullscreen/photo-fullscreen.c
 import { MaterialIconComponent } from '@shared/material-icon-component';
 import { Component, input, model } from '@angular/core';
 import { OverlayMatIconBtnComponent } from '@shared/overlay-context';
+import { Gallery, IGallery, PhotoApiService } from '@shared/photo-context';
 
 @Component({
   selector: 'app-photo-selection',
   template: '',
 })
 export class PhotoSelectionStubComponent {
+  gallery = input.required<IGallery>();
   selectNextPhoto$ = input<any>();
   selectPreviousPhoto$ = input<any>();
 }
@@ -46,6 +48,12 @@ export class PhotoFullscreenStubComponent {
 describe('PhotoDetailedViewComponent', () => {
   let component: PhotoDetailedViewComponent;
   let fixture: ComponentFixture<PhotoDetailedViewComponent>;
+  const fakePhotoApiService = jasmine.createSpyObj<PhotoApiService>(
+    'PhotoApiService',
+    ['searchPhoto']
+  );
+
+  const fakeGallery = new Gallery(fakePhotoApiService);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -74,8 +82,9 @@ describe('PhotoDetailedViewComponent', () => {
       .compileComponents();
 
     fixture = TestBed.createComponent(PhotoDetailedViewComponent);
-    component = fixture.componentInstance;
+    fixture.componentRef.setInput('gallery', fakeGallery);
     fixture.detectChanges();
+    component = fixture.componentInstance;
   });
 
   it('should create', () => {

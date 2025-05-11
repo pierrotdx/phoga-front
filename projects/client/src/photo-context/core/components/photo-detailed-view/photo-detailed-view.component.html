@@ -31,6 +31,7 @@
     </app-photo-metadata>
     <app-photo-selection
         class="photo-detailed-view__selection"
+        [gallery]="gallery()"
         [selectNextPhoto$]="selectNext$"
         [selectPreviousPhoto$]="selectPrevious$"
     ></app-photo-selection>

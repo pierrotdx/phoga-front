@@ -10,6 +10,7 @@
             @if(selectedPhoto()) {
                 <app-overlay-panel [(show)]="showDetailedView">
                     <app-photo-detailed-view
+                        [gallery]="gallery()!"
                         (close)="closeDetailedView()"
                         [photo]="selectedPhoto()">
                     </app-photo-detailed-view>

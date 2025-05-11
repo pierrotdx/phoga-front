@@ -10,5 +10,7 @@ export interface IGallery {
   hasMorePhotosToLoad(): boolean;
   selectedPhoto$: Observable<IPhoto | undefined>;
   selectPhoto(id: IPhoto['_id']): void;
+  selectNextPhoto(): Promise<void>;
+  selectPreviousPhoto(): void;
   deselectPhoto(): void;
 }
