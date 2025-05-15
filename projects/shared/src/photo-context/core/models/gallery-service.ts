@@ -1,13 +1,11 @@
-import { IGalleryPhotos, IPhoto } from '../models';
 import { Observable } from 'rxjs';
-import { ISelectedPhoto } from './selected-photo';
+import { IGallery, ISearchPhotoFilter } from '../models';
 
 export interface IGalleryService {
-  galleryPhotos$: Observable<IGalleryPhotos>;
-  selectedPhoto$: Observable<ISelectedPhoto>;
-  isLoading$: Observable<boolean>;
-  selectPhoto(id: IPhoto['_id']): void;
-  deselectPhoto(): void;
-  loadMore(size?: number): Promise<void>;
-  hasMorePhotosToLoad(): boolean;
+  selectedGallery$: Observable<IGallery | undefined>;
+  create(id: string, filter?: ISearchPhotoFilter): void;
+  get(id: string): IGallery | undefined;
+  getAll(): IGallery[];
+  select(id: IGallery['_id']): void;
+  deselect(): void;
 }

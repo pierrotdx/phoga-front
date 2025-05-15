@@ -1,0 +1,14 @@
+@if (isLoading() && photoStrips().length === 0) {
+        <mat-spinner class="gallery__loading-placeholder"></mat-spinner>
+} @else if (photoStrips().length === 0) {
+    <div class="gallery__empty-gallery-placeholder">The gallery is empty</div>
+} @else {
+    <div class="gallery__strips">
+        @for(strip of photoStrips(); track strip[0]._id) {
+            <app-photo-strip [gallery]="gallery()" [strip]="strip"></app-photo-strip>
+        }
+    </div>
+    @if(isLoading()) {
+        <mat-spinner class="gallery__loading-placeholder"></mat-spinner>
+    }
+}

@@ -1,20 +1,10 @@
-import exp from 'constants';
-import { IGalleryPhotos, IPhoto, ISelectedPhoto, Photo } from '../../';
+import { ISearchPhotoFilter } from '../models';
 import { GalleryService } from './gallery.service';
 import { GalleryServiceTestUtils } from './gallery.service.test-utils';
-import { Subscription } from 'rxjs';
 
 describe('GalleryServiceService', () => {
   let testUtils: GalleryServiceTestUtils;
   let testedService: GalleryService;
-
-  const dumbPhotos: IPhoto[] = [
-    new Photo('dumb photo 1'),
-    new Photo('dumb photo 2'),
-    new Photo('dumb photo 3'),
-    new Photo('dumb photo 4'),
-    new Photo('dumb photo 5'),
-  ];
 
   beforeEach(() => {
     testUtils = new GalleryServiceTestUtils();
@@ -26,167 +16,113 @@ describe('GalleryServiceService', () => {
     expect(testedService).toBeTruthy();
   });
 
-  describe('loadMore', () => {
-    let loadPhotosSpy: jasmine.Spy;
+  describe('create', () => {
+    it("should add a gallery to the services's galleries list", () => {
+      const id = 'gallery-to-add';
+      const filter: ISearchPhotoFilter = {};
 
-    beforeEach(() => {
-      loadPhotosSpy = testUtils.getLoadPhotosSpy();
-      loadPhotosSpy.calls.reset();
+      testedService.create(id, filter);
 
-      const photosToLoad = dumbPhotos.slice(0, 2);
-      testUtils.simulateNextPhotoBatchLoading(photosToLoad);
-    });
-
-    it('should load more photos', async () => {
-      await testedService.loadMore();
-
-      expect(loadPhotosSpy).toHaveBeenCalledTimes(1);
+      testUtils.expectGalleryToBeCreated(id, filter);
     });
   });
 
-  describe('galleryPhotos$', () => {
-    it('should have a default value', async () => {
-      const expectedGalleryPhotos: IGalleryPhotos = { all: [], lastBatch: [] };
-      await testUtils.expectGalleryPhotosToBe(expectedGalleryPhotos);
+  describe('get', () => {
+    describe('when the gallery exists', () => {
+      const galleryId = 'gallery-to-get';
+
+      beforeEach(() => {
+        testedService.create(galleryId);
+      });
+
+      it('should return the required gallery', () => {
+        const result = testedService.get(galleryId);
+        expect(result).toBeTruthy();
+      });
+    });
+
+    describe('when the gallery does not exist', () => {
+      it('should return `undefined`', () => {
+        const result = testedService.get('inexistent-gallery-id');
+        expect(result).toBeUndefined();
+      });
     });
   });
 
-  describe('selectPhoto', () => {
-    beforeEach(async () => {
-      testUtils.simulateNextPhotoBatchLoading(dumbPhotos);
-      await testedService.loadMore();
+  describe('getAll', () => {
+    describe('when there is no gallery', () => {
+      it('should return an empty array', () => {
+        const result = testedService.getAll();
+        expect(result).toEqual([]);
+      });
     });
 
-    it('should select the required photo', async () => {
-      const photoToSelect = dumbPhotos[1];
+    describe('when there are galleries', () => {
+      const galleryIds = ['gallery-1', 'gallery-2'];
 
-      testedService.selectPhoto(photoToSelect._id);
+      beforeEach(() => {
+        galleryIds.forEach((id) => {
+          testedService.create(id);
+        });
+      });
 
-      const expectedSelectedPhoto = photoToSelect;
-      await testUtils.expectSelectedPhotoToBe(expectedSelectedPhoto);
-    });
-  });
-
-  describe('deselectPhoto', () => {
-    const selectedPhoto = dumbPhotos[2];
-
-    beforeEach(async () => {
-      testUtils.simulateNextPhotoBatchLoading(dumbPhotos);
-      await testedService.loadMore();
-
-      testedService.selectPhoto(selectedPhoto._id);
-    });
-
-    it('should reset the selected photo', async () => {
-      testedService.deselectPhoto();
-
-      const expectedSelectedPhoto = undefined;
-      await testUtils.expectSelectedPhotoToBe(expectedSelectedPhoto);
+      it("should return the list of services's galleries", () => {
+        testUtils.expectServiceGalleriesToBe(galleryIds);
+      });
     });
   });
 
-  describe('selectedPhoto$', () => {
+  describe('selectedGallery$', () => {
     it('should be `undefined` by default', async () => {
-      const expectedSelectedPhoto = undefined;
-      await testUtils.expectSelectedPhotoToBe(expectedSelectedPhoto);
+      const expectedGalleryId = undefined;
+
+      testUtils.expectSelectedGalleryToBe(expectedGalleryId);
     });
 
     it('should change according to select/deselect actions', async () => {
-      testUtils.simulateNextPhotoBatchLoading(dumbPhotos);
-      await testedService.loadMore();
+      const galleryId = 'dumb-id';
+      testedService.create(galleryId);
 
-      let expectedSelectedPhoto: ISelectedPhoto = dumbPhotos[0];
-      testedService.selectPhoto(expectedSelectedPhoto._id);
-      await testUtils.expectSelectedPhotoToBe(expectedSelectedPhoto);
+      testedService.select(galleryId);
+      let expectedSelectedGalleryId: string | undefined = galleryId;
+      await testUtils.expectSelectedGalleryToBe(expectedSelectedGalleryId);
 
-      testedService.deselectPhoto();
-      expectedSelectedPhoto = undefined;
-      await testUtils.expectSelectedPhotoToBe(expectedSelectedPhoto);
+      testedService.deselect();
+      expectedSelectedGalleryId = undefined;
+      await testUtils.expectSelectedGalleryToBe(undefined);
     });
   });
 
-  describe('isLoading$', () => {
-    let isLoadingSub: Subscription;
-    let isLoadingSuccessiveValues: boolean[] = [];
-    const appendIsLoadingValue = (value: boolean) =>
-      isLoadingSuccessiveValues.push(value);
+  describe('select', () => {
+    const galleryId = 'dumb-id';
 
     beforeEach(() => {
-      isLoadingSuccessiveValues = [];
-      const isLoading$ = testedService.isLoading$;
-      isLoadingSub = isLoading$.subscribe(appendIsLoadingValue);
-      testUtils.simulateNextPhotoBatchLoading([]);
+      testedService.create(galleryId);
     });
 
-    afterEach(() => {
-      isLoadingSub.unsubscribe();
-    });
+    it('should select the required gallery', async () => {
+      const expectedSelectedGalleryId = galleryId;
 
-    it('should be `false` by default', () => {
-      expect(isLoadingSuccessiveValues[0]).toBeFalse();
-    });
+      testedService.select(galleryId);
 
-    it('should emit `true` when the loading is starting', async () => {
-      await testedService.loadMore();
-      expect(isLoadingSuccessiveValues[0]).toBeFalse();
-      expect(isLoadingSuccessiveValues[1]).toBeTrue();
-    });
-
-    it('should emit `false` when the loading has finished', async () => {
-      await testedService.loadMore();
-      expect(isLoadingSuccessiveValues[0]).toBeFalse();
-      expect(isLoadingSuccessiveValues[1]).toBeTrue();
-      expect(isLoadingSuccessiveValues[2]).toBeFalse();
-    });
-
-    describe('when the server responds with an error', () => {
-      const stubError = new Error('stub error');
-
-      beforeEach(() => {
-        testUtils.simulateNextPhotoBatchLoading(stubError);
-      });
-
-      it('should emit `false`', async () => {
-        try {
-          await testedService.loadMore();
-        } catch (err) {
-          expect(err).toEqual(stubError);
-        } finally {
-          expect(isLoadingSuccessiveValues[0]).toBeFalse();
-          expect(isLoadingSuccessiveValues[1]).toBeTrue();
-          expect(isLoadingSuccessiveValues[2]).toBeFalse();
-        }
-      });
+      await testUtils.expectSelectedGalleryToBe(expectedSelectedGalleryId);
     });
   });
 
-  describe('hasMorePhotosToLoad', () => {
-    describe('when the server responds with full batches', () => {
-      beforeEach(async () => {
-        const size = 3;
-        const fullBatch = dumbPhotos.slice(0, size);
-        testUtils.simulateNextPhotoBatchLoading(fullBatch);
-        await testedService.loadMore(size);
-      });
+  describe('deselect', () => {
+    const galleryId = 'dumb-id';
 
-      it('should return `true`', () => {
-        const hasMoreToLoad = testedService.hasMorePhotosToLoad();
-        expect(hasMoreToLoad).toBeTrue();
-      });
+    beforeEach(() => {
+      testedService.create(galleryId);
+      testedService.select(galleryId);
     });
 
-      describe('when the server responds with non-full batches', () => {
-        beforeEach(async () => {
-        const size = 3;
-        const nonFullBatch = dumbPhotos.slice(0, size - 1);
-        testUtils.simulateNextPhotoBatchLoading(nonFullBatch);
-        await testedService.loadMore(size);
-      });
+    it('should deselect the gallery', async () => {
+      const expectedSelectedGalleryId = undefined;
 
-      it('should return `false`', () => {
-        const hasMoreToLoad = testedService.hasMorePhotosToLoad();
-        expect(hasMoreToLoad).toBeFalse();
-      });
+      testedService.deselect();
+
+      await testUtils.expectSelectedGalleryToBe(expectedSelectedGalleryId);
     });
   });
 });

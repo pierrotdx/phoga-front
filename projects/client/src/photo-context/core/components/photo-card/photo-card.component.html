@@ -1,11 +1,11 @@
-@if(photo) {
+@if(photo(); as photo) {
     <article class="photo-card">
         <div class="photo-card__image-container">
             <app-photo-image [photo]="photo"
                             class="photo-card__image">
             </app-photo-image>
             <app-overlay-mat-icon-btn class="photo-card__image-btn"
-                                      (click)="seeDetails()">
+                                      (click)="select()">
                 expand_content
             </app-overlay-mat-icon-btn>
         </div>
@@ -13,5 +13,10 @@
                             class="photo-card__metadata">
         </app-photo-metadata>
     </article>
+     <app-overlay-panel [(show)]="showDetailedView">
+        <app-photo-detailed-view
+            [gallery]="gallery()"
+            (close)="deselect()">
+        </app-photo-detailed-view>
+    </app-overlay-panel>
 }
-

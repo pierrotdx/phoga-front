@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { IPhoto } from '@shared/photo-context';
+import { Component, input } from '@angular/core';
+import { IGallery, IPhotoStrip } from '@shared/photo-context';
 import { PhotoCardComponent } from '../photo-card/photo-card.component';
 
 @Component({
@@ -9,5 +9,7 @@ import { PhotoCardComponent } from '../photo-card/photo-card.component';
   styleUrl: './photo-strip.component.scss',
 })
 export class PhotoStripComponent {
-  @Input() photos: IPhoto[] | undefined;
+  gallery = input.required<IGallery>();
+
+  strip = input.required<IPhotoStrip>();
 }

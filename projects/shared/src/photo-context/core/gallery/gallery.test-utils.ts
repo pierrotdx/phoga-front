@@ -10,7 +10,10 @@ export class GalleryTestUtils {
     ['searchPhoto']
   );
 
-  private readonly testedClass = new Gallery(this.fakePhotoApiService);
+  private readonly testedClass = new Gallery(
+    this.fakePhotoApiService,
+    'dumb-id'
+  );
 
   async getGalleryPhotos(): Promise<IGalleryPhotos> {
     return await firstValueFrom(this.testedClass.galleryPhotos$);

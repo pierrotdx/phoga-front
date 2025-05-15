@@ -2,46 +2,45 @@ import { Injectable } from '@angular/core';
 import {
   Gallery,
   IGallery,
-  IGalleryPhotos,
   IGalleryService,
-  IPhoto,
+  ISearchPhotoFilter,
   PhotoApiService,
-} from '@shared/public-api';
-import { Observable } from 'rxjs';
-import { ISelectedPhoto } from '../models/selected-photo';
+} from '../';
+import { clone } from 'ramda';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GalleryService implements IGalleryService {
-  readonly galleryPhotos$: Observable<IGalleryPhotos>;
+  private readonly galleries: IGallery[] = [];
 
-  readonly selectedPhoto$: Observable<ISelectedPhoto>;
+  private readonly _selectedGallery$ = new BehaviorSubject<
+    IGallery | undefined
+  >(undefined);
+  selectedGallery$ = this._selectedGallery$.asObservable();
 
-  isLoading$: Observable<boolean>;
+  constructor(private readonly photoApiService: PhotoApiService) {}
 
-  readonly gallery!: IGallery;
-
-  constructor(private readonly photoApiService: PhotoApiService) {
-    this.gallery = new Gallery(this.photoApiService);
-    this.galleryPhotos$ = this.gallery.galleryPhotos$;
-    this.selectedPhoto$ = this.gallery.selectedPhoto$;
-    this.isLoading$ = this.gallery.isLoading$;
+  create(id: string, filter?: ISearchPhotoFilter): void {
+    const galleryToAdd = new Gallery(this.photoApiService, id, filter);
+    this.galleries.push(galleryToAdd);
   }
 
-  hasMorePhotosToLoad(): boolean {
-    return this.gallery.hasMorePhotosToLoad();
+  get(id: string): IGallery | undefined {
+    return this.galleries.find((g) => g._id === id);
   }
 
-  async loadMore(size?: number): Promise<void> {
-    await this.gallery.loadMore(size);
+  getAll(): IGallery[] {
+    return clone(this.galleries);
   }
 
-  selectPhoto(id: IPhoto['_id']): void {
-    this.gallery.selectPhoto(id);
+  select(id: IGallery['_id']): void {
+    const gallery = this.get(id);
+    this._selectedGallery$.next(gallery);
   }
 
-  deselectPhoto(): void {
-    this.gallery.deselectPhoto();
+  deselect(): void {
+    this._selectedGallery$.next(undefined);
   }
 }

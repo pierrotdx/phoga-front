@@ -30,6 +30,7 @@ export class Gallery implements IGallery {
 
   constructor(
     private readonly photoApiService: PhotoApiService,
+    readonly _id: string,
     private readonly filter?: ISearchPhotoFilter
   ) {}
 

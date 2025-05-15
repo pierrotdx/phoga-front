@@ -1,25 +1,11 @@
-<app-section id="gallery"
-             infiniteScroll
-             (scrolled)="loadPhotos()">
+<app-section
+    id="gallery"
+    infiniteScroll
+    (scrolled)="loadPhotos()"
+>
     <ng-container ngProjectAs="section-title">Gallery</ng-container>
     <ng-container ngProjectAs="section-body">
         <app-gallery-nav (selectedTag)="selectedTag.set($event)"></app-gallery-nav>
-        @if(photos$ | async; as photos) {
-            <app-photo-collage [photos]="photos.all"></app-photo-collage>
-
-            @if(selectedPhoto()) {
-                <app-overlay-panel [(show)]="showDetailedView">
-                    <app-photo-detailed-view
-                        [gallery]="gallery()!"
-                        (close)="closeDetailedView()"
-                        [photo]="selectedPhoto()">
-                    </app-photo-detailed-view>
-                </app-overlay-panel>
-            }
-        }
-        @if((isLoading$ | async) === true) {
-            <mat-spinner></mat-spinner>
-        }
+        <lib-gallery [gallery]="gallery()!"></lib-gallery>
     </ng-container>
 </app-section>
-

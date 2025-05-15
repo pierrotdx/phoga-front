@@ -1,12 +1,13 @@
 import { Provider } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import {
+  Gallery,
   GalleryService,
-  IGalleryPhotos,
+  IGallery,
+  ISearchPhotoFilter,
   PhotoApiService,
-} from '@shared/public-api';
-import { firstValueFrom, of } from 'rxjs';
-import { IPhoto, ISelectedPhoto } from '../models';
+} from '../';
+import { firstValueFrom } from 'rxjs';
 
 export class GalleryServiceTestUtils {
   private testedService!: GalleryService;
@@ -20,9 +21,6 @@ export class GalleryServiceTestUtils {
     useValue: this.fakePhotoApiService,
   };
 
-  private readonly loadPhotosSpy: jasmine.Spy =
-    this.fakePhotoApiService.searchPhoto;
-
   globalBeforeEach(): void {
     TestBed.configureTestingModule({
       providers: [this.photoApiServiceProvider],
@@ -34,26 +32,33 @@ export class GalleryServiceTestUtils {
     return this.testedService;
   }
 
-  getLoadPhotosSpy(): jasmine.Spy {
-    return this.loadPhotosSpy;
+  createDumbGallery(id: String): IGallery {
+    return new Gallery(this.fakePhotoApiService, 'fake-gallery');
   }
 
-  simulateNextPhotoBatchLoading(photosToLoad: IPhoto[] | Error): void {
-    const photosToLoad$ = of(photosToLoad);
-    this.loadPhotosSpy.and.returnValue(photosToLoad$);
+  expectGalleryToBeCreated(id: string, filter?: ISearchPhotoFilter): void {
+    const gallery = this.testedService['galleries'].find((g) => g._id === id);
+    expect(gallery).toBeTruthy();
+    if (filter) {
+      expect((gallery as Gallery)['filter']).toEqual(filter);
+    }
   }
 
-  async expectGalleryPhotosToBe(expectedValue: IGalleryPhotos): Promise<void> {
-    const galleryPhotos = await firstValueFrom(
-      this.testedService.galleryPhotos$
+  expectServiceGalleriesToBe(expectedGalleryIds: IGallery['_id'][]) {
+    const serviceGalleries = this.testedService.getAll();
+    expect(serviceGalleries.length).toBe(expectedGalleryIds.length);
+    expectedGalleryIds.forEach((id) => {
+      const gallery = serviceGalleries.find((g) => g._id === id);
+      expect(gallery).toBeTruthy();
+    });
+  }
+
+  async expectSelectedGalleryToBe(
+    expectedGalleryId: IGallery['_id'] | undefined
+  ): Promise<void> {
+    const selectedGallery = await firstValueFrom(
+      this.testedService.selectedGallery$
     );
-    expect(expectedValue).toEqual(galleryPhotos);
-  }
-
-  async expectSelectedPhotoToBe(expectedValue: ISelectedPhoto): Promise<void> {
-    const selectedPhoto = await firstValueFrom(
-      this.testedService.selectedPhoto$
-    );
-    expect(selectedPhoto).toEqual(expectedValue);
+    expect(selectedGallery?._id).toEqual(expectedGalleryId);
   }
 }

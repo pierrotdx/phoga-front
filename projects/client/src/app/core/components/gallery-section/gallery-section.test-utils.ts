@@ -1,28 +1,16 @@
-import { AsyncPipe } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { OverlayPanelComponent } from '@shared/overlay-context';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { GallerySectionComponent } from './gallery-section.component';
-import { GalleryService, IGalleryPhotos, IPhoto } from '@shared/photo-context';
-import { BehaviorSubject } from 'rxjs';
-import { Component, input } from '@angular/core';
+import {
+  GalleryService,
+  ISearchPhotoFilter,
+  PhotoApiService,
+} from '@shared/photo-context';
+import { of } from 'rxjs';
+import { Component, Provider } from '@angular/core';
 import { SectionComponent } from '../section/section.component';
 import { By } from '@angular/platform-browser';
-
-@Component({
-  template: '',
-  selector: 'app-photo-collage',
-})
-class PhotoCollageDumpComponent {
-  photos = input<any>();
-}
-
-@Component({
-  template: '',
-  selector: 'app-photo-detailed-view',
-})
-class PhotoDetailedViewStubComponent {}
+import { GalleryComponent } from '../../../../photo-context';
 
 @Component({
   template: '',
@@ -34,18 +22,16 @@ export class GallerySectionTestUtils {
   private testedComponent!: GallerySectionComponent;
   private fixture!: ComponentFixture<GallerySectionComponent>;
 
-  private readonly fakeGalleryService = jasmine.createSpyObj<GalleryService>(
-    'GalleryService',
-    [],
-    {
-      galleryPhotos$: new BehaviorSubject<IGalleryPhotos>({
-        all: [],
-        lastBatch: [],
-      }),
-      isLoading$: new BehaviorSubject<boolean>(false),
-      selectedPhoto$: new BehaviorSubject<IPhoto | undefined>(undefined),
-    }
+  private readonly fakePhotoApiService = jasmine.createSpyObj<PhotoApiService>(
+    'PhotoApiService',
+    { searchPhoto: of([]) }
   );
+  private readonly photoApiServiceProvider: Provider = {
+    provide: PhotoApiService,
+    useValue: this.fakePhotoApiService,
+  };
+
+  private readonly photoLoaderSpy = this.fakePhotoApiService.searchPhoto;
 
   async globalBeforeEach(): Promise<void> {
     this.configureTestBed();
@@ -56,24 +42,15 @@ export class GallerySectionTestUtils {
   private configureTestBed(): void {
     TestBed.configureTestingModule({
       imports: [GallerySectionComponent],
-      providers: [
-        {
-          provide: GalleryService,
-          useValue: this.fakeGalleryService,
-        },
-      ],
     }).overrideComponent(GallerySectionComponent, {
       set: {
         imports: [
-          AsyncPipe,
-          PhotoCollageDumpComponent,
           InfiniteScrollDirective,
-          MatProgressSpinner,
-          PhotoDetailedViewStubComponent,
-          OverlayPanelComponent,
+          GalleryComponent,
           SectionComponent,
           GalleryNavStubComponent,
         ],
+        providers: [GalleryService, this.photoApiServiceProvider],
       },
     });
   }
@@ -82,6 +59,10 @@ export class GallerySectionTestUtils {
     this.fixture = TestBed.createComponent(GallerySectionComponent);
     this.testedComponent = this.fixture.componentInstance;
     this.fixture.autoDetectChanges();
+  }
+
+  getTestedComponent(): GallerySectionComponent {
+    return this.testedComponent;
   }
 
   expectTestedComponentToBeCreated(): void {
@@ -93,5 +74,17 @@ export class GallerySectionTestUtils {
       By.css('app-gallery-nav')
     );
     expect(galleryNavigation).toBeTruthy();
+  }
+
+  expectPhotosLoaderToHaveBeenCalledWithFilter(
+    expectedFilter: ISearchPhotoFilter | undefined
+  ): void {
+    expect(this.photoLoaderSpy).toHaveBeenCalled();
+    const filter = this.photoLoaderSpy.calls.mostRecent().args[0]?.filter;
+    expect(filter).toEqual(expectedFilter);
+  }
+
+  detectChanges(): void {
+    this.fixture.detectChanges();
   }
 }

@@ -36,7 +36,8 @@ export class PhotoSelectionTestUtils {
     { searchPhoto: this.photosToLoad$.asObservable() }
   );
   private readonly dumbGallery: IGallery = new Gallery(
-    this.fakePhotoApiService
+    this.fakePhotoApiService,
+    'fake gallery'
   );
 
   private readonly selectNext$ = new Subject<void>();
@@ -133,12 +134,12 @@ export class PhotoSelectionTestUtils {
     return this.getElementByClass('photo-selection__loading');
   }
 
-  private getElementByClass(className: string): DebugElement {
-    return this.fixture.debugElement.query(By.css(`.${className}`));
+  getNoPhotosPlaceHolder(): DebugElement {
+    return this.getElementByClass('photo-selection__no-photo');
   }
 
-  getNoPhotosPlaceHolder(): DebugElement {
-    return this.getElementByClass('photo-selection__no-photos');
+  private getElementByClass(className: string): DebugElement {
+    return this.fixture.debugElement.query(By.css(`.${className}`));
   }
 
   getSwiperElement(): DebugElement {

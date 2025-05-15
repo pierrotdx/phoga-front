@@ -20,6 +20,10 @@ describe('Gallery', () => {
     testedClass = testUtils.getTestedClass();
   });
 
+  it('should have an id', () => {
+    expect(testedClass._id).toBeDefined();
+  });
+
   describe('photos', async () => {
     it('should be initialized to an empty array', async () => {
       const expectedPhotos: IGalleryPhotos = { all: [], lastBatch: [] };
