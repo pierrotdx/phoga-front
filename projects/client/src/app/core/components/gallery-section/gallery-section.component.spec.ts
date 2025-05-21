@@ -1,57 +1,43 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ISearchPhotoFilter, ISelectedTag, ITag } from '@shared/public-api';
 import { GallerySectionComponent } from './gallery-section.component';
-import { Component, input, Input } from '@angular/core';
-import { IPhoto, PhotoApiService } from '@shared/photo-context';
-import { AsyncPipe } from '@angular/common';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { BehaviorSubject } from 'rxjs';
-
-@Component({
-  template: '',
-  selector: 'app-photo-collage',
-})
-class PhotoCollageDumpComponent {
-  photos = input<any>();
-}
-
-@Component({
-  template: '',
-  selector: 'app-section',
-})
-class SectionStubComponent {}
+import { GallerySectionTestUtils } from './gallery-section.test-utils';
 
 describe('GalleryComponent', () => {
-  let component: GallerySectionComponent;
-  let fixture: ComponentFixture<GallerySectionComponent>;
+  let testUtils: GallerySectionTestUtils;
+  let testedComponent: GallerySectionComponent;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [GallerySectionComponent],
-      providers: [
-        {
-          provide: PhotoApiService,
-          useValue: {},
-        },
-      ],
-    })
-      .overrideComponent(GallerySectionComponent, {
-        set: {
-          imports: [
-            PhotoCollageDumpComponent,
-            AsyncPipe,
-            MatProgressSpinnerModule,
-            SectionStubComponent,
-          ],
-        },
-      })
-      .compileComponents();
-
-    fixture = TestBed.createComponent(GallerySectionComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    testUtils = new GallerySectionTestUtils();
+    await testUtils.globalBeforeEach();
+    testedComponent = testUtils.getTestedComponent();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    testUtils.expectTestedComponentToBeCreated();
+  });
+
+  describe('when no tag is selected', () => {
+    it('should load photos with no filter', () => {
+      const expectedFilter = undefined;
+      testUtils.expectPhotosLoaderToHaveBeenCalledWithFilter(expectedFilter);
+    });
+  });
+
+  describe('when a tag is selected from the gallery navigation', () => {
+    const selectedTag: ISelectedTag = { _id: 'dumb-tag-id' };
+
+    beforeEach(() => {
+      testedComponent.selectedTag.set(selectedTag);
+      testUtils.detectChanges();
+    });
+
+    it('should load the photos corresponding to the required tag', () => {
+      const expectedFilter: ISearchPhotoFilter = { tagId: selectedTag._id };
+      testUtils.expectPhotosLoaderToHaveBeenCalledWithFilter(expectedFilter);
+    });
+  });
+
+  it('should display the gallery-navigation component', () => {
+    testUtils.expectGalleryNavigationToBeDisplayed();
   });
 });

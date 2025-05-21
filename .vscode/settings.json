@@ -5,5 +5,8 @@
   "html.format.enable": true,
   "[html]": {
     "editor.defaultFormatter": "stringham.angular-template-formatter"
-  }
+  },
+  "javascript.referencesCodeLens.enabled": true,
+  "typescript.referencesCodeLens.enabled": true,
+  "typescript.implementationsCodeLens.enabled": true
 }

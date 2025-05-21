@@ -1,6 +1,7 @@
 @if(show()) {
-    <div class="overlay" [class.disable-body-scrolling]="show()">
+    <dialog #overlay
+        class="overlay"
+        [class.disable-body-scrolling]="show()">
         <ng-content/>
-    </div>
+    </dialog>
 }
-

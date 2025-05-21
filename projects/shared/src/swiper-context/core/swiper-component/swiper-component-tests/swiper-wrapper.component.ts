@@ -3,7 +3,7 @@ import { SwiperComponent } from '../swiper.component';
 
 import { Observable } from 'rxjs';
 import { GetSlideContentFromItem, TestItem } from './models';
-import { ISwiperInitOptions } from '@shared/public-api';
+import { ISwiperInitOptions } from '../../models';
 
 @Component({
   selector: 'swiper-wrapper',

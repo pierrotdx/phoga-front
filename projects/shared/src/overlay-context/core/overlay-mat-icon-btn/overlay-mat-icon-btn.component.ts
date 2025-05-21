@@ -1,5 +1,5 @@
-import { Component, EventEmitter, model, Output } from '@angular/core';
-import { MaterialIconComponent } from '@shared/material-icon-component';
+import { Component } from '@angular/core';
+import { MaterialIconComponent } from '../../../material-icon-component';
 
 @Component({
   selector: 'app-overlay-mat-icon-btn',

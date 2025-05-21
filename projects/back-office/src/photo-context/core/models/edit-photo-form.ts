@@ -1,6 +1,9 @@
+import { ITag } from '@shared/tag-context';
+
 export interface IPhotoVM {
   metadata: IPhotoMetadataVM;
   imageBuffer: Buffer | undefined;
+  tagIds?: ITag['_id'][];
 }
 
 export interface IPhotoMetadataVM {

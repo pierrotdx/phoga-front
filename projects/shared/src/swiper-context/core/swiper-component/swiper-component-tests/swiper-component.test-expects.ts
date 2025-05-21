@@ -1,11 +1,10 @@
 import { Type } from '@angular/core';
 import { TestModuleMetadata } from '@angular/core/testing';
-import { ISwiperInitOptions } from '@shared/public-api';
+import { ISwiperInitOptions } from '../../../core';
 import { TestItem } from './models';
 import { SwiperWrapperComponent } from './swiper-wrapper.component';
 import { SwiperWrapperComponentTestUtils } from './swiper-wrapper.component.test-utils';
 import { equals } from 'ramda';
-import { exec } from 'child_process';
 
 export class SwiperComponentTestExpects extends SwiperWrapperComponentTestUtils {
   constructor(

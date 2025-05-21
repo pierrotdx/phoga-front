@@ -1,0 +1,95 @@
+@mixin item-btn {
+  font-family: var(--font-family);
+  background-color: unset;
+  border: none;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+@mixin highlighted-item {
+  button {
+    font-size: 1.5em;
+    font-weight: 700;
+    border-top: 2px solid var(--clr-secondary);
+    border-bottom: 2px solid var(--clr-secondary);
+    border-right: unset;
+    border-left: unset;
+  }
+}
+
+:host {
+  text-align: center;
+}
+
+.gallery-nav {
+  &__nav-menu-trigger {
+    text-align: center;
+    padding: var(--spacing-01);
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+
+    button {
+      @include item-btn();
+    }
+
+    lib-material-icon {
+      --material-icon-fs: 1em;
+      --material-icon-display: flex;
+      --material-icon-align-items: center;
+    }
+  }
+
+  &__panel {
+    --overlay-panel-height: fit-content;
+    --overlay-panel-width: fit-content;
+    --overlay-panel-display: block;
+    --overlay-panel-margin: auto;
+  }
+
+  &__nav {
+    background-color: var(--clr-white);
+    min-width: 150px;
+  }
+
+  &__nav-item {
+    color: var(--clr-text);
+    padding: var(--spacing-01);
+    text-align: center;
+
+    button {
+      @include item-btn();
+    }
+
+    &:hover,
+    &:focus {
+      @include highlighted-item();
+    }
+  }
+
+  &--selected {
+    @include highlighted-item();
+  }
+
+  &__close-btn {
+    @include item-btn();
+  }
+}
+
+/* For tablets and above */
+@media only screen and (width > 600px) {
+  .gallery-nav {
+    &__nav-menu-trigger {
+      display: none;
+    }
+
+    &__nav {
+      ul {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 4em;
+      }
+    }
+  }
+}

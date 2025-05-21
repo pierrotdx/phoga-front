@@ -18,10 +18,16 @@ import { IPhotoMetadataVM, IPhotoTitleVM, IPhotoVM } from '../../../models';
 
 import { EditMetadataComponent } from '../edit-metadata/edit-metadata.component';
 import { EditImageBufferComponent } from '../edit-image-buffer/edit-image-buffer.component';
+import { EditPhotoTagsComponent } from '../edit-photo-tags/edit-photo-tags.component';
 
 @Component({
   selector: 'app-edit-photo-form',
-  imports: [FormsModule, EditMetadataComponent, EditImageBufferComponent],
+  imports: [
+    FormsModule,
+    EditMetadataComponent,
+    EditImageBufferComponent,
+    EditPhotoTagsComponent,
+  ],
   templateUrl: './edit-photo-form.component.html',
 })
 export class EditPhotoFormComponent implements AfterViewInit, OnDestroy {
@@ -78,6 +84,7 @@ export class EditPhotoFormComponent implements AfterViewInit, OnDestroy {
         date: '',
       },
       imageBuffer: this.photo?.imageBuffer,
+      tagIds: this.photo.tags?.map((t) => t._id),
     };
   }
 

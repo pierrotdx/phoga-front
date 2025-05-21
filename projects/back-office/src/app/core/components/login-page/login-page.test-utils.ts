@@ -5,7 +5,7 @@ import {
   EndpointsProvider,
 } from '../../../../endpoints-context';
 import { LoginPageComponent } from './login-page.component';
-import { CompTestUtils } from '@shared/comp.test-utils';
+import { CompTestUtils } from '@shared/test-utils-context';
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TestModuleMetadata } from '@angular/core/testing';
 

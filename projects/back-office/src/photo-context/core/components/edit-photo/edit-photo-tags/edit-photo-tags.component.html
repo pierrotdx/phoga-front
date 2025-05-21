@@ -1,0 +1,20 @@
+@if(tagsResource.isLoading()) {
+    <mat-spinner class="edit-photo-tags__loading"></mat-spinner>
+} @else {
+    <div>
+        <label for="tags">Tags
+            <mat-select class="edit-photo-tags__tag-selector"
+                [disabled]="!tags().length"
+                multiple
+                name="tags"
+                id="tags"
+                [(ngModel)]="viewModel"
+                [placeholder]="placeHolder()">
+                @for(tag of tags(); track tag._id) {
+                    <mat-option [value]="tag._id">{{ tag.name || tag._id }}</mat-option>
+                }
+            </mat-select>
+        </label>
+    </div>
+
+}

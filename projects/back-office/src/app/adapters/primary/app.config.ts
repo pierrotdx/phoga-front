@@ -18,11 +18,16 @@ import {
 } from '../../../environment-context';
 
 import { UuidProvider } from '@shared/uuid-context/adapters/primary/uuid-provider';
-import { TagApiServiceProvider } from '@shared/tag-context';
 import { RouteProviders } from '../../core';
+import { TagApiService } from '@shared/tag-context';
 
 const PhotoApiServiceProvider: Provider = {
   provide: PhotoApiService,
+  deps: [ENVIRONMENT_TOKEN, HttpClient],
+};
+
+export const TagApiServiceProvider = {
+  provide: TagApiService,
   deps: [ENVIRONMENT_TOKEN, HttpClient],
 };
 
