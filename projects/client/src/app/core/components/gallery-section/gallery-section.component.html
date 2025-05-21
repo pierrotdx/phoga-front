@@ -5,7 +5,7 @@
 >
     <ng-container ngProjectAs="section-title">Gallery</ng-container>
     <ng-container ngProjectAs="section-body">
-        <app-gallery-nav (selectedTag)="selectedTag.set($event)"></app-gallery-nav>
+        <app-gallery-nav (selectedTagChange)="selectedTag.set($event)"></app-gallery-nav>
         <lib-gallery [gallery]="gallery()!"></lib-gallery>
     </ng-container>
 </app-section>

@@ -1,8 +1,14 @@
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TagApiService, ITag } from '@shared/tag-context';
+import { TagApiService, ITag, ISelectedTag } from '@shared/tag-context';
 import { GalleryNavComponent } from './gallery-nav.component';
+import {
+  BreakpointObserver,
+  Breakpoints,
+  BreakpointState,
+} from '@angular/cdk/layout';
+import { ReplaySubject } from 'rxjs';
 
 export const noTagNavItemId = 'no-tag-nav-item';
 
@@ -15,13 +21,30 @@ export class GalleryNavTestUtils {
     ['search']
   );
 
+  private readonly fakeBreakpointState$ = new ReplaySubject<BreakpointState>(1);
+  private readonly fakeBreakpointObserver =
+    jasmine.createSpyObj<BreakpointObserver>({
+      observe: this.fakeBreakpointState$.asObservable(),
+    });
+
   private loadTagsSpy!: jasmine.Spy;
   private selectedTagOutputSpy!: jasmine.Spy;
 
   async globalBeforeEach(): Promise<void> {
+    this.simulateBreakpointState(Breakpoints.XSmall);
     this.configureTestBed();
     await TestBed.compileComponents();
-    this.onComponentsCompilation();
+    await this.onComponentsCompilation();
+  }
+
+  simulateBreakpointState(breakpoint: string): void {
+    const state: BreakpointState = {
+      matches: true,
+      breakpoints: {
+        [breakpoint]: true,
+      },
+    };
+    this.fakeBreakpointState$.next(state);
   }
 
   private configureTestBed(): void {
@@ -32,16 +55,21 @@ export class GalleryNavTestUtils {
           provide: TagApiService,
           useValue: this.fakeTagApiService,
         },
+        {
+          provide: BreakpointObserver,
+          useValue: this.fakeBreakpointObserver,
+        },
       ],
     });
   }
 
-  private onComponentsCompilation(): void {
+  private async onComponentsCompilation(): Promise<void> {
     this.fixture = TestBed.createComponent(GalleryNavComponent);
     this.testedComponent = this.fixture.componentInstance;
-    this.fixture.autoDetectChanges();
     this.setLoadTagsSpy();
     this.setSelectedTagOutputSpy();
+    this.fixture.detectChanges();
+    await this.fixture.whenStable();
   }
 
   private setLoadTagsSpy(): void {
@@ -49,7 +77,10 @@ export class GalleryNavTestUtils {
   }
 
   private setSelectedTagOutputSpy(): void {
-    this.selectedTagOutputSpy = spyOn(this.testedComponent.selectedTag, 'emit');
+    this.selectedTagOutputSpy = spyOn(
+      this.testedComponent.selectedTagChange,
+      'emit'
+    );
   }
 
   resetCallsOfSelectedTagOutputSpy(): void {
@@ -73,17 +104,16 @@ export class GalleryNavTestUtils {
     expect(this.loadTagsSpy).toHaveBeenCalled();
   }
 
-  expectGalleriesNavToBeDisplayed(): void {
-    const galleriesNav = this.getGalleryNav();
-    expect(galleriesNav).toBeTruthy();
-  }
-
-  private getGalleryNav(): DebugElement {
+  getGalleryNav(): DebugElement {
     return this.getDebugElement('.gallery-nav__nav');
   }
 
   private getDebugElement(selector: string): DebugElement {
     return this.fixture.debugElement.query(By.css(selector));
+  }
+
+  getNavMenuTrigger(): DebugElement {
+    return this.getDebugElement('.gallery-nav__nav-menu-trigger');
   }
 
   expectTagNavItemToBeDisplayed(tagId: ITag['_id']): void {
@@ -99,38 +129,30 @@ export class GalleryNavTestUtils {
   }
 
   private getNavItems(): DebugElement[] {
-    const navItemsList = this.getGalleryNav().query(By.css('ul'));
-    return navItemsList.children;
+    return this.fixture.debugElement.queryAll(By.css('.gallery-nav__nav-item'));
   }
 
-  expectNoTagNavItemToBeDisplayed(): void {
-    const noTagNavItem = this.getNoTagNavItem();
-    expect(noTagNavItem).toBeTruthy();
-  }
-
-  private getNoTagNavItem(): DebugElement | undefined {
+  getNoTagNavItem(): DebugElement | undefined {
     return this.getNavItems().find(
       (item) => (item.nativeElement as HTMLElement).id === noTagNavItemId
     );
   }
 
-  expectNavItemToBeSelected(navItemId: string): void {
+  expectSelectedNavItemToBe(navItemId: string): void {
     const item: DebugElement | undefined =
       navItemId === noTagNavItemId
         ? this.getNoTagNavItem()
         : this.getTagNavItem(navItemId);
-    const isSelected = this.isSelected(item);
-    expect(isSelected).toBeTrue();
+    const selectedItem = this.getSelectedItem() || undefined;
+    expect(item).toEqual(selectedItem);
   }
 
-  private isSelected(element: DebugElement | undefined): boolean {
-    if (!element) {
-      return false;
-    }
-    const selectedClass = 'gallery-nav__nav-item--selected';
-    return (element.nativeElement as HTMLElement).classList.contains(
-      selectedClass
+  private getSelectedItem(): DebugElement | undefined {
+    const selectedClass = 'gallery-nav--selected';
+    const selectedItem = this.getNavItems().find((item) =>
+      (item.nativeElement as HTMLElement).classList.contains(selectedClass)
     );
+    return selectedItem;
   }
 
   clickOnNavItem(navItemId: string): void {
@@ -144,7 +166,20 @@ export class GalleryNavTestUtils {
     tick();
   }
 
-  expectSelectedTagOutputToBe(expectedValue: ITag['_id'] | undefined): void {
+  expectSelectedTagOutputToBe(expectedValue: ISelectedTag): void {
     expect(this.selectedTagOutputSpy).toHaveBeenCalledOnceWith(expectedValue);
+  }
+
+  getNoSelectionPlaceHolder(): string {
+    return this.testedComponent.noSelectionPlaceHolder;
+  }
+
+  detectChanges(): void {
+    this.fixture.detectChanges();
+  }
+
+  displayNavMenu(): void {
+    this.testedComponent.expandPanel.set(true);
+    this.detectChanges();
   }
 }

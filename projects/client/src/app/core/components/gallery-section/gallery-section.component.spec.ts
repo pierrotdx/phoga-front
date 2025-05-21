@@ -1,4 +1,4 @@
-import { ISearchPhotoFilter, ITag } from '@shared/public-api';
+import { ISearchPhotoFilter, ISelectedTag, ITag } from '@shared/public-api';
 import { GallerySectionComponent } from './gallery-section.component';
 import { GallerySectionTestUtils } from './gallery-section.test-utils';
 
@@ -24,15 +24,15 @@ describe('GalleryComponent', () => {
   });
 
   describe('when a tag is selected from the gallery navigation', () => {
-    const selectedTagId: ITag['_id'] = 'dumb-tag-id';
+    const selectedTag: ISelectedTag = { _id: 'dumb-tag-id' };
 
     beforeEach(() => {
-      testedComponent.selectedTag.set(selectedTagId);
+      testedComponent.selectedTag.set(selectedTag);
       testUtils.detectChanges();
     });
 
     it('should load the photos corresponding to the required tag', () => {
-      const expectedFilter: ISearchPhotoFilter = { tagId: selectedTagId };
+      const expectedFilter: ISearchPhotoFilter = { tagId: selectedTag._id };
       testUtils.expectPhotosLoaderToHaveBeenCalledWithFilter(expectedFilter);
     });
   });

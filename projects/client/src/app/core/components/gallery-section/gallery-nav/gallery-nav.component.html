@@ -1,17 +1,43 @@
 @if(tags(); as tags) {
-    <nav class="gallery-nav__nav">
-        <ul>
-            <li id="no-tag-nav-item"
-                (click)="selectNavItem()"
-                [class.gallery-nav__nav-item--selected]="!selectedNavItem()">
-                All
-            </li>
-        @for(tag of tags; track tag._id) {
-            <li [id]="tag._id"
-                [class.gallery-nav__nav-item--selected]="selectedNavItem() === tag._id"
-                (click)="selectNavItem(tag._id)">{{ tag.name || tag._id }}
-            </li>
-        }
-        </ul>
-    </nav>
+    <div class="gallery-nav__nav-menu-trigger gallery-nav--selected"
+        (click)="togglePanel()">
+        <button type="button" >{{ menuTriggerPlaceHolder() }}</button>
+    </div>
+    @if(isMobile()) {
+        <app-overlay-panel [show]="expandPanel()"
+            class="gallery-nav__panel">
+                <ng-content *ngTemplateOutlet="navTemplate; context: { tags }">
+                </ng-content>
+                <button type="button"
+                    class="gallery-nav__close-btn"
+                    (click)="togglePanel()">
+                    <lib-material-icon>close</lib-material-icon>
+                </button>
+        </app-overlay-panel>
+    } @else {
+        <ng-content *ngTemplateOutlet="navTemplate; context: { tags }">
+        </ng-content>
+    }
 }
+
+<ng-template #navTemplate
+    let-tags="tags">
+    <nav class="gallery-nav__nav">
+                <ul>
+                    <li id="no-tag-nav-item"
+                        (click)="selectNavItem()"
+                        [class.gallery-nav--selected]="!selectedTag()?._id"
+                        class="gallery-nav__nav-item">
+                        <button type="button">{{ noSelectionPlaceHolder }}</button>
+                    </li>
+                    @for(tag of tags; track tag._id) {
+                        <li [id]="tag._id"
+                            class="gallery-nav__nav-item"
+                            [class.gallery-nav--selected]="selectedTag()?._id === tag._id"
+                            (click)="selectNavItem(tag)">
+                            <button type="button">{{ tag.name || tag._id }}</button>
+                        </li>
+                    }
+                </ul>
+            </nav>
+</ng-template>

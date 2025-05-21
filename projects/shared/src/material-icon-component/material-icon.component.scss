@@ -1,3 +1,8 @@
+:host {
+  display: var(--material-icon-display);
+  align-items: var(--material-icon-align-items);
+}
+
 .material-icon {
   display: flex;
   font-size: var(--material-icon-fs);

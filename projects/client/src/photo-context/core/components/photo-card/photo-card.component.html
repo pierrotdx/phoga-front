@@ -13,7 +13,7 @@
                             class="photo-card__metadata">
         </app-photo-metadata>
     </article>
-     <app-overlay-panel [(show)]="showDetailedView">
+     <app-overlay-panel [show]="showDetailedView()">
         <app-photo-detailed-view
             [gallery]="gallery()"
             (close)="deselect()">

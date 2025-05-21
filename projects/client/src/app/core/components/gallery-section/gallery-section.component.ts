@@ -11,7 +11,7 @@ import {
 } from '@shared/photo-context';
 
 import { GalleryNavComponent } from './gallery-nav/gallery-nav.component';
-import { ITag } from '@shared/tag-context';
+import { ISelectedTag, ITag } from '@shared/tag-context';
 import { GalleryComponent } from '../../../../photo-context';
 
 @Component({
@@ -34,7 +34,7 @@ export class GallerySectionComponent implements OnInit, OnDestroy {
   private readonly subs: Subscription[] = [];
   private readonly initialNbPhotos = 3;
 
-  selectedTag = signal<ITag['_id'] | undefined>(undefined);
+  selectedTag = signal<ISelectedTag>(undefined);
 
   readonly defaultGalleryId = 'default';
 
@@ -45,19 +45,19 @@ export class GallerySectionComponent implements OnInit, OnDestroy {
     this.galleryService.select(this.defaultGalleryId);
 
     effect(async () => {
-      const tagId = this.selectedTag();
-      if (!tagId) {
+      const tag = this.selectedTag();
+      if (!tag) {
         this.galleryService.select(this.defaultGalleryId);
         return;
       }
-      const galleryId = tagId;
+      const galleryId = tag._id;
       const tagGallery = this.galleryService.get(galleryId);
       if (!!tagGallery) {
         this.galleryService.select(galleryId);
         return;
       }
 
-      this.galleryService.create(galleryId, { tagId });
+      this.galleryService.create(galleryId, { tagId: tag._id });
       this.galleryService.select(galleryId);
     });
   }
