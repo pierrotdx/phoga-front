@@ -1,9 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditPhotoFormComponent } from './edit-photo-form.component';
 import { UuidProvider } from '@shared/uuid-context/adapters/primary/uuid-provider';
-import { DebugElement } from '@angular/core';
+import { Component, DebugElement, input } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { IPhoto } from '@shared/photo-context';
+import { EditPhotoTagsComponent } from '../edit-photo-tags/edit-photo-tags.component';
+import { FormsModule } from '@angular/forms';
+import { EditImageBufferComponent } from '../edit-image-buffer/edit-image-buffer.component';
+import { EditMetadataComponent } from '../edit-metadata/edit-metadata.component';
+
+@Component({
+  selector: 'app-edit-photo-tags',
+  template: '',
+})
+export class EditPhotoTagsStubComponent {
+  viewModel = input<any>();
+}
 
 export class EditPhotoFormTestUtils {
   component!: EditPhotoFormComponent;
@@ -11,9 +23,20 @@ export class EditPhotoFormTestUtils {
 
   async globalBeforeEach(): Promise<void> {
     await TestBed.configureTestingModule({
-      imports: [EditPhotoFormComponent],
+      imports: [EditPhotoFormComponent, EditPhotoTagsComponent],
       providers: [UuidProvider],
-    }).compileComponents();
+    })
+      .overrideComponent(EditPhotoFormComponent, {
+        set: {
+          imports: [
+            FormsModule,
+            EditMetadataComponent,
+            EditImageBufferComponent,
+            EditPhotoTagsStubComponent,
+          ],
+        },
+      })
+      .compileComponents();
 
     this.fixture = TestBed.createComponent(EditPhotoFormComponent);
     this.component = this.fixture.componentInstance;

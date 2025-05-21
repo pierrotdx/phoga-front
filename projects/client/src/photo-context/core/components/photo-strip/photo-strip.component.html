@@ -1,5 +1,5 @@
 <div class="photo-strip">
-    @for (photo of photos; track photo._id) {
-        <app-photo-card [photo]="photo" class="photo-strip__item"></app-photo-card>
+    @for (photo of strip(); track photo._id) {
+        <app-photo-card [photoId]="photo._id" [gallery]="gallery()" class="photo-strip__item"></app-photo-card>
     }
 </div>

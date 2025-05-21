@@ -3,16 +3,14 @@ import {
   effect,
   EventEmitter,
   input,
-  OnChanges,
   OnDestroy,
   Output,
   signal,
-  SimpleChanges,
   TemplateRef,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { Observable } from 'rxjs';
-import { SubscriptionHandler } from '@shared/subscription-handler-context';
+import { SubscriptionHandler } from '../../../subscription-handler-context';
 import { ISlide, ISwiper, ISwiperState, ISwiperInitOptions } from '../models';
 import { Swiper } from '../swiper/swiper';
 

@@ -1,64 +1,105 @@
-import { AsyncPipe } from '@angular/common';
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Component, effect, OnDestroy, OnInit, signal } from '@angular/core';
+
 import { SectionComponent } from '../section/section.component';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
-import { IPhoto } from '@shared/photo-context';
+import { Observable, Subscription } from 'rxjs';
 import {
-  PhotoCollageComponent,
-  IGalleryPhotos,
-  PhotoDetailedViewComponent,
   GalleryService,
-} from '../../../../photo-context';
-import { OverlayPanelComponent } from '@shared/overlay-context';
+  IGallery,
+  IGalleryPhotos,
+  IPhoto,
+} from '@shared/photo-context';
+
+import { GalleryNavComponent } from './gallery-nav/gallery-nav.component';
+import { ISelectedTag, ITag } from '@shared/tag-context';
+import { GalleryComponent } from '../../../../photo-context';
 
 @Component({
   selector: 'app-gallery-section',
   imports: [
-    AsyncPipe,
-    PhotoCollageComponent,
     InfiniteScrollDirective,
-    MatProgressSpinner,
-    PhotoDetailedViewComponent,
-    OverlayPanelComponent,
     SectionComponent,
+    GalleryNavComponent,
+    GalleryComponent,
   ],
   templateUrl: './gallery-section.component.html',
 })
 export class GallerySectionComponent implements OnInit, OnDestroy {
-  readonly photos$: BehaviorSubject<IGalleryPhotos>;
-  isLoading$!: Subject<boolean>;
+  photos$!: Observable<IGalleryPhotos>;
+  isLoading$!: Observable<boolean>;
 
   readonly selectedPhoto = signal<IPhoto | undefined>(undefined);
   readonly showDetailedView = signal<boolean>(false);
 
   private readonly subs: Subscription[] = [];
-  private readonly initialNbPhotos = 6;
+  private readonly initialNbPhotos = 3;
+
+  selectedTag = signal<ISelectedTag>(undefined);
+
+  readonly defaultGalleryId = 'default';
+
+  gallery = signal<IGallery | undefined>(undefined);
 
   constructor(private readonly galleryService: GalleryService) {
-    this.photos$ = this.galleryService.photos$;
+    this.galleryService.create(this.defaultGalleryId);
+    this.galleryService.select(this.defaultGalleryId);
+
+    effect(async () => {
+      const tag = this.selectedTag();
+      if (!tag) {
+        this.galleryService.select(this.defaultGalleryId);
+        return;
+      }
+      const galleryId = tag._id;
+      const tagGallery = this.galleryService.get(galleryId);
+      if (!!tagGallery) {
+        this.galleryService.select(galleryId);
+        return;
+      }
+
+      this.galleryService.create(galleryId, { tagId: tag._id });
+      this.galleryService.select(galleryId);
+    });
   }
 
   ngOnInit() {
-    this.isLoading$ = this.galleryService.isLoading$;
-    void this.loadPhotos(this.initialNbPhotos);
-    this.subToSelectedPhoto();
+    this.subToSelectedGallery();
   }
 
   ngOnDestroy(): void {
     this.subs.forEach((sub) => sub.unsubscribe());
   }
 
+  private subToSelectedGallery(): void {
+    const sub = this.galleryService.selectedGallery$.subscribe(
+      (selectedGallery) => this.onSelectedGalleryChange(selectedGallery)
+    );
+    this.subs.push(sub);
+  }
+
+  private onSelectedGalleryChange(gallery: IGallery | undefined): void {
+    this.gallery.set(gallery);
+    if (!gallery) {
+      this.galleryService.select(this.defaultGalleryId);
+      return;
+    }
+    this.photos$ = gallery.galleryPhotos$;
+    this.isLoading$ = gallery.isLoading$;
+    void this.loadPhotos(this.initialNbPhotos);
+    this.subToSelectedPhoto();
+  }
+
   async loadPhotos(size?: number): Promise<void> {
-    await this.galleryService.loadMore(size);
+    await this.gallery()?.loadMore(size);
   }
 
   private subToSelectedPhoto(): void {
-    const selectedPhotoSub = this.galleryService.selectedPhoto$.subscribe(
-      (photo) => this.onSelectedPhotoChange(photo)
+    const sub = this.gallery()?.selectedPhoto$.subscribe((photo) =>
+      this.onSelectedPhotoChange(photo)
     );
-    this.subs.push(selectedPhotoSub);
+    if (sub) {
+      this.subs.push(sub);
+    }
   }
 
   private onSelectedPhotoChange(photo: IPhoto | undefined) {

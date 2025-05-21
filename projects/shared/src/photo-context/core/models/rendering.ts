@@ -1,6 +1,4 @@
-import { ImageSize } from './image-size';
-
-export interface IRendering extends ImageSize {
+export interface IRendering {
   dateOrder?: SortDirection;
   size?: number;
   from?: number;

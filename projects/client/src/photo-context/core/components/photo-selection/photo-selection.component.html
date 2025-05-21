@@ -1,4 +1,6 @@
-@if(hasInitPhotos()) {
+@if(!hasInitPhotos()) {
+    <mat-spinner class="photo-selection__loading"></mat-spinner>
+} @else if (initPhotos().length > 0) {
     <lib-swiper
         class="photo-selection__swiper"
         [items]="initPhotos()"
@@ -6,18 +8,17 @@
         [slideTemplate]="slideTemplate"
         [activateItem$]="activateItem$"
         [swipeToItem$]="swipeToItem$"
-        [addItems$]="addItems$"
-        (swiperStateChange)="onSwiperStateChange($event)">
+        [addItems$]="addItems$">
     </lib-swiper>
 } @else {
-    <mat-spinner class="photo-selection__loading"></mat-spinner>
+    <div class="photo-selection__no-photo">No photo available</div>
 }
 
 <ng-template #slideTemplate
              let-slide="slide">
     <div class="photo-option"
          [class.photo-option--active]="slide.isActive"
-         (click)="selectPhoto(slide.itemIndex)">
+         (click)="selectPhoto(slide.value._id)">
         <app-photo-image [photo]="slide.value"></app-photo-image>
     </div>
 </ng-template>

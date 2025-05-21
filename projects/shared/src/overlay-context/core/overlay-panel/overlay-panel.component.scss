@@ -1,12 +1,17 @@
 .overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100vw;
-  backdrop-filter: brightness(20%);
+  position: var(--overlay-panel-position, fixed);
+  top: var(--overlay-panel-top, 0);
+  left: var(--overlay-panel-left, 0);
+  min-height: var(--overlay-panel-height, 100vh);
+  min-width: var(--overlay-panel-width, 100vw);
   z-index: 2;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: var(--overlay-panel-display, flex);
+  border: none;
+  margin: var(--overlay-panel-margin, 0);
+  padding: 0;
+}
+
+::backdrop {
+  backdrop-filter: brightness(20%);
+  background-color: var(--overlay-panel-background-color);
 }

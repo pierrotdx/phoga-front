@@ -1,7 +1,6 @@
 
-@if (photo?.imageBuffer; as imageBuffer) {
+@if (photo().imageBuffer; as imageBuffer) {
     <img
         class="photo-image__image"
-        [src]="imageBuffer | bufferToImage$ | async"
-        [alt]="imageAlt()">
+        [src]="imageBuffer | bufferToImage$ | async">
 }

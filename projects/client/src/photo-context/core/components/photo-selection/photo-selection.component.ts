@@ -1,21 +1,18 @@
-import {
-  Component,
-  effect,
-  input,
-  OnDestroy,
-  OnInit,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { Component, effect, input, OnDestroy, signal } from '@angular/core';
 
-import { ISwiperState, SwiperComponent } from '@shared/swiper-context';
+import { SwiperComponent } from '@shared/swiper-context';
 import { PhotoImageComponent } from '../photo-image/photo-image.component';
-import { IPhoto } from '@shared/photo-context';
-import { PhotoSelectionLoader } from './photo-selection-loader/photo-selection-loader';
-import { GalleryService, IGalleryPhotos } from '../../';
+import { IGallery, IGalleryPhotos, IPhoto } from '@shared/photo-context';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import {
+  firstValueFrom,
+  Observable,
+  Subject,
+  Subscribable,
+  Subscription,
+} from 'rxjs';
 import { SubscriptionHandler } from '@shared/subscription-handler-context';
+import { isEmpty } from 'ramda';
 
 @Component({
   selector: 'app-photo-selection',
@@ -23,173 +20,151 @@ import { SubscriptionHandler } from '@shared/subscription-handler-context';
   templateUrl: './photo-selection.component.html',
   styleUrl: './photo-selection.component.scss',
 })
-export class PhotoSelectionComponent implements OnInit, OnDestroy {
+export class PhotoSelectionComponent implements OnDestroy {
+  gallery = input.required<IGallery>();
   selectNextPhoto$ = input<Observable<void>>();
-  private readonly selectNextSubHandler: SubscriptionHandler<void>;
-
   selectPreviousPhoto$ = input<Observable<void>>();
-  private readonly selectPreviousSubHandler: SubscriptionHandler<void>;
 
   private readonly activateItemEmitter = new Subject<number | undefined>();
   activateItem$ = this.activateItemEmitter.asObservable();
 
-  readonly nbSlides = 6;
-  readonly initPhotos = signal<IPhoto[]>([]);
-  readonly hasInitPhotos = signal<boolean>(false);
-
   private swipeToItemEmitter = new Subject<number>();
   readonly swipeToItem$ = this.swipeToItemEmitter.asObservable();
-
-  private readonly selectedPhoto$: BehaviorSubject<IPhoto | undefined>;
-  private readonly selectedPhotoHandler: SubscriptionHandler<
-    IPhoto | undefined
-  >;
-
-  private readonly photos$: BehaviorSubject<IGalleryPhotos>;
-  private readonly photosHandler: SubscriptionHandler<IGalleryPhotos>;
 
   private readonly addItemsEmitter = new Subject<IPhoto[]>();
   readonly addItems$ = this.addItemsEmitter.asObservable();
 
-  swiperElement = viewChild(SwiperComponent);
-  private hasSwiperViewInit = false;
+  private nbPreloadPhotos: number = 2;
+  readonly nbSlides = 4;
 
-  private readonly photoLoader: PhotoSelectionLoader;
-  private readonly subs: SubscriptionHandler<any>[] = [];
+  readonly initPhotos = signal<IPhoto[]>([]);
+  readonly hasInitPhotos = signal<boolean>(false);
 
-  constructor(private readonly galleryService: GalleryService) {
-    this.selectedPhoto$ = this.galleryService.selectedPhoto$;
-    this.photos$ = this.galleryService.photos$;
-    this.photoLoader = new PhotoSelectionLoader(
-      this.galleryService,
-      this.nbSlides
-    );
+  private readonly subs: (Subscription | SubscriptionHandler<any>)[] = [];
+  private readonly gallerySubs: (Subscription | SubscriptionHandler<any>)[] =
+    [];
 
-    this.selectedPhotoHandler = new SubscriptionHandler<IPhoto | undefined>(
-      this.onSelectedPhotoChange
-    );
-    this.selectedPhotoHandler.subscribeTo(this.selectedPhoto$);
-    this.subs.push(this.selectedPhotoHandler);
-
-    this.photosHandler = new SubscriptionHandler<IGalleryPhotos>(this.onPhotos);
-    this.photosHandler.subscribeTo(this.photos$);
-    this.subs.push(this.photosHandler);
-
-    this.selectNextSubHandler = new SubscriptionHandler<void>(
-      this.onSelectNext
-    );
-    this.subs.push(this.selectNextSubHandler);
-    effect(() => this.subToSelectNextInput());
-
-    this.selectPreviousSubHandler = new SubscriptionHandler<void>(
-      this.onSelectPrevious
-    );
-    this.subs.push(this.selectPreviousSubHandler);
-    effect(() => this.subToSelectPreviousInput());
-
-    effect(() => {
-      if (!this.swiperElement() || this.hasSwiperViewInit) {
-        return;
-      }
-      this.onSwiperViewInit();
-      this.hasSwiperViewInit = true;
-    });
+  constructor() {
+    effect(() => this.onGalleryInput());
+    effect(() => this.onSelectNextInput());
+    effect(() => this.onSelectPreviousInput());
   }
 
-  private readonly onSelectedPhotoChange = (
+  private onGalleryInput(): void {
+    const gallery = this.gallery();
+
+    this.clearGallerySubs();
+
+    const afterFirstPhotosLoading$ = gallery.galleryPhotos$;
+    this.setupSubHandler(
+      afterFirstPhotosLoading$,
+      this.onGalleryPhotos,
+      this.gallerySubs
+    );
+
+    this.setupSubHandler(
+      gallery.selectedPhoto$,
+      this.onSelectedPhotoChange,
+      this.gallerySubs
+    );
+  }
+
+  private clearGallerySubs(): void {
+    if (!isEmpty(this.gallerySubs)) {
+      this.gallerySubs.forEach((sub) => sub.unsubscribe());
+    }
+  }
+
+  private setupSubHandler<T>(
+    observable: Subscribable<T> | undefined,
+    onNext: (params: T) => void | Promise<void>,
+    subsList: (Subscription | SubscriptionHandler<any>)[]
+  ): void {
+    const handler = new SubscriptionHandler<T>(onNext);
+    handler.subscribeTo(observable);
+    subsList.push(handler);
+  }
+
+  private onFirstPhotosLoading = async (): Promise<void> => {
+    const gallery = this.gallery();
+    const galleryPhotos = await firstValueFrom(gallery.galleryPhotos$);
+    const nbMissingPhotos = this.nbSlides - galleryPhotos.all.length;
+    if (nbMissingPhotos > 0 && this.gallery().hasMorePhotosToLoad()) {
+      await gallery.loadMore(nbMissingPhotos);
+      return;
+    }
+    this.initPhotos.set(galleryPhotos.all);
+    this.hasInitPhotos.set(true);
+  };
+
+  private onGalleryPhotos = async (
+    galleryPhotos: IGalleryPhotos
+  ): Promise<void> => {
+    if (!this.hasInitPhotos()) {
+      await this.onFirstPhotosLoading();
+    }
+    this.addItemsEmitter.next(galleryPhotos.lastBatch);
+  };
+
+  private readonly onSelectedPhotoChange = async (
     newSelectedPhoto: IPhoto | undefined
-  ): void => {
+  ): Promise<void> => {
     if (newSelectedPhoto) {
-      const photoIndex = this.getPhotoIndex(newSelectedPhoto);
+      const photoIndex = await this.getPhotoIndex(newSelectedPhoto);
       this.activateItemEmitter.next(photoIndex);
       this.swipeToItem(photoIndex);
+      await this.triggerPreloadIfNecessary(newSelectedPhoto);
     } else {
       this.activateItemEmitter.next(undefined);
     }
   };
 
-  private getPhotoIndex(photo: IPhoto): number {
-    return this.getPhotos().all.findIndex((p) => p._id === photo._id);
+  private async triggerPreloadIfNecessary(
+    selectedPhoto: IPhoto
+  ): Promise<void> {
+    const galleryPhotos = await firstValueFrom(this.gallery().galleryPhotos$);
+    const triggerPreloadIndex = galleryPhotos.all.length - this.nbPreloadPhotos;
+    const selectedPhotoIndex = await this.getPhotoIndex(selectedPhoto);
+    if (selectedPhotoIndex >= triggerPreloadIndex) {
+      await this.gallery().loadMore();
+    }
   }
 
-  private getPhotos(): IGalleryPhotos {
-    return this.photos$.getValue();
-  }
-
-  private onSwiperViewInit(): void {
-    this.refreshView();
+  private async getPhotoIndex(photo: IPhoto): Promise<number> {
+    const galleryPhotos = await firstValueFrom(this.gallery().galleryPhotos$);
+    return galleryPhotos.all.findIndex((p) => p._id === photo._id);
   }
 
   private swipeToItem(itemIndex: number): void {
     this.swipeToItemEmitter.next(itemIndex);
   }
 
-  ngOnInit(): void {
-    void this.setInitPhotos();
+  private onSelectNextInput(): void {
+    this.setupSubHandler(this.selectNextPhoto$(), this.onSelectNext, this.subs);
   }
+
+  private onSelectNext = async (): Promise<void> => {
+    await this.gallery().selectNextPhoto();
+  };
+
+  private onSelectPreviousInput(): void {
+    this.setupSubHandler(
+      this.selectPreviousPhoto$(),
+      this.onSelectPrevious,
+      this.subs
+    );
+  }
+
+  private onSelectPrevious = (): void => {
+    this.gallery().selectPreviousPhoto();
+  };
+
+  selectPhoto = (id: IPhoto['_id']): void => {
+    this.gallery().selectPhoto(id);
+  };
 
   ngOnDestroy(): void {
     this.subs.forEach((sub) => sub.unsubscribe());
+    this.clearGallerySubs();
   }
-
-  private subToSelectNextInput(): void {
-    const selectNext$ = this.selectNextPhoto$();
-    this.selectNextSubHandler.subscribeTo(selectNext$);
-  }
-
-  private subToSelectPreviousInput(): void {
-    const selectPrevious$ = this.selectPreviousPhoto$();
-    this.selectPreviousSubHandler.subscribeTo(selectPrevious$);
-  }
-
-  private onSelectNext = (): void => {
-    const selectedPhoto = this.selectedPhoto$.getValue();
-    const currentSelectedPhotoIndex = selectedPhoto
-      ? this.getPhotoIndex(selectedPhoto)
-      : -1;
-    const newSelectedPhotoIndex = currentSelectedPhotoIndex + 1;
-    if (newSelectedPhotoIndex < this.photos$.getValue().all.length) {
-      this.selectPhoto(newSelectedPhotoIndex);
-    }
-  };
-
-  private onSelectPrevious = (): void => {
-    const selectedPhoto = this.selectedPhoto$.getValue();
-    const currentSelectedPhotoIndex = selectedPhoto
-      ? this.getPhotoIndex(selectedPhoto)
-      : 1;
-    const newSelectedPhotoIndex = currentSelectedPhotoIndex - 1;
-    if (newSelectedPhotoIndex >= 0) {
-      this.selectPhoto(newSelectedPhotoIndex);
-    }
-  };
-
-  selectPhoto(itemIndex: number | undefined): void {
-    if (itemIndex !== undefined) {
-      const selectedPhoto = this.getPhotos().all[itemIndex];
-      this.galleryService.selectPhoto(selectedPhoto._id);
-    } else {
-      this.galleryService.deselectPhoto();
-    }
-  }
-
-  private async setInitPhotos(): Promise<void> {
-    const initPhotos = await this.photoLoader.getInitPhotos();
-    this.initPhotos.set(initPhotos.all);
-    this.hasInitPhotos.set(true);
-  }
-
-  private refreshView(): void {
-    const selectedPhoto = this.galleryService.selectedPhoto$.getValue();
-    this.onSelectedPhotoChange(selectedPhoto);
-  }
-
-  private onPhotos = (photos: IGalleryPhotos): void => {
-    const loadedPhotos = photos.lastBatch;
-    this.addItemsEmitter.next(loadedPhotos);
-  };
-
-  onSwiperStateChange = (swiperState: ISwiperState<IPhoto>): void => {
-    this.photoLoader.onSwiperStateChange(swiperState);
-  };
 }
