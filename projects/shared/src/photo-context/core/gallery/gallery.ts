@@ -1,4 +1,4 @@
-import { PhotoApiService } from '@shared/public-api';
+import { ISearchResult } from '@shared/models';
 import {
   IGallery,
   IGalleryPhotos,
@@ -8,6 +8,7 @@ import {
 } from '../models';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { ISelectedPhoto } from '../models/selected-photo';
+import { PhotoApiService } from '../photo-api-service/photo-api.service';
 
 export class Gallery implements IGallery {
   private readonly _galleryPhotos$ = new BehaviorSubject<IGalleryPhotos>({
@@ -21,7 +22,7 @@ export class Gallery implements IGallery {
 
   private from: number = 0;
   readonly defaultSize: number = 3;
-  private hasMoreToLoad: boolean = true;
+  private totalCount: number | undefined;
 
   private readonly _selectedPhoto$ = new BehaviorSubject<ISelectedPhoto>(
     undefined
@@ -44,7 +45,7 @@ export class Gallery implements IGallery {
     try {
       const searchOptions = this.getSearchPhotoOptions(size);
       const loadedPhotos = await this.loadPhotosFromServer(searchOptions);
-      this.onPhotoLoading(searchOptions, loadedPhotos);
+      this.onPhotoLoading(loadedPhotos);
     } catch (err) {
       console.error(err);
       throw err;
@@ -65,31 +66,29 @@ export class Gallery implements IGallery {
 
   private async loadPhotosFromServer(
     options?: ISearchPhotoOptions
-  ): Promise<IPhoto[]> {
+  ): Promise<ISearchResult<IPhoto>> {
     const loadRequest$ = this.photoApiService.searchPhoto({
       filter: this.filter,
       options,
     });
-    const result = await firstValueFrom(loadRequest$);
-    if (result instanceof Error) {
-      throw result;
+    const searchResult = await firstValueFrom(loadRequest$);
+    if (searchResult instanceof Error) {
+      throw searchResult;
     }
-    return result;
+    return searchResult;
   }
 
-  private onPhotoLoading(
-    searchPhotoOptions: ISearchPhotoOptions,
-    loadedPhotos: IPhoto[]
-  ): void {
-    if (loadedPhotos.length > 0) {
-      this.updateGalleryPhotos(loadedPhotos);
-      this.updateFrom(loadedPhotos.length + 1);
+  private onPhotoLoading(searchResult: ISearchResult<IPhoto>): void {
+    if (searchResult.hits?.length > 0) {
+      this.updateGalleryPhotos(searchResult.hits);
+      this.updateFrom(searchResult);
     }
-    this.updateHasMoreToLoad(searchPhotoOptions, loadedPhotos);
+    this.totalCount = searchResult.totalCount;
   }
 
-  private updateFrom(step: number): void {
-    this.from += step;
+  private updateFrom(searchResult: ISearchResult<IPhoto>): void {
+    const delta = searchResult.hits.length + 1;
+    this.from += delta;
   }
 
   private updateGalleryPhotos(photosToAdd: IPhoto[]): void {
@@ -99,14 +98,6 @@ export class Gallery implements IGallery {
       lastBatch: photosToAdd,
     };
     this._galleryPhotos$.next(newGalleryPhotos);
-  }
-
-  private updateHasMoreToLoad(
-    searchPhotoOptions: ISearchPhotoOptions,
-    loadedPhotos: IPhoto[]
-  ): void {
-    this.hasMoreToLoad =
-      loadedPhotos.length === searchPhotoOptions.rendering!.size;
   }
 
   selectPhoto(id: IPhoto['_id']): void {
@@ -126,7 +117,14 @@ export class Gallery implements IGallery {
     this._selectedPhoto$.next(undefined);
   };
 
-  hasMorePhotosToLoad = (): boolean => this.hasMoreToLoad;
+  hasMorePhotosToLoad = (): boolean => {
+    const hasStartedLoading = this.totalCount !== undefined;
+    if (!hasStartedLoading) {
+      return true;
+    }
+    const nbLoadedPhotos = this._galleryPhotos$.getValue().all.length;
+    return nbLoadedPhotos < this.totalCount!;
+  };
 
   async selectNextPhoto(): Promise<void> {
     const allPhotos = this._galleryPhotos$.getValue().all;

@@ -1,7 +1,8 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { PhotoSelectionTestUtils } from './photo-selection.test-utils';
 import { IPhoto, ISearchPhotoOptions, Photo } from '@shared/photo-context';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { ISearchResult } from '@shared/models';
 
 describe('PhotoSelectionComponent', () => {
   let testUtils: PhotoSelectionTestUtils;
@@ -46,8 +47,11 @@ describe('PhotoSelectionComponent', () => {
     let loadPhotosSpy: jasmine.Spy;
 
     it('should be loading the required nb of slides', async () => {
-      await testUtils.tmp(preloadPhotos);
       testUtils.createComponent();
+      testUtils.simulatePhotosLoading({
+        hits: preloadPhotos,
+        totalCount: preloadPhotos.length * 2,
+      });
       testUtils.getHasMorePhotosToLoadSpy().and.returnValue(true);
       testUtils.detectChanges();
       await testUtils.whenStable();
@@ -55,7 +59,7 @@ describe('PhotoSelectionComponent', () => {
       loadPhotosSpy = testUtils.getLoadPhotosFromServerSpy();
 
       const expectedSize = testUtils.getRequiredSlidesNb() - nbPreloadPhotos;
-      const expectedFrom = nbPreloadPhotos + 1;
+      const expectedFrom = preloadPhotos.length + 1;
       const expectedOptions: ISearchPhotoOptions = {
         rendering: { size: expectedSize, from: expectedFrom },
       };
@@ -79,8 +83,8 @@ describe('PhotoSelectionComponent', () => {
   describe('when there is no loaded photos (empty batch)', () => {
     beforeEach(async () => {
       testUtils.createComponent();
-      const loadedPhotos: IPhoto[] = [];
-      await testUtils.simulatePhotosLoading(loadedPhotos);
+      const searchResult: ISearchResult<IPhoto> = { hits: [], totalCount: 0 };
+      await testUtils.simulatePhotosLoading(searchResult);
       await testUtils.whenStable();
       await testUtils.waitInitPhotosLoading();
     });
@@ -94,7 +98,11 @@ describe('PhotoSelectionComponent', () => {
   describe('when there are loaded photos', () => {
     beforeEach(async () => {
       testUtils.createComponent();
-      await testUtils.simulatePhotosLoading(dumbPhotos);
+      const searchResult: ISearchResult<IPhoto> = {
+        hits: dumbPhotos,
+        totalCount: dumbPhotos.length,
+      };
+      await testUtils.simulatePhotosLoading(searchResult);
       await testUtils.waitInitPhotosLoading();
     });
 
@@ -176,7 +184,12 @@ describe('PhotoSelectionComponent', () => {
         it('should load more photos and add them to the swiper', fakeAsync(() => {
           const photosToLoad = [new Photo('dumb')];
           const loadPhotosSpy = testUtils.getLoadPhotosFromServerSpy();
-          loadPhotosSpy.and.returnValue(of(photosToLoad));
+
+          const searchResult$: Observable<ISearchResult<IPhoto>> = of({
+            hits: photosToLoad,
+            totalCount: photosToLoad.length,
+          });
+          loadPhotosSpy.and.returnValue(searchResult$);
           testUtils.detectChanges();
 
           loadPhotosSpy.calls.reset();

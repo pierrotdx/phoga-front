@@ -56,7 +56,7 @@ export class GalleryNavComponent {
     if (result instanceof Error) {
       throw result;
     }
-    return result || [];
+    return result?.hits || [];
   }
 
   selectNavItem(tag?: ITag): void {

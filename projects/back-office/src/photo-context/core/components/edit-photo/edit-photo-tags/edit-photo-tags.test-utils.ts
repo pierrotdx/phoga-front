@@ -4,6 +4,7 @@ import { ITag, TagApiService } from '@shared/tag-context';
 import { DebugElement, Provider } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { MatOption, MatSelect } from '@angular/material/select';
+import { ISearchResult } from '@shared/models';
 
 export class EditPhotoTagsTestUtils {
   private fakeTagApiService = jasmine.createSpyObj<TagApiService>(
@@ -58,8 +59,8 @@ export class EditPhotoTagsTestUtils {
     this.fixture.detectChanges();
   }
 
-  simulateLoadedTags(tags: ITag[] | Error): void {
-    this.testedComponent.tagsResource.set(tags);
+  simulateLoadedTags(searchResult: ISearchResult<ITag>): void {
+    this.testedComponent.tagsResource.set(searchResult);
     this.fixture.detectChanges();
   }
 

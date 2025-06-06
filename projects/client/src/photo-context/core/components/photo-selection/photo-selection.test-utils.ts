@@ -19,6 +19,7 @@ import { By } from '@angular/platform-browser';
 import { Component, DebugElement, effect, input } from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { NgClass } from '@angular/common';
+import { ISearchResult } from '@shared/models';
 
 @Component({
   selector: 'app-photo-image',
@@ -29,7 +30,9 @@ export class PhotoImageStubComponent {
 }
 
 export class PhotoSelectionTestUtils {
-  private readonly photosToLoad$ = new ReplaySubject<IPhoto[] | Error>(1);
+  private readonly photosToLoad$ = new ReplaySubject<
+    ISearchResult<IPhoto> | Error
+  >(1);
 
   private readonly fakePhotoApiService = jasmine.createSpyObj<PhotoApiService>(
     'PhotoApiService',
@@ -202,13 +205,10 @@ export class PhotoSelectionTestUtils {
     this.component.selectPhoto(id);
   }
 
-  async tmp(photos: IPhoto[] | Error): Promise<void> {
-    this.photosToLoad$.next(photos);
-    await this.dumbGallery.loadMore();
-  }
-
-  async simulatePhotosLoading(photos: IPhoto[] | Error): Promise<void> {
-    this.photosToLoad$.next(photos);
+  async simulatePhotosLoading(
+    searchResult: ISearchResult<IPhoto> | Error
+  ): Promise<void> {
+    this.photosToLoad$.next(searchResult);
     await this.dumbGallery.loadMore();
     this.detectChanges();
   }

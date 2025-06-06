@@ -38,7 +38,7 @@ export class EditPhotoTagsComponent {
     if (result instanceof Error) {
       throw result;
     }
-    return result || [];
+    return result?.hits || [];
   }
 
   private setPlaceHolder(): void {

@@ -6,6 +6,7 @@ import {
   ISharedEnvironment,
 } from '../../../environment-context';
 import { catchError, Observable } from 'rxjs';
+import { ISearchResult } from '@shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class TagApiService implements ITagApiService {
@@ -20,9 +21,11 @@ export class TagApiService implements ITagApiService {
     this.adminBaseUrl = `${env.phogaApiUrl}/admin/tag`;
   }
 
-  search(filter?: ISearchTagFilter): Observable<ITag[] | Error> {
+  search(filter?: ISearchTagFilter): Observable<ISearchResult<ITag> | Error> {
     return this.httpClient
-      .get<ITag[]>(`${this.baseUrl}/search`, { params: { ...filter } })
+      .get<ISearchResult<ITag>>(`${this.baseUrl}/search`, {
+        params: { ...filter },
+      })
       .pipe(catchError(this.handleError));
   }
 
