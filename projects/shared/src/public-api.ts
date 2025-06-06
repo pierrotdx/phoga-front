@@ -5,6 +5,7 @@
 export * from './contact-context';
 export * from './environment-context';
 export * from './material-icon-component';
+export * from './models';
 export * from './overlay-context';
 export * from './photo-context';
 export * from './pipes';

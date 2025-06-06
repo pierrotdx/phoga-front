@@ -16,14 +16,16 @@ export class HomePageComponent implements OnInit {
   constructor(private readonly photoApiService: PhotoApiService) {}
 
   ngOnInit(): void {
-    void this.searchPhoto();
+    void this.loadPhotos();
   }
 
-  private async searchPhoto() {
-    const photos = await firstValueFrom(this.photoApiService.searchPhoto());
-    if (photos instanceof Error) {
+  private async loadPhotos() {
+    const searchResult = await firstValueFrom(
+      this.photoApiService.searchPhoto()
+    );
+    if (searchResult instanceof Error) {
       return;
     }
-    this.photos$.set(photos);
+    this.photos$.set(searchResult.hits);
   }
 }

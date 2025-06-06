@@ -92,7 +92,11 @@ export class GalleryNavTestUtils {
   }
 
   simulateLoadedTags(tags: ITag[] | Error | undefined): void {
-    this.testedComponent.tagsResource.set(tags);
+    const payload =
+      tags instanceof Error || !tags
+        ? tags
+        : { hits: tags, totalCount: tags.length };
+    this.testedComponent.tagsResource.set(payload);
     this.fixture.detectChanges();
   }
 

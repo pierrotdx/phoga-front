@@ -18,6 +18,7 @@ import {
   ISearchPhotoFilter,
   ISearchPhotoOptions,
 } from '../../../photo-context/core/models';
+import { ISearchResult } from '@shared/models';
 
 @Injectable({
   providedIn: 'root',
@@ -84,19 +85,21 @@ export class PhotoApiService {
   searchPhoto(params?: {
     filter?: ISearchPhotoFilter;
     options?: ISearchPhotoOptions;
-  }): Observable<IPhoto[] | Error> {
+  }): Observable<ISearchResult<IPhoto> | Error> {
     const searchParams = params ? this.getSearchParams(params) : undefined;
     return this.httpClient
-      .get<IPhoto[]>(`${this.apiUrl}/photo`, { params: searchParams })
+      .get<ISearchResult<IPhoto>>(`${this.apiUrl}/photo`, {
+        params: searchParams,
+      })
       .pipe(
-        map((photos) => {
-          photos.forEach((photo) => {
+        map((searchResult) => {
+          searchResult.hits.forEach((photo) => {
             photo.metadata = this.getPhotoMetadataFromServerPhoto(photo);
             if (photo.imageBuffer) {
               photo.imageBuffer = Buffer.from(photo.imageBuffer);
             }
           });
-          return photos;
+          return searchResult;
         }),
         catchError(this.handleError)
       );

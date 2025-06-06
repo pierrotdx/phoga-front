@@ -11,6 +11,7 @@ import {
 } from '../models';
 import { Buffer } from 'buffer';
 import { firstValueFrom } from 'rxjs';
+import { ISearchResult } from '@shared/models';
 
 describe('PhotoApiService', () => {
   let testUtils: PhotoApiTestUtils;
@@ -154,13 +155,17 @@ describe('PhotoApiService', () => {
 
     describe('when the API responds with a 200', () => {
       it('should return an array of photos', async () => {
+        const expectedResult: ISearchResult<IPhoto> = {
+          hits: photos,
+          totalCount: photos.length,
+        };
         const request$ = firstValueFrom(testedService.searchPhoto());
 
         testUtils.setupRequestMock(searchPhotoRelativeUrl);
-        testUtils.fakeResponseBody(photos);
+        testUtils.fakeResponseBody(expectedResult);
         const result = await request$;
 
-        expect(result).toEqual(photos);
+        expect(result).toEqual(expectedResult);
       });
     });
 

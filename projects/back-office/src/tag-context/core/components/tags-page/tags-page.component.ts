@@ -36,6 +36,6 @@ export class TagsPageComponent implements OnInit {
     if (result instanceof Error) {
       return;
     }
-    this.tags.set(result);
+    this.tags.set(result.hits);
   }
 }
