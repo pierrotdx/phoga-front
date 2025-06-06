@@ -2,6 +2,8 @@ import { Subscription } from 'rxjs';
 import { IGalleryPhotos, IPhoto, ISelectedPhoto, Photo } from '../models';
 import { Gallery } from './gallery';
 import { GalleryTestUtils } from './gallery.test-utils';
+import { ISearchResult } from '@shared/models';
+import { splitEvery } from 'ramda';
 
 describe('Gallery', () => {
   let testUtils: GalleryTestUtils;
@@ -45,59 +47,75 @@ describe('Gallery', () => {
       };
       await testUtils.expectGalleryPhotosToBe(expectedGalleryPhotos);
 
-      const firstBatch = dumbPhotos.slice(0, size);
-      expectedGalleryPhotos.all = expectedGalleryPhotos.all.concat(firstBatch);
-      expectedGalleryPhotos.lastBatch = firstBatch;
-      testUtils.simulateNextServerResponse(firstBatch);
-      await testedClass.loadMore(size);
-      await testUtils.expectGalleryPhotosToBe(expectedGalleryPhotos);
+      const batches = splitEvery(size, dumbPhotos);
+      for (const batch of batches) {
+        const searchResult: ISearchResult<IPhoto> = {
+          hits: batch,
+          totalCount: dumbPhotos.length,
+        };
+        expectedGalleryPhotos.lastBatch = searchResult.hits;
+        expectedGalleryPhotos.all = expectedGalleryPhotos.all.concat(
+          searchResult.hits
+        );
 
-      const secondBatch = dumbPhotos.slice(size, 2 * size);
-      expectedGalleryPhotos.all = expectedGalleryPhotos.all.concat(secondBatch);
-      expectedGalleryPhotos.lastBatch = secondBatch;
-      testUtils.simulateNextServerResponse(secondBatch);
-      await testedClass.loadMore(size);
-      await testUtils.expectGalleryPhotosToBe(expectedGalleryPhotos);
+        testUtils.simulateNextServerResponse(searchResult);
+        await testedClass.loadMore(batch.length);
+
+        await testUtils.expectGalleryPhotosToBe(expectedGalleryPhotos);
+      }
     });
 
-    it('should not send the request when there is no more photos to load', async () => {
-      // last batch because batch-size < size
-      const batch = dumbPhotos.slice(0, size - 1);
-      testUtils.simulateNextServerResponse(batch);
+    describe('when there is no more photos to load', () => {
+      it('should not send the request when there is no more photos to load', async () => {
+        const searchResult: ISearchResult<IPhoto> = {
+          hits: dumbPhotos,
+          totalCount: dumbPhotos.length,
+        };
 
-      await testedClass.loadMore(size);
+        testUtils.simulateNextServerResponse(searchResult);
 
-      const expectedPhotos: IGalleryPhotos = {
-        all: batch,
-        lastBatch: batch,
-      };
-      await testUtils.expectGalleryPhotosToBe(expectedPhotos);
-      await testedClass.loadMore(size);
+        size = dumbPhotos.length;
+        await testedClass.loadMore(size);
 
-      const requestSpy = testUtils.getServerRequestSpy();
-      expect(requestSpy).toHaveBeenCalledTimes(1);
+        const expectedPhotos: IGalleryPhotos = {
+          all: dumbPhotos,
+          lastBatch: dumbPhotos,
+        };
+        await testUtils.expectGalleryPhotosToBe(expectedPhotos);
+        await testedClass.loadMore(size);
+
+        const requestSpy = testUtils.getServerRequestSpy();
+        expect(requestSpy).toHaveBeenCalledTimes(1);
+      });
     });
 
     describe('the `from` request parameter', () => {
       it('should be updated based on the previous request', async () => {
-        let expectedFrom = 0;
+        let expectedFromInRequest = 0;
 
-        const firstBatch = dumbPhotos.slice(0, size);
-        testUtils.simulateNextServerResponse(firstBatch);
-        await testedClass.loadMore(size);
-        testUtils.expectFromRequestParamToBe(expectedFrom);
+        const batches = splitEvery(size, dumbPhotos);
+        for (const batch of batches) {
+          const searchResult: ISearchResult<IPhoto> = {
+            hits: batch,
+            totalCount: dumbPhotos.length,
+          };
+          testUtils.simulateNextServerResponse(searchResult);
+          await testedClass.loadMore(size);
 
-        const secondBatch = dumbPhotos.slice(0, 2 * size);
-        testUtils.simulateNextServerResponse(secondBatch);
-        expectedFrom += firstBatch.length + 1;
-        await testedClass.loadMore(size);
-        testUtils.expectFromRequestParamToBe(expectedFrom);
+          testUtils.expectFromRequestParamToBe(expectedFromInRequest);
+
+          expectedFromInRequest += batch.length + 1;
+        }
       });
     });
 
     describe('the `size` request parameter', () => {
       beforeEach(() => {
-        testUtils.simulateNextServerResponse([]);
+        const searchResult: ISearchResult<IPhoto> = {
+          hits: [],
+          totalCount: 0,
+        };
+        testUtils.simulateNextServerResponse(searchResult);
       });
 
       it(`should have a default value`, async () => {
@@ -126,9 +144,8 @@ describe('Gallery', () => {
 
     beforeEach(() => {
       isLoadingSuccessiveValues = [];
-      const isLoading$ = testedClass.isLoading$;
-      isLoadingSub = isLoading$.subscribe(appendIsLoadingValue);
-      testUtils.simulateNextServerResponse([]);
+      isLoadingSub = testedClass.isLoading$.subscribe(appendIsLoadingValue);
+      testUtils.simulateNextServerResponse({ hits: [], totalCount: 0 });
     });
 
     afterEach(() => {
@@ -265,31 +282,34 @@ describe('Gallery', () => {
   });
 
   describe('hasMorePhotosToLoad', () => {
-    describe('when the server responds with full batches', () => {
+    describe('when all photos have been loaded', () => {
       beforeEach(async () => {
-        const size = 3;
-        const fullBatch = dumbPhotos.slice(0, size);
-        testUtils.simulateNextServerResponse(fullBatch);
-        await testedClass.loadMore(size);
-      });
-
-      it('should return `true`', () => {
-        const hasMoreToLoad = testedClass.hasMorePhotosToLoad();
-        expect(hasMoreToLoad).toBeTrue();
-      });
-    });
-
-    describe('when the server responds with non-full batches', () => {
-      beforeEach(async () => {
-        const size = 3;
-        const nonFullBatch = dumbPhotos.slice(0, size - 1);
-        testUtils.simulateNextServerResponse(nonFullBatch);
+        testUtils.simulateNextServerResponse({
+          hits: dumbPhotos,
+          totalCount: dumbPhotos.length,
+        });
+        const size = dumbPhotos.length;
         await testedClass.loadMore(size);
       });
 
       it('should return `false`', () => {
         const hasMoreToLoad = testedClass.hasMorePhotosToLoad();
         expect(hasMoreToLoad).toBeFalse();
+      });
+    });
+
+    describe('when there are still more photos to load', () => {
+      beforeEach(async () => {
+        testUtils.simulateNextServerResponse({
+          hits: dumbPhotos.slice(0, 1),
+          totalCount: dumbPhotos.length,
+        });
+        await testedClass.loadMore();
+      });
+
+      it('should return `true`', () => {
+        const hasMoreToLoad = testedClass.hasMorePhotosToLoad();
+        expect(hasMoreToLoad).toBeTrue();
       });
     });
   });
@@ -341,8 +361,10 @@ describe('Gallery', () => {
         it('should try to load more photos', async () => {
           const loadMoreSpy = testUtils.getServerRequestSpy();
           loadMoreSpy.calls.reset();
-          const dumbServerResponse: IPhoto[] = [];
-          testUtils.simulateNextServerResponse(dumbServerResponse);
+          testUtils.simulateNextServerResponse({
+            hits: [],
+            totalCount: dumbPhotos.length,
+          });
 
           await testedClass.selectNextPhoto();
 
@@ -355,7 +377,10 @@ describe('Gallery', () => {
               new Photo('additional-1'),
               new Photo('additional-2'),
             ];
-            testUtils.simulateNextServerResponse(additionalPhotosToLoad);
+            testUtils.simulateNextServerResponse({
+              hits: additionalPhotosToLoad,
+              totalCount: dumbPhotos.length + additionalPhotosToLoad.length,
+            });
           });
 
           it('should select the first photo of the freshly loaded batch', async () => {
@@ -370,7 +395,10 @@ describe('Gallery', () => {
         describe('when the loaded-photos batch is empty', () => {
           beforeEach(() => {
             additionalPhotosToLoad = [];
-            testUtils.simulateNextServerResponse(additionalPhotosToLoad);
+            testUtils.simulateNextServerResponse({
+              hits: additionalPhotosToLoad,
+              totalCount: dumbPhotos.length + additionalPhotosToLoad.length,
+            });
           });
 
           it('should not change the current selected photo', async () => {

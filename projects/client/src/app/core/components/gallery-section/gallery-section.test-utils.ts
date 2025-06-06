@@ -24,7 +24,7 @@ export class GallerySectionTestUtils {
 
   private readonly fakePhotoApiService = jasmine.createSpyObj<PhotoApiService>(
     'PhotoApiService',
-    { searchPhoto: of([]) }
+    { searchPhoto: of({ hits: [], totalCount: 0 }) }
   );
   private readonly photoApiServiceProvider: Provider = {
     provide: PhotoApiService,

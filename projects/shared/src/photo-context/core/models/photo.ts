@@ -21,12 +21,18 @@ export class Photo implements IPhoto {
   ) {
     if (data?.photoData?.metadata) {
       this.metadata = data?.photoData?.metadata;
+    } else {
+      delete this.metadata;
     }
     if (data?.photoData?.tags) {
       this.tags = data.photoData.tags;
+    } else {
+      delete this.tags;
     }
     if (data?.imageBuffer) {
       this.imageBuffer = data.imageBuffer;
+    } else {
+      delete this.imageBuffer;
     }
   }
 }

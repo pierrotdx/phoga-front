@@ -1,8 +1,10 @@
-import { PhotoApiService } from '@shared/public-api';
 import { IGalleryPhotos, IPhoto } from '../models';
 import { Gallery } from './gallery';
 import { firstValueFrom, of } from 'rxjs';
 import { ISelectedPhoto } from '../models/selected-photo';
+import { PhotoApiService } from '../photo-api-service/photo-api.service';
+import { ISearchResult } from '@shared/models';
+import { TestBed } from '@angular/core/testing';
 
 export class GalleryTestUtils {
   private readonly fakePhotoApiService = jasmine.createSpyObj<PhotoApiService>(
@@ -29,7 +31,7 @@ export class GalleryTestUtils {
     return this.testedClass.defaultSize;
   }
 
-  simulateNextServerResponse(fakeResponse: IPhoto[] | Error) {
+  simulateNextServerResponse(fakeResponse: ISearchResult<IPhoto> | Error) {
     const fakeResponse$ = of(fakeResponse);
     const spy = this.getServerRequestSpy();
     spy.and.returnValue(fakeResponse$);

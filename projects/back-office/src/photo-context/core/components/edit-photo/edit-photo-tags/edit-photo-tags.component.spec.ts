@@ -2,6 +2,7 @@ import { ITag } from '@shared/tag-context';
 import { EditPhotoTagsTestUtils } from './edit-photo-tags.test-utils';
 import { fakeAsync } from '@angular/core/testing';
 import { MatSelect } from '@angular/material/select';
+import { ISearchResult } from '@shared/models';
 
 describe('EditPhotoTagsComponent', () => {
   let testUtils: EditPhotoTagsTestUtils;
@@ -56,7 +57,7 @@ describe('EditPhotoTagsComponent', () => {
 
     describe('when the list of loaded tags is empty', () => {
       beforeEach(() => {
-        testUtils.simulateLoadedTags([]);
+        testUtils.simulateLoadedTags({ hits: [], totalCount: 0 });
       });
 
       describe('the tag selection', () => {
@@ -73,12 +74,15 @@ describe('EditPhotoTagsComponent', () => {
     });
 
     describe('when the list of loaded tags is not empty', () => {
-      const loadedTags: ITag[] = [
-        { _id: 'tag-1', name: 'name of tag 1' },
-        { _id: 'tag-2' },
-        { _id: 'tag-3' },
-        { _id: 'tag-4' },
-      ];
+      const loadedTags: ISearchResult<ITag> = {
+        hits: [
+          { _id: 'tag-1', name: 'name of tag 1' },
+          { _id: 'tag-2' },
+          { _id: 'tag-3' },
+          { _id: 'tag-4' },
+        ],
+        totalCount: 4,
+      };
 
       beforeEach(() => {
         testUtils.simulateLoadedTags(loadedTags);
@@ -86,13 +90,13 @@ describe('EditPhotoTagsComponent', () => {
 
       describe('the tag selection', () => {
         it('should display the list of tag options', () => {
-          loadedTags.forEach((tag) => {
+          loadedTags.hits.forEach((tag) => {
             testUtils.expectTagToBeInTagSelection(tag._id);
           });
         });
 
         it('should update the view model when a tag is selected', fakeAsync(() => {
-          const tagToClickOn = loadedTags[1];
+          const tagToClickOn = loadedTags.hits[1];
           const expectedViewModel = [tagToClickOn._id];
 
           testUtils.selectTagOption(tagToClickOn._id);
@@ -109,8 +113,8 @@ describe('EditPhotoTagsComponent', () => {
 
       describe("when the input view model has tags at component's initialization", () => {
         const initialSelectedTagIds: ITag['_id'][] = [
-          loadedTags[1]._id,
-          loadedTags[3]._id,
+          loadedTags.hits[1]._id,
+          loadedTags.hits[3]._id,
         ];
 
         beforeEach(async () => {
