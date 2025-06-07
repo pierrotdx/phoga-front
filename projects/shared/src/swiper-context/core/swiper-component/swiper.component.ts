@@ -31,6 +31,7 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
   readonly swipeToPrevious$ = input<Observable<void>>();
   readonly swipeToItem$ = input<Observable<number>>();
   readonly addItems$ = input<Observable<T[]>>();
+  readonly loop = input<boolean>(false);
 
   @Output() swiperStateChange = new EventEmitter<ISwiperState<T>>();
   @Output() itemsChange = new EventEmitter<T[]>();
@@ -95,6 +96,8 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
       items,
       nbSlides,
     });
+    const loop = this.loop();
+    this.swiper.setLoop(loop);
     this.swiperStateHandler.subscribeTo(this.swiper.stateChange$);
 
     this.emitItems();

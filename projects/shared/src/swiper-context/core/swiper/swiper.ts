@@ -3,6 +3,7 @@ import { ISlide, ISwiper, ISwiperState } from '../models';
 import { clone, equals } from 'ramda';
 
 export class Swiper<T> implements ISwiper<T> {
+  private loop = false;
   private _stateChange$ = new ReplaySubject<ISwiperState<T>>(1);
   readonly stateChange$ = this._stateChange$
     .asObservable()
@@ -88,7 +89,7 @@ export class Swiper<T> implements ISwiper<T> {
     const itemsEndIndex = this.items.length - 1;
     const slideEndIndex = this.slideItemIndices[this.nbSlides - 1];
     const isAtEnd = slideEndIndex === itemsEndIndex;
-    return isAtEnd;
+    return isAtEnd && !this.loop;
   }
 
   swipeToPrevious() {
@@ -105,7 +106,7 @@ export class Swiper<T> implements ISwiper<T> {
 
   private isPreviousDisabled(): boolean {
     const isOnStartingEdge = this.slideItemIndices[0] === 0;
-    return isOnStartingEdge;
+    return isOnStartingEdge && !this.loop;
   }
 
   swipeToItem(itemIndex: number): void {
@@ -144,5 +145,9 @@ export class Swiper<T> implements ISwiper<T> {
 
   getItems(): T[] {
     return this.items || [];
+  }
+
+  setLoop(loop: boolean): void {
+    this.loop = loop;
   }
 }

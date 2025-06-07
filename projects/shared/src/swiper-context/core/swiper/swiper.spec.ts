@@ -55,7 +55,7 @@ describe('swiper', () => {
   describe('the slides', () => {
     it('should initially be filled with the first items', () => {
       const expectedSlideValues = items.slice(0, nbSlides);
-      testUtils.expectSlideValuesToMatch(expectedSlideValues);
+      testUtils.expectSlideValuesToEqual(expectedSlideValues);
     });
   });
 
@@ -72,30 +72,54 @@ describe('swiper', () => {
     describe('when there are more items to show on the right side', () => {
       it('should shift the slides to the right', () => {
         const expectedInitSlides = items.slice(0, nbSlides);
-        testUtils.expectSlideValuesToMatch(expectedInitSlides);
+        testUtils.expectSlideValuesToEqual(expectedInitSlides);
 
         swiper.swipeToNext();
 
         const expectedSlidesAfter = items.slice(1, nbSlides + 1);
-        testUtils.expectSlideValuesToMatch(expectedSlidesAfter);
+        testUtils.expectSlideValuesToEqual(expectedSlidesAfter);
       });
     });
 
     describe('when there are no more items to show on the right side', () => {
+      let initSlideValues: TItem[];
+
       beforeEach(() => {
         items = ['a', 'b', 'c'];
         nbSlides = 3;
         swiper = new Swiper({ items, nbSlides });
         testUtils = new SwiperTestUtils<TItem>(swiper);
+
+        swiper.swipeToItem(items.length - nbSlides);
       });
 
-      it('should do nothing to the slides', () => {
-        const expectedSlides = items.slice(0, nbSlides);
-        testUtils.expectSlideValuesToMatch(expectedSlides);
+      describe('when `loop=false`', () => {
+        it('should do nothing to the slides', () => {
+          const expectedSlides = items.slice(
+            items.length - nbSlides,
+            items.length
+          );
 
-        swiper.swipeToNext();
+          swiper.swipeToNext();
 
-        testUtils.expectSlideValuesToMatch(expectedSlides);
+          testUtils.expectSlideValuesToEqual(expectedSlides);
+        });
+      });
+
+      describe('when `loop=true`', () => {
+        beforeEach(() => {
+          swiper.setLoop(true);
+        });
+
+        it('should continue swiping by looping the first items', () => {
+          const expectedSlides = items
+            .slice(items.length - nbSlides + 1, items.length)
+            .concat([items[0]]);
+
+          swiper.swipeToNext();
+
+          testUtils.expectSlideValuesToEqual(expectedSlides);
+        });
       });
     });
   });
@@ -118,23 +142,40 @@ describe('swiper', () => {
 
       it('should shift the slides to the left', () => {
         const expectedInitSlides = items.slice(1, nbSlides + 1);
-        testUtils.expectSlideValuesToMatch(expectedInitSlides);
+        testUtils.expectSlideValuesToEqual(expectedInitSlides);
 
         swiper.swipeToPrevious();
 
         const expectedSlidesAfter = items.slice(0, nbSlides);
-        testUtils.expectSlideValuesToMatch(expectedSlidesAfter);
+        testUtils.expectSlideValuesToEqual(expectedSlidesAfter);
       });
     });
 
     describe('when there are no more items to show on the left side', () => {
-      it('should do nothing to the slides', () => {
-        const expectedInitSlides = items.slice(0, nbSlides);
-        testUtils.expectSlideValuesToMatch(expectedInitSlides);
+      describe('when `loop=false`', () => {
+        it('should do nothing to the slides', () => {
+          const expectedSlides = items.slice(0, nbSlides);
+          testUtils.expectSlideValuesToEqual(expectedSlides);
 
-        swiper.swipeToPrevious();
+          swiper.swipeToPrevious();
 
-        testUtils.expectSlideValuesToMatch(expectedInitSlides);
+          testUtils.expectSlideValuesToEqual(expectedSlides);
+        });
+      });
+
+      describe('when `loop=true`', () => {
+        beforeEach(() => {
+          swiper.setLoop(true);
+        });
+
+        it('should continue swiping by looping the last items', () => {
+          const lastItem = items[items.length - 1];
+          const expectedSlides = [...lastItem, ...items.slice(0, nbSlides - 1)];
+
+          swiper.swipeToPrevious();
+
+          testUtils.expectSlideValuesToEqual(expectedSlides);
+        });
       });
     });
   });
@@ -151,12 +192,12 @@ describe('swiper', () => {
       });
 
       it('should update the slides such that the first one matches the input item', () => {
-        testUtils.expectSlideValuesToMatch(expectedSlidesBefore);
+        testUtils.expectSlideValuesToEqual(expectedSlidesBefore);
 
         swiper.swipeToItem(inputIndex);
 
         const expectedSlidesAfter = items.slice(inputIndex, nbSlides);
-        testUtils.expectSlideValuesToMatch(expectedSlidesAfter);
+        testUtils.expectSlideValuesToEqual(expectedSlidesAfter);
       });
     });
 
@@ -167,7 +208,7 @@ describe('swiper', () => {
       });
 
       it('should update the slides such that the last one matches the input', () => {
-        testUtils.expectSlideValuesToMatch(expectedSlidesBefore);
+        testUtils.expectSlideValuesToEqual(expectedSlidesBefore);
 
         swiper.swipeToItem(inputIndex);
 
@@ -177,7 +218,7 @@ describe('swiper', () => {
           nbSlides,
           inputIndex
         );
-        testUtils.expectSlideValuesToMatch(expectedSlidesAfter);
+        testUtils.expectSlideValuesToEqual(expectedSlidesAfter);
       });
     });
   });
