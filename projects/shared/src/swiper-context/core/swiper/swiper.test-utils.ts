@@ -39,13 +39,10 @@ export class SwiperTestUtils<T> {
     expect(slides.length).toEqual(expectedNbSlides);
   }
 
-  expectSlideValuesToMatch(expectedSlideValues: T[]): void {
+  expectSlideValuesToEqual(expectedSlideValues: T[]): void {
     const slides = this.swiperState.slides;
-    expect(slides.length).toEqual(expectedSlideValues.length);
-    expectedSlideValues.forEach((expectedValue) => {
-      const isInSlides = slides.some((s) => s.value === expectedValue);
-      expect(isInSlides).toBeTrue();
-    });
+    const slideValues = slides.map((s) => s.value);
+    expect(slideValues).toEqual(expectedSlideValues);
   }
 
   expectActiveItemIndexToEqual(
