@@ -1,4 +1,9 @@
-import { distinctUntilChanged, ReplaySubject } from 'rxjs';
+import {
+  distinctUntilChanged,
+  interval,
+  ReplaySubject,
+  Subscription,
+} from 'rxjs';
 import { ISlide, ISwiper, ISwiperState } from '../models';
 import { clone, equals } from 'ramda';
 
@@ -18,6 +23,8 @@ export class Swiper<T> implements ISwiper<T> {
   private slideItemIndices: number[] = [];
   private swiperSize: number = 0;
   private readonly nbSlides: number;
+
+  private autoSwiperSub: Subscription | undefined;
 
   constructor({ items = [], nbSlides }: { items?: T[]; nbSlides: number }) {
     this.nbSlides = nbSlides;
@@ -149,5 +156,22 @@ export class Swiper<T> implements ISwiper<T> {
 
   setLoop(loop: boolean): void {
     this.loop = loop;
+  }
+
+  autoSwipeStart(timeOnSlideInMs: number = 1000): void {
+    if (!this.loop) {
+      return;
+    }
+    this.autoSwiperSub = interval(timeOnSlideInMs).subscribe(() =>
+      this.swipeToNext()
+    );
+  }
+
+  autoSwipeStop(): void {
+    if (!this.loop || !this.autoSwiperSub) {
+      return;
+    }
+    this.autoSwiperSub.unsubscribe();
+    delete this.autoSwiperSub;
   }
 }
