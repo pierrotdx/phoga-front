@@ -72,4 +72,12 @@ export class SwiperTestUtils<T> {
       index++;
     }
   }
+
+  getSwipeToNextSpy() {
+    return spyOn(this.swiper, 'swipeToNext');
+  }
+
+  waitForTime(timeInMs: number) {
+    return new Promise((resolve) => setTimeout(resolve, timeInMs));
+  }
 }
