@@ -1,4 +1,9 @@
-import { ISlide, ISwiperInitOptions } from '../models';
+import {
+  AutoSwipeDirection,
+  IAutoSwipeOptions,
+  ISlide,
+  ISwiperInitOptions,
+} from '../models';
 import { SwiperComponent } from './swiper.component';
 import { SwiperWrapperComponent, TestItem } from './swiper-component-tests';
 import { SwiperComponentTestExpects } from './swiper-component-tests';
@@ -114,6 +119,41 @@ describe('SwiperComponent', () => {
 
       const isInSlidesAfter = testUtils.isItemInSlides(targetedItemIndex);
       expect(isInSlidesAfter).toBeTrue();
+    });
+  });
+
+  describe('autoSwipeStart', () => {
+    let autoSwipeStart: jasmine.Spy;
+
+    beforeEach(() => {
+      autoSwipeStart = testUtils.getAutoSwipeStartSpy();
+      autoSwipeStart.calls.reset();
+    });
+
+    it('should start swiper`s auto-swipe mode with the required options', () => {
+      const options: IAutoSwipeOptions = {
+        timeOnSlideInMs: 50,
+        direction: AutoSwipeDirection.Backward,
+      };
+
+      testUtils.autoSwipeStart(options);
+
+      expect(autoSwipeStart).toHaveBeenCalledOnceWith(options);
+    });
+  });
+
+  describe('autoSwipeStop', () => {
+    let autoSwipeStop: jasmine.Spy;
+
+    beforeEach(() => {
+      autoSwipeStop = testUtils.getAutoSwipeStopSpy();
+      autoSwipeStop.calls.reset();
+    });
+
+    it('should stop swiper`s auto-swipe mode', () => {
+      testUtils.autoSwipeStop();
+
+      expect(autoSwipeStop).toHaveBeenCalledTimes(1);
     });
   });
 

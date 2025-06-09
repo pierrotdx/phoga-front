@@ -3,7 +3,12 @@ import { DebugElement, Type } from '@angular/core';
 import { TestModuleMetadata } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { firstValueFrom, Observable, Subject, Subscription } from 'rxjs';
-import { ISlide, ISwiperInitOptions, ISwiperState } from '../../models';
+import {
+  IAutoSwipeOptions,
+  ISlide,
+  ISwiperInitOptions,
+  ISwiperState,
+} from '../../models';
 import { SwiperWrapperComponent } from './swiper-wrapper.component';
 import { GetSlideContentFromItem, TestItem } from './models';
 import { clone } from 'ramda';
@@ -18,6 +23,12 @@ export class SwiperWrapperComponentTestUtils extends CompTestUtils<SwiperWrapper
 
   private readonly swipeToNext$ = new Subject<void>();
   private readonly swipeToPrevious$ = new Subject<void>();
+  private readonly autoSwipeStart$ = new Subject<
+    IAutoSwipeOptions | undefined
+  >();
+
+  private readonly autoSwipeStop$ = new Subject<void>();
+
   private readonly swipeToItem$ = new Subject<number>();
   private readonly activateItem$ = new Subject<number | undefined>();
   private readonly addItems$ = new Subject<TestItem[]>();
@@ -54,6 +65,8 @@ export class SwiperWrapperComponentTestUtils extends CompTestUtils<SwiperWrapper
     this.setInput('items', this.inputs.items);
     this.setInput('swipeToNext$', this.swipeToNext$.asObservable());
     this.setInput('swipeToPrevious$', this.swipeToPrevious$.asObservable());
+    this.setInput('autoSwipeStart$', this.autoSwipeStart$.asObservable());
+    this.setInput('autoSwipeStop$', this.autoSwipeStop$.asObservable());
     this.setInput('swipeToItem$', this.swipeToItem$.asObservable());
     this.setInput('activateItem$', this.activateItem$.asObservable());
     this.setInput('addItems$', this.addItems$.asObservable());
@@ -92,6 +105,14 @@ export class SwiperWrapperComponentTestUtils extends CompTestUtils<SwiperWrapper
 
   swipeToPrevious(): void {
     this.swipeToPrevious$.next();
+  }
+
+  autoSwipeStart(options?: IAutoSwipeOptions): void {
+    this.autoSwipeStart$.next(options);
+  }
+
+  autoSwipeStop(): void {
+    this.autoSwipeStop$.next();
   }
 
   addItems(itemsToAdd: TestItem[]): void {
@@ -173,5 +194,15 @@ export class SwiperWrapperComponentTestUtils extends CompTestUtils<SwiperWrapper
   isItemInSlides(itemIndex: number): boolean {
     const slides = this.getSlides();
     return slides.some((slide) => slide.itemIndex === itemIndex);
+  }
+
+  getAutoSwipeStartSpy() {
+    const swiperComp = this.getSwiperComponent();
+    return spyOn(swiperComp['swiper'], 'autoSwipeStart');
+  }
+
+  getAutoSwipeStopSpy() {
+    const swiperComp = this.getSwiperComponent();
+    return spyOn(swiperComp['swiper'], 'autoSwipeStop');
   }
 }

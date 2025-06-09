@@ -11,8 +11,15 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import { Observable } from 'rxjs';
 import { SubscriptionHandler } from '../../../subscription-handler-context';
-import { ISlide, ISwiper, ISwiperState, ISwiperInitOptions } from '../models';
+import {
+  ISlide,
+  ISwiper,
+  ISwiperState,
+  ISwiperInitOptions,
+  IAutoSwipeOptions,
+} from '../models';
 import { Swiper } from '../swiper/swiper';
+import { ITagApiService } from '@shared/tag-context';
 
 @Component({
   selector: 'lib-swiper',
@@ -32,6 +39,8 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
   readonly swipeToItem$ = input<Observable<number>>();
   readonly addItems$ = input<Observable<T[]>>();
   readonly loop = input<boolean>(false);
+  readonly autoSwipeStart$ = input<Observable<IAutoSwipeOptions | undefined>>();
+  readonly autoSwipeStop$ = input<Observable<void>>();
 
   @Output() swiperStateChange = new EventEmitter<ISwiperState<T>>();
   @Output() itemsChange = new EventEmitter<T[]>();
@@ -41,6 +50,11 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
 
   private readonly activateItemHandler: SubscriptionHandler<number | undefined>;
   private readonly swipeToNextHandler: SubscriptionHandler<void>;
+  private readonly autoSwipeStartHandler: SubscriptionHandler<
+    IAutoSwipeOptions | undefined
+  >;
+  private readonly autoSwipeStopHandler: SubscriptionHandler<void>;
+
   private readonly swipeToPreviousHandler: SubscriptionHandler<void>;
   private readonly swipeToItemHandler: SubscriptionHandler<number>;
   private readonly addItemHandler: SubscriptionHandler<T[]>;
@@ -66,6 +80,18 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
       this.onSwipeToPrevious
     );
     this.subs.push(this.swipeToPreviousHandler);
+
+    effect(() => this.autoSwipeStartEffectFn());
+    this.autoSwipeStartHandler = new SubscriptionHandler<
+      IAutoSwipeOptions | undefined
+    >(this.onAutoSwipeStart);
+    this.subs.push(this.autoSwipeStartHandler);
+
+    effect(() => this.autoSwipeStopEffectFn());
+    this.autoSwipeStopHandler = new SubscriptionHandler<void>(
+      this.onAutoSwipeStop
+    );
+    this.subs.push(this.autoSwipeStopHandler);
 
     effect(() => this.swipeToItemEffectFn());
     this.swipeToItemHandler = new SubscriptionHandler<number>(
@@ -145,6 +171,24 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
 
   private onSwipeToPrevious = (): void => {
     this.swiper.swipeToPrevious();
+  };
+
+  private autoSwipeStartEffectFn() {
+    const autoSwipeStart$ = this.autoSwipeStart$();
+    this.autoSwipeStartHandler.subscribeTo(autoSwipeStart$);
+  }
+
+  private onAutoSwipeStart = (options?: IAutoSwipeOptions) => {
+    this.swiper.autoSwipeStart(options);
+  };
+
+  private autoSwipeStopEffectFn() {
+    const autoSwipeStop$ = this.autoSwipeStop$();
+    this.autoSwipeStopHandler.subscribeTo(autoSwipeStop$);
+  }
+
+  private onAutoSwipeStop = () => {
+    this.swiper.autoSwipeStop();
   };
 
   private swipeToItemEffectFn(): void {
