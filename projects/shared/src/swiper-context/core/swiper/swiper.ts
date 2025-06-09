@@ -4,7 +4,13 @@ import {
   ReplaySubject,
   Subscription,
 } from 'rxjs';
-import { ISlide, ISwiper, ISwiperState } from '../models';
+import {
+  AutoSwipeDirection,
+  IAutoSwipeOptions,
+  ISlide,
+  ISwiper,
+  ISwiperState,
+} from '../models';
 import { clone, equals } from 'ramda';
 
 export class Swiper<T> implements ISwiper<T> {
@@ -158,13 +164,22 @@ export class Swiper<T> implements ISwiper<T> {
     this.loop = loop;
   }
 
-  autoSwipeStart(timeOnSlideInMs: number = 1000): void {
+  autoSwipeStart(
+    options: IAutoSwipeOptions = {
+      timeOnSlideInMs: 1000,
+      direction: AutoSwipeDirection.Forward,
+    }
+  ): void {
     if (!this.loop) {
       return;
     }
-    this.autoSwiperSub = interval(timeOnSlideInMs).subscribe(() =>
-      this.swipeToNext()
-    );
+    this.autoSwiperSub = interval(options.timeOnSlideInMs).subscribe(() => {
+      if (options.direction === AutoSwipeDirection.Backward) {
+        this.swipeToPrevious();
+      } else {
+        this.swipeToNext();
+      }
+    });
   }
 
   autoSwipeStop(): void {

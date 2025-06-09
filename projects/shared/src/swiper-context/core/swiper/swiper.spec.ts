@@ -1,3 +1,4 @@
+import { AutoSwipeDirection, IAutoSwipeOptions } from '../models';
 import { Swiper } from './swiper';
 import { SwiperTestUtils } from './swiper.test-utils';
 
@@ -312,7 +313,12 @@ describe('swiper', () => {
   });
 
   describe('autoSwipeStart', () => {
-    const timePerSlideInMs = 50;
+    let autoSwipeOptions: IAutoSwipeOptions;
+    const timeOnSlideInMs = 50;
+
+    beforeEach(() => {
+      autoSwipeOptions = { timeOnSlideInMs };
+    });
 
     describe('when loop mode is off', () => {
       beforeEach(() => {
@@ -322,8 +328,8 @@ describe('swiper', () => {
       it('should not do anything (no swiping)', async () => {
         const expectedSlideValues = items.slice(0, nbSlides);
 
-        swiper.autoSwipeStart(timePerSlideInMs);
-        await testUtils.waitForTime(timePerSlideInMs * 2);
+        swiper.autoSwipeStart(autoSwipeOptions);
+        await testUtils.waitForTime(timeOnSlideInMs * 2);
 
         testUtils.expectSlideValuesToEqual(expectedSlideValues);
       });
@@ -339,8 +345,20 @@ describe('swiper', () => {
         swipeToNextSpy.calls.reset();
         const nbExpectedCalls = 3;
 
-        swiper.autoSwipeStart(timePerSlideInMs);
-        await testUtils.waitForTime(timePerSlideInMs * nbExpectedCalls);
+        swiper.autoSwipeStart(autoSwipeOptions);
+        await testUtils.waitForTime(timeOnSlideInMs * nbExpectedCalls);
+
+        expect(swipeToNextSpy).toHaveBeenCalledTimes(nbExpectedCalls);
+      });
+
+      it('should swipe backwards if requested', async () => {
+        autoSwipeOptions.direction = AutoSwipeDirection.Backward;
+        const swipeToNextSpy = testUtils.getSwipeToPreviousSpy();
+        swipeToNextSpy.calls.reset();
+        const nbExpectedCalls = 3;
+
+        swiper.autoSwipeStart(autoSwipeOptions);
+        await testUtils.waitForTime(timeOnSlideInMs * nbExpectedCalls);
 
         expect(swipeToNextSpy).toHaveBeenCalledTimes(nbExpectedCalls);
       });
@@ -350,15 +368,15 @@ describe('swiper', () => {
   describe('autoSwipeStop', () => {
     describe('when loop mode and auto-swipe are on ', () => {
       let swipeToNextSpy: jasmine.Spy;
-      const timePerSlideInMs = 50;
+      const timeOnSlideInMs = 50;
 
       beforeEach(async () => {
         swiper.setLoop(true);
-        swiper.autoSwipeStart(timePerSlideInMs);
+        swiper.autoSwipeStart({ timeOnSlideInMs });
 
         swipeToNextSpy = testUtils.getSwipeToNextSpy();
         swipeToNextSpy.calls.reset();
-        await testUtils.waitForTime(timePerSlideInMs);
+        await testUtils.waitForTime(timeOnSlideInMs);
       });
 
       it('should stop auto-swipe', async () => {
@@ -366,7 +384,7 @@ describe('swiper', () => {
 
         swiper.autoSwipeStop();
         swipeToNextSpy.calls.reset();
-        await testUtils.waitForTime(timePerSlideInMs * 2);
+        await testUtils.waitForTime(timeOnSlideInMs * 2);
 
         expect(swipeToNextSpy).not.toHaveBeenCalled();
       });
