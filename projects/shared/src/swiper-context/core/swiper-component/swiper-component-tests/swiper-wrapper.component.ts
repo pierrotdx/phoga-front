@@ -3,7 +3,7 @@ import { SwiperComponent } from '../swiper.component';
 
 import { Observable } from 'rxjs';
 import { GetSlideContentFromItem, TestItem } from './models';
-import { ISwiperInitOptions } from '../../models';
+import { IAutoSwipeOptions, ISwiperInitOptions } from '../../models';
 
 @Component({
   selector: 'swiper-wrapper',
@@ -19,6 +19,8 @@ import { ISwiperInitOptions } from '../../models';
       [swipeToNext$]="swipeToNext$()"
       [swipeToPrevious$]="swipeToPrevious$()"
       [activateItem$]="activateItem$()"
+      [autoSwipeStart$]="autoSwipeStart$()"
+      [autoSwipeStop$]="autoSwipeStop$()"
       [addItems$]="addItems$()"
       [swipeToItem$]="swipeToItem$()"
       [swiperInitOptions]="swiperInitOptions()"
@@ -32,6 +34,9 @@ export class SwiperWrapperComponent {
   items = input<TestItem[]>([]);
   swipeToNext$ = input<Observable<void>>();
   swipeToPrevious$ = input<Observable<void>>();
+  autoSwipeStart$ = input<Observable<IAutoSwipeOptions | undefined>>();
+  autoSwipeStop$ = input<Observable<void>>();
+
   swipeToItem$ = input<Observable<number>>();
   activateItem$ = input<Observable<number | undefined>>();
   addItems$ = input<Observable<TestItem[]>>();
