@@ -1,6 +1,11 @@
 <app-header></app-header>
 <main>
+    @if(hasInit()) {
     <app-gallery-section></app-gallery-section>
-    <app-about-section></app-about-section>
+    <app-about-section></app-about-section>    
+    } @else {
+        <mat-spinner></mat-spinner>
+    }
+
 </main>
 <app-footer></app-footer>

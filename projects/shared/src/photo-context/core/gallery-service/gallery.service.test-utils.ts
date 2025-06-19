@@ -4,6 +4,7 @@ import {
   Gallery,
   GalleryService,
   IGallery,
+  IGalleryOptions,
   ISearchPhotoFilter,
   PhotoApiService,
 } from '../';
@@ -91,9 +92,9 @@ export class GalleryServiceTestUtils {
   }
 
   private fakeGalleryCreationAndExtractPhotoPreloadSpy =
-    (spies: jasmine.Spy[]) => (id: string, filter?: ISearchPhotoFilter) => {
+    (spies: jasmine.Spy[]) => (id: string, options?: IGalleryOptions) => {
       // fake gallery creation
-      const gallery = new Gallery({} as any, id, filter);
+      const gallery = new Gallery({} as any, id, options);
       this.testedService['galleries'].push(gallery);
 
       // spy on load more

@@ -1,4 +1,4 @@
-@if(tags(); as tags) {
+@if(galleries(); as galleries) {
     <div class="gallery-nav__nav-menu-trigger gallery-nav--selected"
         (click)="togglePanel()">
         <button type="button" >{{ menuTriggerPlaceHolder() }}</button>
@@ -6,7 +6,7 @@
     @if(isMobile()) {
         <app-overlay-panel [show]="expandPanel()"
             class="gallery-nav__panel">
-                <ng-content *ngTemplateOutlet="navTemplate; context: { tags }">
+                <ng-content *ngTemplateOutlet="navTemplate; context: { galleries }">
                 </ng-content>
                 <button type="button"
                     class="gallery-nav__close-btn"
@@ -15,27 +15,21 @@
                 </button>
         </app-overlay-panel>
     } @else {
-        <ng-content *ngTemplateOutlet="navTemplate; context: { tags }">
+        <ng-content *ngTemplateOutlet="navTemplate; context: { galleries }">
         </ng-content>
     }
 }
 
 <ng-template #navTemplate
-    let-tags="tags">
+    let-galleries="galleries">
     <nav class="gallery-nav__nav">
                 <ul>
-                    <li id="no-tag-nav-item"
-                        (click)="selectNavItem()"
-                        [class.gallery-nav--selected]="!selectedTag()?._id"
-                        class="gallery-nav__nav-item">
-                        <button type="button">{{ noSelectionPlaceHolder }}</button>
-                    </li>
-                    @for(tag of tags; track tag._id) {
-                        <li [id]="tag._id"
+                    @for(gallery of galleries; track gallery._id) {
+                        <li [id]="gallery._id"
                             class="gallery-nav__nav-item"
-                            [class.gallery-nav--selected]="selectedTag()?._id === tag._id"
-                            (click)="selectNavItem(tag)">
-                            <button type="button">{{ tag.name || tag._id }}</button>
+                            [class.gallery-nav--selected]="selectedGallery()?._id === gallery._id"
+                            (click)="selectNavItem(gallery._id)">
+                            <button type="button">{{ gallery.name || gallery._id }}</button>
                         </li>
                     }
                 </ul>

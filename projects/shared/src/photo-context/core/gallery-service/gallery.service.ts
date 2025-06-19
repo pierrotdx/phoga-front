@@ -3,6 +3,7 @@ import {
   DefaultGalleryId,
   Gallery,
   IGallery,
+  IGalleryOptions,
   IGalleryService,
   ISearchPhotoFilter,
   PhotoApiService,
@@ -24,7 +25,7 @@ export class GalleryService implements IGalleryService {
 
   defaultGalleryId: string = DefaultGalleryId;
 
-  private readonly nbPreloadedPhotos: number = 8;
+  private readonly nbPreloadedPhotos: number = 4;
 
   constructor(
     private readonly photoApiService: PhotoApiService,
@@ -39,15 +40,19 @@ export class GalleryService implements IGalleryService {
   }
 
   private createDefaultGallery(): void {
-    this.create(this.defaultGalleryId);
+    const options: IGalleryOptions = { name: 'All' };
+    this.create(this.defaultGalleryId, options);
   }
 
   private async createGalleriesFromTags(): Promise<void> {
     const tags = await this.fetchTags();
     for (const tag of tags) {
       const id = tag._id;
-      const filter: ISearchPhotoFilter = { tagId: tag._id };
-      this.create(id, filter);
+      const options: IGalleryOptions = {
+        name: tag.name,
+        filter: { tagId: tag._id },
+      };
+      this.create(id, options);
     }
   }
 
@@ -64,17 +69,17 @@ export class GalleryService implements IGalleryService {
   }
 
   private async preloadPhotos(): Promise<void> {
-    for (const gallery of this.getAll()) {
+    for (const gallery of this.galleries) {
       await gallery.loadMore(this.nbPreloadedPhotos);
     }
   }
 
-  create(id: string, filter?: ISearchPhotoFilter): IGallery {
+  create(id: string, options?: IGalleryOptions): IGallery {
     const alreadyExistingGallery = this.galleries.find((g) => g._id === id);
     if (alreadyExistingGallery) {
       return alreadyExistingGallery;
     }
-    const galleryToAdd = new Gallery(this.photoApiService, id, filter);
+    const galleryToAdd = new Gallery(this.photoApiService, id, options);
     this.galleries.push(galleryToAdd);
     return galleryToAdd;
   }

@@ -4,6 +4,7 @@ import {
   computed,
   effect,
   EventEmitter,
+  OnDestroy,
   Output,
   resource,
   Signal,
@@ -14,7 +15,12 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MaterialIconComponent } from '@shared/material-icon-component';
 import { OverlayPanelComponent } from '@shared/overlay-context';
 import { ISelectedTag, ITag, TagApiService } from '@shared/tag-context';
-import { firstValueFrom, map } from 'rxjs';
+import { firstValueFrom, map, Unsubscribable } from 'rxjs';
+import {
+  DefaultGalleryId,
+  GalleryService,
+  IGallery,
+} from '@shared/photo-context';
 
 @Component({
   selector: 'app-gallery-nav',
@@ -22,25 +28,29 @@ import { firstValueFrom, map } from 'rxjs';
   templateUrl: './gallery-nav.component.html',
   styleUrl: './gallery-nav.component.scss',
 })
-export class GalleryNavComponent {
-  tagsResource = resource({
-    loader: () => firstValueFrom(this.tagApiService.search()),
-  });
-
-  tags = computed(() => this.computeTags());
-
-  selectedTag = signal<ISelectedTag>(undefined);
-  @Output() selectedTagChange = new EventEmitter<ISelectedTag>();
+export class GalleryNavComponent implements OnDestroy {
+  galleries = signal<IGallery[]>([]);
 
   expandPanel = signal<boolean>(false);
 
-  readonly noSelectionPlaceHolder = 'All';
-  menuTriggerPlaceHolder = signal<string>(this.noSelectionPlaceHolder);
+  menuTriggerPlaceHolder = computed<string>(() => {
+    const selectedGallery = this.selectedGallery();
+    return selectedGallery
+      ? selectedGallery.name || selectedGallery._id
+      : this.noSelectionPlaceHolder;
+  });
+
+  readonly noSelectionPlaceHolder = 'No galleries to display';
 
   isMobile: Signal<boolean>;
 
+  DefaultGalleryId = DefaultGalleryId;
+  selectedGallery = signal<IGallery | undefined>(undefined);
+
+  private readonly subs: Unsubscribable[] = [];
+
   constructor(
-    private readonly tagApiService: TagApiService,
+    private readonly galleryService: GalleryService,
     private readonly breakpointObserver: BreakpointObserver
   ) {
     this.isMobile = toSignal(
@@ -49,22 +59,15 @@ export class GalleryNavComponent {
         .pipe(map((state) => state.matches)),
       { initialValue: true }
     );
+
+    const galleries = this.galleryService.getAll();
+    this.galleries.set(galleries);
+
+    this.subToSelectedGallery();
   }
 
-  private computeTags(): ITag[] {
-    const result = this.tagsResource.value();
-    if (result instanceof Error) {
-      throw result;
-    }
-    return result?.hits || [];
-  }
-
-  selectNavItem(tag?: ITag): void {
-    this.selectedTag.set(tag);
-    this.menuTriggerPlaceHolder.set(
-      tag ? tag.name || tag._id : this.noSelectionPlaceHolder
-    );
-    this.selectedTagChange.emit(tag);
+  selectNavItem(id: IGallery['_id']): void {
+    this.galleryService.select(id);
     this.closePanel();
   }
 
@@ -75,5 +78,22 @@ export class GalleryNavComponent {
   togglePanel(): void {
     const currentValue = this.expandPanel();
     this.expandPanel.set(!currentValue);
+  }
+
+  private subToSelectedGallery(): void {
+    const sub = this.galleryService.selectedGallery$.subscribe(
+      (selectedGallery) => {
+        if (!selectedGallery) {
+          this.galleryService.select(DefaultGalleryId);
+          return;
+        }
+        this.selectedGallery.set(selectedGallery);
+      }
+    );
+    this.subs.push(sub);
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach((sub) => sub.unsubscribe());
   }
 }
