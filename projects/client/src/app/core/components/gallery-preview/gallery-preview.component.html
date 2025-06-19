@@ -1,0 +1,16 @@
+@if(photos().length) {
+    <div class="gallery-preview__wrapper" (mouseenter)="stopScrolling()" (mouseleave)="startScrolling()">
+        <div class="gallery-preview__carousel" #carousel>
+            <div class="gallery-preview__carousel-wrapper">
+                @for(photo of photos(); track photo._id; let index = $index) {
+                    <app-photo-image [photo]="photo" class="gallery-preview__carousel-slide" #slide></app-photo-image>
+                }
+            </div>
+        </div>
+        <div class="gallery-preview__details">
+            @if(gallery().name) {
+                <a class="gallery-preview__redirect" (click)="navToGallery()">{{ gallery().name }}<lib-material-icon>camera</lib-material-icon></a>
+            }
+        </div>
+    </div>
+}

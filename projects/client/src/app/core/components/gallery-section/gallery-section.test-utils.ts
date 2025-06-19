@@ -3,11 +3,13 @@ import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { GallerySectionComponent } from './gallery-section.component';
 import {
   GalleryService,
+  IGallery,
+  IGalleryService,
   ISearchPhotoFilter,
   PhotoApiService,
 } from '@shared/photo-context';
-import { of } from 'rxjs';
-import { Component, Provider } from '@angular/core';
+import { of, Subject } from 'rxjs';
+import { Component, DebugElement, input, Provider } from '@angular/core';
 import { SectionComponent } from '../section/section.component';
 import { By } from '@angular/platform-browser';
 import { GalleryComponent } from '../../../../photo-context';
@@ -17,6 +19,14 @@ import { GalleryComponent } from '../../../../photo-context';
   selector: 'app-gallery-nav',
 })
 class GalleryNavStubComponent {}
+
+@Component({
+  template: '',
+  selector: 'lib-gallery',
+})
+class GalleryStubComponent {
+  gallery = input<IGallery>();
+}
 
 export class GallerySectionTestUtils {
   private testedComponent!: GallerySectionComponent;
@@ -31,7 +41,15 @@ export class GallerySectionTestUtils {
     useValue: this.fakePhotoApiService,
   };
 
-  private readonly photoLoaderSpy = this.fakePhotoApiService.searchPhoto;
+  private readonly fakeGalleryService = jasmine.createSpyObj<IGalleryService>(
+    'GalleryService',
+    ['create', 'select'],
+    { selectedGallery$: new Subject<IGallery | undefined>().asObservable() }
+  );
+  private readonly galleryServiceProvider: Provider = {
+    provide: GalleryService,
+    useValue: this.fakeGalleryService,
+  };
 
   async globalBeforeEach(): Promise<void> {
     this.configureTestBed();
@@ -46,11 +64,11 @@ export class GallerySectionTestUtils {
       set: {
         imports: [
           InfiniteScrollDirective,
-          GalleryComponent,
+          GalleryStubComponent,
           SectionComponent,
           GalleryNavStubComponent,
         ],
-        providers: [GalleryService, this.photoApiServiceProvider],
+        providers: [this.galleryServiceProvider, this.photoApiServiceProvider],
       },
     });
   }
@@ -69,19 +87,8 @@ export class GallerySectionTestUtils {
     expect(this.testedComponent).toBeTruthy();
   }
 
-  expectGalleryNavigationToBeDisplayed(): void {
-    const galleryNavigation = this.fixture.debugElement.query(
-      By.css('app-gallery-nav')
-    );
-    expect(galleryNavigation).toBeTruthy();
-  }
-
-  expectPhotosLoaderToHaveBeenCalledWithFilter(
-    expectedFilter: ISearchPhotoFilter | undefined
-  ): void {
-    expect(this.photoLoaderSpy).toHaveBeenCalled();
-    const filter = this.photoLoaderSpy.calls.mostRecent().args[0]?.filter;
-    expect(filter).toEqual(expectedFilter);
+  queryByCss(selector: string): DebugElement {
+    return this.fixture.debugElement.query(By.css(selector));
   }
 
   detectChanges(): void {

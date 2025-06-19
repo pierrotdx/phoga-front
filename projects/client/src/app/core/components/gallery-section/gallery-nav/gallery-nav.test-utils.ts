@@ -1,14 +1,20 @@
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TagApiService, ITag, ISelectedTag } from '@shared/tag-context';
 import { GalleryNavComponent } from './gallery-nav.component';
 import {
   BreakpointObserver,
   Breakpoints,
   BreakpointState,
 } from '@angular/cdk/layout';
-import { ReplaySubject } from 'rxjs';
+import { ReplaySubject, Subject } from 'rxjs';
+import {
+  DefaultGalleryId,
+  Gallery,
+  GalleryService,
+  IGallery,
+  IGalleryService,
+} from '@shared/photo-context';
 
 export const noTagNavItemId = 'no-tag-nav-item';
 
@@ -16,9 +22,27 @@ export class GalleryNavTestUtils {
   private testedComponent!: GalleryNavComponent;
   private fixture!: ComponentFixture<GalleryNavComponent>;
 
-  private readonly fakeTagApiService = jasmine.createSpyObj<TagApiService>(
-    'TagApiService',
-    ['search']
+  readonly galleries: IGallery[] = [
+    new Gallery(undefined as any, DefaultGalleryId, {
+      name: 'default gallery',
+    }),
+    new Gallery(undefined as any, 'gallery-id-1', { name: 'gallery 1' }),
+    new Gallery(undefined as any, 'gallery-id-2', { name: 'gallery 2' }),
+  ];
+
+  private readonly selectedGallery$ = new Subject<IGallery | undefined>();
+  private readonly fakeSelectGallery = (id: IGallery['_id']) => {
+    const selectedGallery = this.galleries.find((g) => g._id === id);
+    this.selectedGallery$.next(selectedGallery);
+  };
+
+  private readonly fakeGalleryService = jasmine.createSpyObj<IGalleryService>(
+    'GalleryService',
+    {
+      getAll: this.galleries,
+      select: undefined,
+    },
+    { selectedGallery$: this.selectedGallery$.asObservable() }
   );
 
   private readonly fakeBreakpointState$ = new ReplaySubject<BreakpointState>(1);
@@ -27,10 +51,10 @@ export class GalleryNavTestUtils {
       observe: this.fakeBreakpointState$.asObservable(),
     });
 
-  private loadTagsSpy!: jasmine.Spy;
   private selectedTagOutputSpy!: jasmine.Spy;
 
   async globalBeforeEach(): Promise<void> {
+    this.fakeGalleryService.select.and.callFake(this.fakeSelectGallery);
     this.simulateBreakpointState(Breakpoints.XSmall);
     this.configureTestBed();
     await TestBed.compileComponents();
@@ -52,8 +76,8 @@ export class GalleryNavTestUtils {
       imports: [GalleryNavComponent],
       providers: [
         {
-          provide: TagApiService,
-          useValue: this.fakeTagApiService,
+          provide: GalleryService,
+          useValue: this.fakeGalleryService,
         },
         {
           provide: BreakpointObserver,
@@ -66,46 +90,17 @@ export class GalleryNavTestUtils {
   private async onComponentsCompilation(): Promise<void> {
     this.fixture = TestBed.createComponent(GalleryNavComponent);
     this.testedComponent = this.fixture.componentInstance;
-    this.setLoadTagsSpy();
-    this.setSelectedTagOutputSpy();
+
     this.fixture.detectChanges();
     await this.fixture.whenStable();
-  }
-
-  private setLoadTagsSpy(): void {
-    this.loadTagsSpy = this.fakeTagApiService.search;
-  }
-
-  private setSelectedTagOutputSpy(): void {
-    this.selectedTagOutputSpy = spyOn(
-      this.testedComponent.selectedTagChange,
-      'emit'
-    );
-  }
-
-  resetCallsOfSelectedTagOutputSpy(): void {
-    this.selectedTagOutputSpy.calls.reset();
   }
 
   getTestedComponent(): GalleryNavComponent {
     return this.testedComponent;
   }
 
-  simulateLoadedTags(tags: ITag[] | Error | undefined): void {
-    const payload =
-      tags instanceof Error || !tags
-        ? tags
-        : { hits: tags, totalCount: tags.length };
-    this.testedComponent.tagsResource.set(payload);
-    this.fixture.detectChanges();
-  }
-
   expectTestedComponentToBeCreated(): void {
     expect(this.testedComponent).toBeTruthy();
-  }
-
-  expectLoadTagsToHaveBeenCalled(): void {
-    expect(this.loadTagsSpy).toHaveBeenCalled();
   }
 
   getGalleryNav(): DebugElement {
@@ -120,14 +115,14 @@ export class GalleryNavTestUtils {
     return this.getDebugElement('.gallery-nav__nav-menu-trigger');
   }
 
-  expectTagNavItemToBeDisplayed(tagId: ITag['_id']): void {
-    const tagNavItem = this.getTagNavItem(tagId);
-    expect(tagNavItem).toBeTruthy();
+  expectNavItemToBeDisplayed(galleryId: IGallery['_id']): void {
+    const navItem = this.getNavItem(galleryId);
+    expect(navItem).toBeTruthy();
   }
 
-  private getTagNavItem(tagId: ITag['_id']): DebugElement | undefined {
+  private getNavItem(galleryId: IGallery['_id']): DebugElement | undefined {
     const tagItem = this.getNavItems().find(
-      (item) => (item.nativeElement as HTMLElement).id === tagId
+      (item) => (item.nativeElement as HTMLElement).id === galleryId
     );
     return tagItem;
   }
@@ -146,7 +141,7 @@ export class GalleryNavTestUtils {
     const item: DebugElement | undefined =
       navItemId === noTagNavItemId
         ? this.getNoTagNavItem()
-        : this.getTagNavItem(navItemId);
+        : this.getNavItem(navItemId);
     const selectedItem = this.getSelectedItem() || undefined;
     expect(item).toEqual(selectedItem);
   }
@@ -163,15 +158,11 @@ export class GalleryNavTestUtils {
     const item: DebugElement | undefined =
       navItemId === noTagNavItemId
         ? this.getNoTagNavItem()
-        : this.getTagNavItem(navItemId);
+        : this.getNavItem(navItemId);
 
     (item?.nativeElement as HTMLElement).click();
 
     tick();
-  }
-
-  expectSelectedTagOutputToBe(expectedValue: ISelectedTag): void {
-    expect(this.selectedTagOutputSpy).toHaveBeenCalledOnceWith(expectedValue);
   }
 
   getNoSelectionPlaceHolder(): string {
@@ -185,5 +176,9 @@ export class GalleryNavTestUtils {
   displayNavMenu(): void {
     this.testedComponent.expandPanel.set(true);
     this.detectChanges();
+  }
+
+  getSelectGallerySpy() {
+    return this.fakeGalleryService.select;
   }
 }

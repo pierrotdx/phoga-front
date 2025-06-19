@@ -1,0 +1,20 @@
+@if (galleriesResource.value()) {
+    <div class="landing-section__gallery-previews">
+        @for(gallery of galleriesResource.value(); track gallery._id; let index = $index) {
+            <app-gallery-preview 
+                [reverseDirection]="index % 2 === 1"
+                [delay]="index * 100"
+                [gallery]="gallery"
+            ></app-gallery-preview>
+        }
+    </div>
+} @else {
+    <div class="landing-section__no-gallery-placeholder">No galleries available</div>
+}
+
+<ng-template #slideTemplate
+             let-slide="slide">
+    <div class="landing-section__photo">
+        <app-photo-image [photo]="slide.value"></app-photo-image>
+    </div>
+</ng-template>
