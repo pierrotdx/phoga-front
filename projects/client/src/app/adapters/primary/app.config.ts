@@ -3,7 +3,11 @@ import {
   Provider,
   provideZoneChangeDetection,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {
+  InMemoryScrollingOptions,
+  provideRouter,
+  withInMemoryScrolling,
+} from '@angular/router';
 
 import { routes } from '../../core';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
@@ -27,10 +31,15 @@ export const TagApiServiceProvider = {
   deps: [ENVIRONMENT_TOKEN, HttpClient],
 };
 
+const inMemoryScrollingFeature: InMemoryScrollingOptions = {
+  anchorScrolling: 'enabled',
+  scrollPositionRestoration: 'enabled',
+};
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
+    provideRouter(routes, withInMemoryScrolling(inMemoryScrollingFeature)),
     provideHttpClient(),
     PhotoApiServiceProvider,
     PhotoUtilsServiceProvider,

@@ -1,6 +1,7 @@
 import { ISearchResult } from '@shared/models';
 import {
   IGallery,
+  IGalleryOptions,
   IGalleryPhotos,
   IPhoto,
   ISearchPhotoFilter,
@@ -29,11 +30,25 @@ export class Gallery implements IGallery {
   );
   readonly selectedPhoto$ = this._selectedPhoto$.asObservable();
 
+  name?: string;
+  description?: string;
+  filter?: ISearchPhotoFilter;
+
   constructor(
     private readonly photoApiService: PhotoApiService,
     readonly _id: string,
-    private readonly filter?: ISearchPhotoFilter
-  ) {}
+    private readonly options?: IGalleryOptions
+  ) {
+    if (options?.name) {
+      this.name = options.name;
+    }
+    if (options?.description) {
+      this.description = options.description;
+    }
+    if (options?.filter) {
+      this.filter = options.filter;
+    }
+  }
 
   async loadMore(size?: number): Promise<void> {
     // 1 query at a time (might need queue?)

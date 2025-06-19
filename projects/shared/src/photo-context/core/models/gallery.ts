@@ -14,4 +14,6 @@ export interface IGallery {
   selectNextPhoto(): Promise<void>;
   selectPreviousPhoto(): void;
   deselectPhoto(): void;
+  name?: string;
+  description?: string;
 }

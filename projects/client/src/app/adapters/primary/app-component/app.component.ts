@@ -1,10 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   AboutSectionComponent,
   FooterComponent,
   GallerySectionComponent,
   HeaderComponent,
+  LandingSectionComponent,
 } from '../../../core';
+import { GalleryService } from '@shared/photo-context';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +16,20 @@ import {
     FooterComponent,
     HeaderComponent,
     GallerySectionComponent,
+    MatProgressSpinner,
+    LandingSectionComponent,
   ],
   templateUrl: './app.component.html',
 })
-export class AppComponent {}
+export class AppComponent {
+  hasInit = signal<boolean>(false);
+
+  constructor(private readonly galleryService: GalleryService) {
+    void this.init();
+  }
+
+  private async init(): Promise<void> {
+    await this.galleryService.initGalleries();
+    this.hasInit.set(true);
+  }
+}

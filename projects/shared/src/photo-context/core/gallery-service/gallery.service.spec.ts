@@ -1,6 +1,7 @@
-import { ISearchPhotoFilter } from '../models';
+import { DefaultGalleryId, IGallery, ISearchPhotoFilter } from '../models';
 import { GalleryService } from './gallery.service';
 import { GalleryServiceTestUtils } from './gallery.service.test-utils';
+import { ITag } from '@shared/tag-context';
 
 describe('GalleryServiceService', () => {
   let testUtils: GalleryServiceTestUtils;
@@ -16,14 +17,84 @@ describe('GalleryServiceService', () => {
     expect(testedService).toBeTruthy();
   });
 
+  describe('defaultGalleryId', () => {
+    it(`should be "${DefaultGalleryId}"`, () => {
+      expect(testedService.defaultGalleryId).toBe(DefaultGalleryId);
+    });
+  });
+
+  describe('initGalleries', () => {
+    const tags: ITag[] = [{ _id: 'tag-id-1' }, { _id: 'tag-id-2' }];
+
+    beforeEach(() => {
+      testUtils.fakeTagSearch(tags);
+    });
+
+    it('should create the default gallery', async () => {
+      const defaultGalleryBefore = testedService.get(DefaultGalleryId);
+      expect(defaultGalleryBefore).toBeUndefined();
+
+      await testedService.initGalleries();
+
+      testUtils.expectGalleryToBeCreated(DefaultGalleryId);
+    });
+
+    it('should create a gallery for each tags', async () => {
+      await testedService.initGalleries();
+
+      tags.forEach((tag) => {
+        const expectedId = tag._id;
+        const expectedFilter: ISearchPhotoFilter = { tagId: tag._id };
+        testUtils.expectGalleryToBeCreated(expectedId, expectedFilter);
+      });
+    });
+
+    it('should preload photos for each gallery', async () => {
+      const preloadSpies: jasmine.Spy[] = testUtils.getSpiesOfPhotosPreload();
+
+      await testedService.initGalleries();
+
+      preloadSpies.forEach((spy) => {
+        expect(spy).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    it('should select the default gallery', async () => {
+      await testedService.initGalleries();
+
+      const expectedSelectedGalleryId = DefaultGalleryId;
+      await testUtils.expectSelectedGalleryToBe(expectedSelectedGalleryId);
+    });
+  });
+
   describe('create', () => {
-    it("should add a gallery to the services's galleries list", () => {
+    describe('when the gallery id is available', () => {
       const id = 'gallery-to-add';
-      const filter: ISearchPhotoFilter = {};
 
-      testedService.create(id, filter);
+      it("should add a gallery to the services's galleries list and return the created gallery", () => {
+        const createdGallery = testedService.create(id);
 
-      testUtils.expectGalleryToBeCreated(id, filter);
+        testUtils.expectGalleryToBeCreated(id);
+        expect(createdGallery).toBeDefined();
+      });
+    });
+
+    describe('when the gallery id is already taken', () => {
+      const id = 'already-existing-gallery-id';
+      let alreadyExistingGallery: IGallery;
+
+      beforeEach(() => {
+        alreadyExistingGallery = testedService.create(id);
+      });
+
+      it('should not create a new gallery and return the one with the required id', () => {
+        const expectedNbGalleries = testedService.getAll().length;
+
+        const result = testedService.create(id);
+
+        expect(result).toEqual(alreadyExistingGallery);
+        testUtils.expectNbOfGalleriesToBe(expectedNbGalleries);
+      });
     });
   });
 
