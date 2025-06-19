@@ -1,4 +1,5 @@
 export * from './add-photo-params';
+export * from './default-gallery';
 export * from './edit-photo-params';
 export * from './gallery';
 export * from './gallery-photos';

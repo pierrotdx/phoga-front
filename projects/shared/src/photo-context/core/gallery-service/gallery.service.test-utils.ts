@@ -7,33 +7,40 @@ import {
   ISearchPhotoFilter,
   PhotoApiService,
 } from '../';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
+import { ITag, TagApiService } from '@shared/tag-context';
+import { ISearchResult } from '@shared/models';
 
 export class GalleryServiceTestUtils {
   private testedService!: GalleryService;
 
   private readonly fakePhotoApiService = jasmine.createSpyObj<PhotoApiService>(
     'PhotoApiService',
-    ['searchPhoto']
+    { searchPhoto: of({ hits: [], totalCount: 0 }) }
   );
   private readonly photoApiServiceProvider: Provider = {
     provide: PhotoApiService,
     useValue: this.fakePhotoApiService,
   };
 
+  private readonly fakeTagApiService = jasmine.createSpyObj<TagApiService>(
+    'TagApiService',
+    ['search']
+  );
+  private readonly tagApiServiceProvider: Provider = {
+    provide: TagApiService,
+    useValue: this.fakeTagApiService,
+  };
+
   globalBeforeEach(): void {
     TestBed.configureTestingModule({
-      providers: [this.photoApiServiceProvider],
+      providers: [this.photoApiServiceProvider, this.tagApiServiceProvider],
     });
     this.testedService = TestBed.inject(GalleryService);
   }
 
   getTestedService(): GalleryService {
     return this.testedService;
-  }
-
-  createDumbGallery(id: String): IGallery {
-    return new Gallery(this.fakePhotoApiService, 'fake-gallery');
   }
 
   expectGalleryToBeCreated(id: string, filter?: ISearchPhotoFilter): void {
@@ -61,4 +68,40 @@ export class GalleryServiceTestUtils {
     );
     expect(selectedGallery?._id).toEqual(expectedGalleryId);
   }
+
+  expectNbOfGalleriesToBe(expectedNbGalleries: number): void {
+    const nbGalleries = this.testedService.getAll().length;
+    expect(nbGalleries).toBe(expectedNbGalleries);
+  }
+
+  fakeTagSearch(tags: ITag[]): void {
+    const searchResult: ISearchResult<ITag> = {
+      hits: tags,
+      totalCount: tags.length,
+    };
+    this.fakeTagApiService.search.and.returnValue(of(searchResult));
+  }
+
+  getSpiesOfPhotosPreload(): jasmine.Spy[] {
+    const spies: jasmine.Spy[] = [];
+    spyOn(this.testedService, 'create').and.callFake(
+      this.fakeGalleryCreationAndExtractPhotoPreloadSpy(spies)
+    );
+    return spies;
+  }
+
+  private fakeGalleryCreationAndExtractPhotoPreloadSpy =
+    (spies: jasmine.Spy[]) => (id: string, filter?: ISearchPhotoFilter) => {
+      // fake gallery creation
+      const gallery = new Gallery({} as any, id, filter);
+      this.testedService['galleries'].push(gallery);
+
+      // spy on load more
+      const spy = spyOn(gallery, 'loadMore');
+      spy.and.resolveTo();
+      spy.calls.reset();
+      spies.push(spy);
+
+      return gallery;
+    };
 }
