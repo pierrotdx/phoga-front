@@ -3,6 +3,7 @@
   align-items: center;
   justify-content: center;
   backdrop-filter: brightness(20%);
+  width: var(--photo-image-width);
 }
 
 .photo-image {

@@ -25,7 +25,7 @@ export class GalleryService implements IGalleryService {
 
   defaultGalleryId: string = DefaultGalleryId;
 
-  private readonly nbPreloadedPhotos: number = 4;
+  private readonly nbPreloadedPhotos: number = 10;
 
   constructor(
     private readonly photoApiService: PhotoApiService,

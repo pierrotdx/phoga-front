@@ -3,7 +3,12 @@ import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { SectionComponent } from '../section/section.component';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { Subscription } from 'rxjs';
-import { GalleryService, IGallery, IPhoto } from '@shared/photo-context';
+import {
+  DefaultGalleryId,
+  GalleryService,
+  IGallery,
+  IPhoto,
+} from '@shared/photo-context';
 
 import { GalleryNavComponent } from './gallery-nav/gallery-nav.component';
 import { GalleryComponent } from '../../../../photo-context';
@@ -23,7 +28,7 @@ export class GallerySectionComponent implements OnInit, OnDestroy {
   readonly showDetailedView = signal<boolean>(false);
 
   private readonly subs: Subscription[] = [];
-  readonly defaultGalleryId = 'default';
+  readonly defaultGalleryId = DefaultGalleryId;
 
   gallery = signal<IGallery | undefined>(undefined);
 
@@ -31,10 +36,6 @@ export class GallerySectionComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subToSelectedGallery();
-  }
-
-  ngOnDestroy(): void {
-    this.subs.forEach((sub) => sub.unsubscribe());
   }
 
   private subToSelectedGallery(): void {
@@ -73,5 +74,9 @@ export class GallerySectionComponent implements OnInit, OnDestroy {
 
   closeDetailedView(): void {
     this.showDetailedView.set(false);
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach((sub) => sub.unsubscribe());
   }
 }

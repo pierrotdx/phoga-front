@@ -4,6 +4,7 @@ import {
   FooterComponent,
   GallerySectionComponent,
   HeaderComponent,
+  LandingSectionComponent,
 } from '../../../core';
 import { GalleryService } from '@shared/photo-context';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -16,6 +17,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     HeaderComponent,
     GallerySectionComponent,
     MatProgressSpinner,
+    LandingSectionComponent,
   ],
   templateUrl: './app.component.html',
 })

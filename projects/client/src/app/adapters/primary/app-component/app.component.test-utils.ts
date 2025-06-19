@@ -2,10 +2,7 @@ import { Component, DebugElement, Provider } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GalleryService, IGalleryService } from '@shared/photo-context';
 import { AppComponent } from './app.component';
-import {
-  MatProgressSpinner,
-  MatProgressSpinnerModule,
-} from '@angular/material/progress-spinner';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { By } from '@angular/platform-browser';
 
 @Component({
@@ -32,6 +29,12 @@ class GalleryStubComponent {}
 })
 class AboutStubComponent {}
 
+@Component({
+  selector: 'app-landing-section',
+  template: '',
+})
+class LandingSectionStubComponent {}
+
 export class AppComponentTestUtils {
   private testedComponent!: AppComponent;
   private fixture!: ComponentFixture<AppComponent>;
@@ -57,6 +60,7 @@ export class AppComponentTestUtils {
             GalleryStubComponent,
             HeaderStubComponent,
             MatProgressSpinner,
+            LandingSectionStubComponent,
           ],
           providers: [this.galleryServiceProvider],
         },
