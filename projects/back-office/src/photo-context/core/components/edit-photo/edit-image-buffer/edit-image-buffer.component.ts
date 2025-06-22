@@ -14,6 +14,7 @@ import { IPhotoVM } from '../../../models';
 import { Buffer } from 'buffer';
 import { Subscription } from 'rxjs';
 import { EditImageBufferValidationComponent } from './edit-image-buffer-validation/edit-image-buffer-validation.component';
+import { IPhoto } from '@shared/photo-context';
 
 @Component({
   selector: 'app-edit-image-buffer',
@@ -24,6 +25,7 @@ export class EditImageBufferComponent implements OnInit, OnDestroy {
   private subs: Subscription[] = [];
   private initViewModel: IPhotoVM['imageBuffer'];
 
+  @Input() initImageUrl: IPhoto['imageUrl'];
   @Input() viewModel: IPhotoVM['imageBuffer'];
   @Output() viewModelChange = new EventEmitter<IPhotoVM['imageBuffer']>();
   @Input() cancel: EventEmitter<void> | undefined;

@@ -62,8 +62,7 @@ export class EditPhotoComponent {
     if (!photoBase) {
       return;
     }
-    const imageBuffer = await this.getImageBuffer();
-    const photo: IPhoto = { imageBuffer, ...photoBase };
+    const photo: IPhoto = { ...photoBase };
     this.photo.set(photo);
   }
 
@@ -72,13 +71,6 @@ export class EditPhotoComponent {
       this.photoApiService.getPhotoBase(this.photoId!)
     );
     return result instanceof Error ? undefined : result;
-  }
-
-  private async getImageBuffer(): Promise<IPhoto['imageBuffer']> {
-    const imageBuffer = await firstValueFrom(
-      this.photoApiService.getPhotoImage(this.photoId!)
-    );
-    return imageBuffer instanceof Error ? undefined : imageBuffer;
   }
 
   async onSave(viewModel: IPhotoVM): Promise<void> {

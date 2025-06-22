@@ -78,40 +78,6 @@ describe('PhotoApiService', () => {
     });
   });
 
-  describe(`getPhotoImage`, () => {
-    const getPhotoImageRelativeUrl = `photo/${photo._id}/image`;
-
-    it('should send a GET request to the api with the input options', () => {
-      firstValueFrom(testedService.getPhotoImage(photo._id));
-
-      testUtils.setupRequestMock(getPhotoImageRelativeUrl);
-
-      testUtils.expectRequestMethodToBe('GET');
-    });
-
-    describe('when the API responds with a 200', () => {
-      it('should return a photo image buffer', async () => {
-        const request$ = firstValueFrom(testedService.getPhotoImage(photo._id));
-
-        testUtils.setupRequestMock(getPhotoImageRelativeUrl);
-        testUtils.fakeResponseBody(photo.imageBuffer!.buffer);
-
-        const result = await request$;
-        expect(result).toEqual(photo.imageBuffer!);
-      });
-    });
-
-    describe('when the API responds with an error', () => {
-      it('should log the error in the console and return a more user friendly error', async () => {
-        const request$ = firstValueFrom(testedService.getPhotoImage(photo._id));
-
-        testUtils.setupRequestMock(getPhotoImageRelativeUrl);
-
-        await testUtils.fakeResponseErrorAndExpectErrorHandling(request$);
-      });
-    });
-  });
-
   describe(`searchPhoto`, () => {
     const searchPhotoRelativeUrl = `photo`;
     const photo2 = new Photo('e703ac39-5f29-46b6-8fa7-b65f40ae58b4', {
@@ -130,19 +96,15 @@ describe('PhotoApiService', () => {
     it('should send a GET request to the api with the input options', () => {
       const filter: ISearchPhotoFilter = { tagId: 'tag-id' };
       const options: ISearchPhotoOptions = {
-        excludeImages: true,
-        rendering: {
-          size: 78,
-          from: 4,
-          dateOrder: SortDirection.Ascending,
-        },
+        size: 78,
+        from: 4,
+        dateOrder: SortDirection.Ascending,
       };
       const expectedQueryParams = {
         tagId: filter.tagId,
         size: '78',
         from: '4',
         dateOrder: SortDirection.Ascending,
-        excludeImages: 'true',
       };
 
       firstValueFrom(testedService.searchPhoto({ filter, options }));

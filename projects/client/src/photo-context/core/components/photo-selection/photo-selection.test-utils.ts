@@ -244,14 +244,14 @@ export class PhotoSelectionTestUtils {
     expect(loadPhotosSpy).toHaveBeenCalled();
     const options: ISearchPhotoOptions | undefined =
       loadPhotosSpy.calls.mostRecent().args[0]?.options;
-    const expectedSize = expectedOptions?.rendering?.size;
+    const expectedSize = expectedOptions?.size;
     if (expectedSize) {
-      const size = options?.rendering?.size;
+      const size = options?.size;
       expect(size).toBe(expectedSize);
     }
-    const expectedFrom = expectedOptions?.rendering?.from;
+    const expectedFrom = expectedOptions?.from;
     if (expectedFrom) {
-      const from = options?.rendering?.from;
+      const from = options?.from;
       expect(from).toBe(expectedFrom);
     }
   }

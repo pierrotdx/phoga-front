@@ -60,7 +60,7 @@ export class GalleryTestUtils {
     expect(serverRequestSpy).toHaveBeenCalled();
 
     const searchParams = serverRequestSpy.calls.mostRecent()?.args?.[0];
-    expect(searchParams?.options?.rendering?.from).toBe(expectedFrom);
+    expect(searchParams?.options?.from).toBe(expectedFrom);
   }
 
   expectSizeRequestParamToBe(expectedSize: number): void {
@@ -68,7 +68,7 @@ export class GalleryTestUtils {
     expect(serverRequestSpy).toHaveBeenCalled();
 
     const searchOptions = serverRequestSpy.calls.mostRecent()?.args?.[0];
-    expect(searchOptions?.options?.rendering?.size).toBe(expectedSize);
+    expect(searchOptions?.options?.size).toBe(expectedSize);
   }
 
   async expectSelectedPhotoToBe(
