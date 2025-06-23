@@ -11,6 +11,7 @@ export class Photo implements IPhoto {
   metadata?: IPhotoMetadata;
   imageBuffer?: Buffer;
   tags?: ITag[];
+  imageUrl?: string;
 
   constructor(
     public readonly _id: string,
@@ -19,20 +20,24 @@ export class Photo implements IPhoto {
       imageBuffer?: IPhoto['imageBuffer'];
     }
   ) {
-    if (data?.photoData?.metadata) {
-      this.metadata = data?.photoData?.metadata;
-    } else {
-      delete this.metadata;
+    if (data?.photoData) {
+      this.initPhotoData(data.photoData);
     }
-    if (data?.photoData?.tags) {
-      this.tags = data.photoData.tags;
-    } else {
-      delete this.tags;
-    }
+
     if (data?.imageBuffer) {
       this.imageBuffer = data.imageBuffer;
-    } else {
-      delete this.imageBuffer;
+    }
+  }
+
+  private initPhotoData(photoData: Partial<IPhotoData>): void {
+    if (photoData.metadata) {
+      this.metadata = photoData.metadata;
+    }
+    if (photoData?.tags) {
+      this.tags = photoData.tags;
+    }
+    if (photoData.imageUrl) {
+      this.imageUrl = photoData.imageUrl;
     }
   }
 }

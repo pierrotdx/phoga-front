@@ -71,10 +71,8 @@ export class Gallery implements IGallery {
 
   private getSearchPhotoOptions(size?: number): ISearchPhotoOptions {
     const options: ISearchPhotoOptions = {
-      rendering: {
-        from: this.from,
-        size: size || this.defaultSize,
-      },
+      from: this.from,
+      size: size || this.defaultSize,
     };
     return options;
   }

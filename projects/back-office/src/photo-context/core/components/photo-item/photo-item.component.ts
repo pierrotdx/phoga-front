@@ -1,8 +1,6 @@
-import { AsyncPipe } from '@angular/common';
 import { Component, Inject, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { IPhoto } from '@shared/photo-context';
-import { BufferToImagePipe } from '@shared/pipes';
 import {
   EndpointId,
   ENDPOINTS_TOKEN,
@@ -11,7 +9,7 @@ import {
 
 @Component({
   selector: 'app-photo-item',
-  imports: [AsyncPipe, BufferToImagePipe, RouterModule],
+  imports: [RouterModule],
   templateUrl: './photo-item.component.html',
 })
 export class PhotoItemComponent {

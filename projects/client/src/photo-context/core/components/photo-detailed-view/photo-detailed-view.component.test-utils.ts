@@ -1,9 +1,4 @@
-import {
-  Component,
-  DebugElement,
-  input,
-  model,
-} from '@angular/core';
+import { Component, DebugElement, input, model } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MaterialIconComponent } from '@shared/material-icon-component';
 import { OverlayMatIconBtnComponent } from '@shared/overlay-context';
@@ -52,6 +47,7 @@ export class PhotoImageStubComponent {
 export class PhotoFullscreenStubComponent {
   show = model<boolean>();
   imageBuffer = input<IPhoto['imageBuffer']>();
+  imageUrl = input<IPhoto['imageUrl']>();
 }
 
 export class PhotoDetailedViewComponentTestUtils {
@@ -126,6 +122,4 @@ export class PhotoDetailedViewComponentTestUtils {
   detectChanges(): void {
     this.detectChanges();
   }
-
-  
 }

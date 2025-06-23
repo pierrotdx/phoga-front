@@ -34,9 +34,7 @@ describe('PhotoSelectionComponent', () => {
       await testUtils.whenStable();
 
       const expectedSize = testUtils.getRequiredSlidesNb();
-      const expectedOptions: ISearchPhotoOptions = {
-        rendering: { size: expectedSize },
-      };
+      const expectedOptions: ISearchPhotoOptions = { size: expectedSize };
       testUtils.expectPhotosLoadToHaveBeenCalledWith(expectedOptions);
     });
   });
@@ -61,7 +59,8 @@ describe('PhotoSelectionComponent', () => {
       const expectedSize = testUtils.getRequiredSlidesNb() - nbPreloadPhotos;
       const expectedFrom = preloadPhotos.length + 1;
       const expectedOptions: ISearchPhotoOptions = {
-        rendering: { size: expectedSize, from: expectedFrom },
+        size: expectedSize,
+        from: expectedFrom,
       };
 
       testUtils.expectPhotosLoadToHaveBeenCalledWith(expectedOptions);

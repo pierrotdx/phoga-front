@@ -42,8 +42,9 @@ describe('PhotoItemComponent', () => {
 
     describe('that has an image', () => {
       beforeEach(() => {
+        const dumbUrl = 'http:://no-url.com';
         photo = new Photo('dumb id', {
-          imageBuffer: Buffer.from('dumb buffer'),
+          photoData: { imageUrl: dumbUrl },
         });
         testUtils.setPhoto(photo);
       });
