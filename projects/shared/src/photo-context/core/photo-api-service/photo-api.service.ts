@@ -64,24 +64,6 @@ export class PhotoApiService {
     throw new Error('An error occurred on the server');
   }
 
-  getPhotoImage(id: IPhoto['_id']): Observable<IPhoto['imageBuffer'] | Error> {
-    return this.httpClient
-      .get(`${this.apiUrl}/photo/${id}/image`, {
-        observe: 'response',
-        responseType: 'arraybuffer',
-      })
-      .pipe(
-        map((response: HttpResponse<ArrayBuffer>) => {
-          const arrayBuffer = response.body;
-          if (!arrayBuffer) {
-            throw new Error('no image to display');
-          }
-          return Buffer.from(arrayBuffer);
-        }),
-        catchError(this.handleError)
-      );
-  }
-
   searchPhoto(params?: {
     filter?: ISearchPhotoFilter;
     options?: ISearchPhotoOptions;
@@ -113,15 +95,11 @@ export class PhotoApiService {
     options?: ISearchPhotoOptions;
   }) {
     let params: any = {};
-
     if (filter) {
-      params = { ...filter };
+      params = { ...params, ...filter };
     }
-    if (options?.rendering) {
-      params = { ...params, ...options?.rendering };
-    }
-    if (options?.excludeImages !== undefined) {
-      params.excludeImages = options?.excludeImages;
+    if (options) {
+      params = { ...params, ...options };
     }
     return params;
   }

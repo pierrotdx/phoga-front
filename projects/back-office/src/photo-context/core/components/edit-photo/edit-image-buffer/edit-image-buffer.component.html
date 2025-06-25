@@ -3,6 +3,10 @@
     [src]="viewModel | bufferToImage$ | async"
     [style]="'max-height: 400px; max-width:' + imgWidthInPct +'%'">
     <button type="button" (click)="deleteImage()">delete image</button>
+} @else if (initImageUrl) {
+    <img (click)="onImgClick()"
+    [src]="initImageUrl"
+    [style]="'max-height: 400px; max-width:' + imgWidthInPct +'%'">
 } @else {
     <div>no image</div>
 }

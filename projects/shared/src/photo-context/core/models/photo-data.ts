@@ -5,4 +5,5 @@ export interface IPhotoData {
   _id: string;
   metadata?: IPhotoMetadata;
   tags?: ITag[];
+  imageUrl?: string;
 }

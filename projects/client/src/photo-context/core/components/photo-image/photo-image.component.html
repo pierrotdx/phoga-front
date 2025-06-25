@@ -1,6 +1,6 @@
 
-@if (photo().imageBuffer; as imageBuffer) {
+@if (photo().imageUrl; as url) {
     <img
         class="photo-image__image"
-        [src]="imageBuffer | bufferToImage$ | async">
+        [src]="url">
 }

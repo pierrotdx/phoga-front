@@ -1,8 +1,8 @@
 @if(photo) {
-    @if(photo.imageBuffer; as image) {
+    @if(photo.imageUrl; as imageUrl) {
         <div id="image-container">
             <a [routerLink]="[editPhotoBaseUrl, photo._id]">
-                <img [src]="image | bufferToImage$ | async" />
+                <img [src]="imageUrl" />
             </a>
         </div>
     } @else {
