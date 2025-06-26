@@ -1,6 +1,9 @@
 @if(!hasInitPhotos()) {
     <mat-spinner class="photo-selection__loading"></mat-spinner>
 } @else if (initPhotos().length > 0) {
+    <app-gallery-pagination class="photo-selection__pagination"
+        [gallery]="gallery()"></app-gallery-pagination>
+
     <lib-swiper
         class="photo-selection__swiper"
         [items]="initPhotos()"

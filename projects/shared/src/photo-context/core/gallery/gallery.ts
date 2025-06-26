@@ -23,7 +23,9 @@ export class Gallery implements IGallery {
 
   private from: number = 0;
   readonly defaultSize: number = 3;
-  private totalCount: number | undefined;
+
+  private _totalCount = new BehaviorSubject<number | undefined>(undefined);
+  readonly totalCount$ = this._totalCount.asObservable();
 
   private readonly _selectedPhoto$ = new BehaviorSubject<ISelectedPhoto>(
     undefined
@@ -96,7 +98,7 @@ export class Gallery implements IGallery {
       this.updateGalleryPhotos(searchResult.hits);
       this.updateFrom(searchResult);
     }
-    this.totalCount = searchResult.totalCount;
+    this._totalCount.next(searchResult.totalCount);
   }
 
   private updateFrom(searchResult: ISearchResult<IPhoto>): void {
@@ -131,12 +133,13 @@ export class Gallery implements IGallery {
   };
 
   hasMorePhotosToLoad = (): boolean => {
-    const hasStartedLoading = this.totalCount !== undefined;
+    const totalCount = this._totalCount.getValue();
+    const hasStartedLoading = totalCount !== undefined;
     if (!hasStartedLoading) {
       return true;
     }
     const nbLoadedPhotos = this._galleryPhotos$.getValue().all.length;
-    return nbLoadedPhotos < this.totalCount!;
+    return nbLoadedPhotos < totalCount;
   };
 
   async selectNextPhoto(): Promise<void> {
