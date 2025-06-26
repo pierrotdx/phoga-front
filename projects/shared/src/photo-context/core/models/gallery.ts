@@ -9,6 +9,7 @@ export interface IGallery {
   isLoading$: Observable<boolean>;
   loadMore(size?: number): Promise<void>;
   hasMorePhotosToLoad(): boolean;
+  totalCount$: Observable<number | undefined>;
   selectedPhoto$: Observable<IPhoto | undefined>;
   selectPhoto(id: IPhoto['_id']): void;
   selectNextPhoto(): Promise<void>;

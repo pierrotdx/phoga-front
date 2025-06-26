@@ -13,10 +13,16 @@ import {
 } from 'rxjs';
 import { SubscriptionHandler } from '@shared/subscription-handler-context';
 import { isEmpty } from 'ramda';
+import { GalleryPaginationComponent } from '../gallery-pagination/gallery-pagination.component';
 
 @Component({
   selector: 'app-photo-selection',
-  imports: [SwiperComponent, PhotoImageComponent, MatProgressSpinner],
+  imports: [
+    SwiperComponent,
+    PhotoImageComponent,
+    MatProgressSpinner,
+    GalleryPaginationComponent,
+  ],
   templateUrl: './photo-selection.component.html',
   styleUrl: './photo-selection.component.scss',
 })

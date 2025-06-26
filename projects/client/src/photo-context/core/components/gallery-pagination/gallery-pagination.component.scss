@@ -1,0 +1,18 @@
+:host {
+  display: inline-block;
+  margin-bottom: var(--spacing-02);
+  color: var(--clr-text);
+  font-weight: 500;
+}
+
+.gallery-pagination {
+  &__selected-photo-position {
+    font-size: 2em;
+  }
+
+  &__total-count {
+    &::before {
+      content: "/";
+    }
+  }
+}
