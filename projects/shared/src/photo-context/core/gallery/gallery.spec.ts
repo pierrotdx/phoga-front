@@ -1,4 +1,4 @@
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { IGalleryPhotos, IPhoto, ISelectedPhoto, Photo } from '../models';
 import { Gallery } from './gallery';
 import { GalleryTestUtils } from './gallery.test-utils';
@@ -310,6 +310,35 @@ describe('Gallery', () => {
       it('should return `true`', () => {
         const hasMoreToLoad = testedClass.hasMorePhotosToLoad();
         expect(hasMoreToLoad).toBeTrue();
+      });
+    });
+  });
+
+  describe('totalCount$', () => {
+    describe('when the gallery has not loaded any photo yet', () => {
+      it('should return `undefined`', async () => {
+        const expectedResult = undefined;
+        const totalCount = await firstValueFrom(testedClass.totalCount$);
+        expect(totalCount).toBe(expectedResult);
+      });
+    });
+
+    describe('when the gallery has loaded photos', () => {
+      const size = 2;
+      const searchResult: ISearchResult<IPhoto> = {
+        hits: dumbPhotos.slice(0, size),
+        totalCount: dumbPhotos.length,
+      };
+
+      beforeEach(async () => {
+        testUtils.simulateNextServerResponse(searchResult);
+        await testedClass.loadMore(size);
+      });
+
+      it('should have a value equal to the total number of results', async () => {
+        const expectedResult = searchResult.totalCount;
+        const totalCount = await firstValueFrom(testedClass.totalCount$);
+        expect(totalCount).toBe(expectedResult);
       });
     });
   });

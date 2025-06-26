@@ -29,6 +29,14 @@ export class PhotoImageStubComponent {
   photo = input<IPhoto>();
 }
 
+@Component({
+  selector: 'app-gallery-pagination',
+  template: '',
+})
+export class GalleryPaginationStubComponent {
+  gallery = input<IGallery>();
+}
+
 export class PhotoSelectionTestUtils {
   private readonly photosToLoad$ = new ReplaySubject<
     ISearchResult<IPhoto> | Error
@@ -63,6 +71,7 @@ export class PhotoSelectionTestUtils {
       set: {
         imports: [
           PhotoImageStubComponent,
+          GalleryPaginationStubComponent,
           MatProgressSpinner,
           SwiperComponent,
           NgClass,

@@ -1,4 +1,5 @@
 export * from './gallery-component/gallery.component';
+export * from './gallery-pagination/gallery-pagination.component';
 export * from './photo-card/photo-card.component';
 export * from './photo-detailed-view/photo-detailed-view.component';
 export * from './photo-fullscreen/photo-fullscreen.component';
