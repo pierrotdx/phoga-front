@@ -54,7 +54,7 @@
 
     &__metadata {
       display: none;
-      background-color: rgba(var(--clr-primary-rgb), 0.6);
+      background-color: rgb(from var(--clr-primary) r g b / 60%);
       position: absolute;
       bottom: 0;
       width: 100%;

@@ -18,7 +18,7 @@
   &__details {
     visibility: hidden;
 
-    background-color: rgba(var(--clr-text-rgb), 0.6);
+    background-color: rgba(from var(--clr-text) r g b / 60%);
     position: absolute;
     top: 0;
     left: 0;
