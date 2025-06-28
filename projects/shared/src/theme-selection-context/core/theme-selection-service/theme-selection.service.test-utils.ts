@@ -5,7 +5,7 @@ import { Theme } from '../models';
 export class ThemeSelectionServiceTestUtils {
   private testedService!: ThemeSelectionService;
 
-  createComponent(): ThemeSelectionService {
+  createService(): ThemeSelectionService {
     TestBed.configureTestingModule({});
     this.testedService = TestBed.inject(ThemeSelectionService);
     return this.testedService;
@@ -16,7 +16,20 @@ export class ThemeSelectionServiceTestUtils {
   }
 
   fakeTheme(theme: Theme): void {
-    this.testedService['theme'] = theme;
+    this.testedService['theme'].set(theme);
+  }
+
+  flushEffects(): void {
+    TestBed.flushEffects();
+  }
+
+  fakeSystemPreferredThemeToBeDark(isDarkSystemPreferredTheme: boolean): void {
+    const fakeMediaQuery = jasmine.createSpyObj<MediaQueryList>(
+      'MediaQueryList',
+      [],
+      { matches: isDarkSystemPreferredTheme }
+    );
+    spyOn(window, 'matchMedia').and.returnValue(fakeMediaQuery);
   }
 
   getThemeKeyInLocalStorage(): string {

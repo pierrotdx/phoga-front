@@ -14,17 +14,18 @@ describe('ThemeSelectionServiceService', () => {
   });
 
   it('should be created', () => {
-    testedService = testUtils.createComponent();
+    testedService = testUtils.createService();
 
     expect(testedService).toBeTruthy();
   });
 
-  describe('select', () => {
+  describe('select()', () => {
     const initTheme = Theme.Light;
 
     beforeEach(() => {
-      testedService = testUtils.createComponent();
+      testedService = testUtils.createService();
       testUtils.fakeTheme(initTheme);
+      testUtils.flushEffects();
     });
 
     it('should change the selected theme', async () => {
@@ -40,43 +41,66 @@ describe('ThemeSelectionServiceService', () => {
       const expectedTheme = Theme.Dark;
 
       testedService.select(expectedTheme);
+      testUtils.flushEffects();
 
       const key = testUtils.getThemeKeyInLocalStorage();
       expect(localStorage[key]).toBe(expectedTheme);
     });
 
     it('should update the "theme" attribute of the HTML document', () => {
-      // dark theme
+      // switch to dark theme
       let expectedTheme = Theme.Dark;
 
       testedService.select(expectedTheme);
+      testUtils.flushEffects();
 
       let htmlDocThemeAttribute = testUtils.getHtmlDocThemeAttribute();
       expect(htmlDocThemeAttribute).toBe(expectedTheme);
 
-      // light theme
+      // switch to light theme
       expectedTheme = Theme.Light;
 
       testedService.select(expectedTheme);
+      testUtils.flushEffects();
 
       htmlDocThemeAttribute = testUtils.getHtmlDocThemeAttribute();
       expect(htmlDocThemeAttribute).toBe(expectedTheme);
     });
   });
 
-  describe('theme$', () => {
+  describe('getTheme()', () => {
     describe('by default', () => {
       describe('when there is no theme stored in the local storage', () => {
-        beforeEach(() => {
-          testedService = testUtils.createComponent();
+        describe('when the system-preferred theme is "dark"', () => {
+          const systemPreferredTheme = 'dark';
+
+          beforeEach(() => {
+            testUtils.fakeSystemPreferredThemeToBeDark(true);
+            testedService = testUtils.createService();
+          });
+
+          it('should set the theme to "dark"', () => {
+            const expectedTheme = systemPreferredTheme;
+
+            const theme = testedService.getTheme();
+
+            expect(theme).toBe(expectedTheme);
+          });
         });
 
-        it('should have a default value', async () => {
-          const expectedTheme = testUtils.getDefaultTheme();
+        describe('when the system-preferred theme is not "dark"', () => {
+          beforeEach(() => {
+            testUtils.fakeSystemPreferredThemeToBeDark(false);
+            testedService = testUtils.createService();
+          });
 
-          const theme = testedService.getTheme();
+          it('should set the theme to "light"', () => {
+            const expectedTheme = Theme.Light;
 
-          expect(theme).toBe(expectedTheme);
+            const theme = testedService.getTheme();
+
+            expect(theme).toBe(expectedTheme);
+          });
         });
       });
 
@@ -87,10 +111,10 @@ describe('ThemeSelectionServiceService', () => {
           const key = testUtils.getThemeKeyInLocalStorage();
           localStorage.setItem(key, storedTheme);
 
-          testedService = testUtils.createComponent();
+          testedService = testUtils.createService();
         });
 
-        it('should have a the value from the local storage', async () => {
+        it('should take the local-storage value', async () => {
           const expectedTheme = storedTheme;
 
           const theme = testedService.getTheme();

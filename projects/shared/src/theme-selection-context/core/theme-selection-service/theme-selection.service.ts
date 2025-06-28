@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { effect, Injectable, signal, WritableSignal } from '@angular/core';
 import { Theme, IThemeSelectionService } from '../models';
 
 @Injectable({
@@ -7,37 +7,46 @@ import { Theme, IThemeSelectionService } from '../models';
 export class ThemeSelectionService implements IThemeSelectionService {
   private readonly themeAttr = 'theme';
   private readonly storageKey = 'theme';
-  private theme: Theme;
+  private readonly theme: WritableSignal<Theme>;
 
   constructor() {
-    this.theme = this.getDefaultTheme();
-    this.onThemeChange();
+    effect(() => this.onThemeChange());
+    const defaultTheme = this.getDefaultTheme();
+    this.theme = signal<Theme>(defaultTheme);
   }
 
   private getDefaultTheme(): Theme {
     const storageTheme = localStorage.getItem(this.storageKey) as Theme;
-    return storageTheme || Theme.Light;
+    if (storageTheme) {
+      return storageTheme;
+    }
+    return this.prefersDarkTheme() ? Theme.Dark : Theme.Light;
+  }
+
+  private prefersDarkTheme(): boolean {
+    const query = '(prefers-color-scheme: dark)';
+    return window.matchMedia(query).matches;
   }
 
   getTheme(): Theme {
-    return this.theme;
+    return this.theme();
   }
 
   select(theme: Theme): void {
-    this.theme = theme;
-    this.onThemeChange();
+    this.theme.set(theme);
   }
 
-  private onThemeChange(): void {
-    this.storeThemeInLocalStorage();
-    this.activateTheme();
+  private onThemeChange = (): void => {
+    const theme = this.theme();
+    this.storeThemeInLocalStorage(theme);
+    this.activateTheme(theme);
+  };
+
+  private storeThemeInLocalStorage(theme: Theme): void {
+    localStorage.setItem(this.storageKey, theme);
   }
 
-  private storeThemeInLocalStorage(): void {
-    localStorage.setItem(this.storageKey, this.theme);
-  }
-
-  private activateTheme(): void {
-    document.documentElement.setAttribute(this.themeAttr, this.theme);
+  private activateTheme(theme: Theme): void {
+    document.documentElement.setAttribute(this.themeAttr, theme);
   }
 }
