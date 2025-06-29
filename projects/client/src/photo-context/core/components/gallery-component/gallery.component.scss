@@ -1,6 +1,12 @@
-.gallery__strips {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-01);
-  padding: 0 var(--spacing-01);
+.gallery {
+  &__empty-gallery-placeholder {
+    text-align: center;
+  }
+
+  &__strips {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-01);
+    padding: 0 var(--spacing-01);
+  }
 }

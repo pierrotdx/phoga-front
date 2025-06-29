@@ -1,6 +1,22 @@
 @use "reset";
-@use "variables";
+@use "variables" as var;
 @use "material";
+
+:root {
+  color-scheme: light dark;
+
+  &[theme="light"] {
+    color-scheme: light;
+  }
+
+  &[theme="dark"] {
+    color-scheme: dark;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+  }
+}
 
 * {
   box-sizing: border-box;

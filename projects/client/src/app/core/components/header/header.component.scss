@@ -12,14 +12,20 @@
   }
 
   &__title {
+    flex-grow: 1;
+
     img {
       vertical-align: middle;
       height: 3em;
+
+      :host-context([theme="dark"]) & {
+        filter: invert(1);
+      }
     }
   }
 
   &__nav {
-    flex: 1 1 auto;
+    flex: 0 1 auto;
     display: flex;
     font-size: 1.2em;
   }
