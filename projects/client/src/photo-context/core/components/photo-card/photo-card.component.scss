@@ -10,6 +10,12 @@
 
     app-photo-image {
       --photo-image-object-fit: cover;
+
+      &:hover,
+      &:focus {
+        box-shadow: var(--spacing-01) calc(-1 * var(--spacing-01))
+          var(--spacing-02) 0 var(--clr-secondary);
+      }
     }
 
     &:hover,

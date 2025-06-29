@@ -42,6 +42,7 @@
     flex: 1 0 auto;
     min-width: 0;
     --photo-image-img-height: 15rem;
+    --photo-image-object-fit: cover;
 
     &:last-of-type {
       margin-right: var(--spacing-01);
