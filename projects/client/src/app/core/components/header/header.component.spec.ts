@@ -10,6 +10,12 @@ import { Component } from '@angular/core';
 })
 class NavigationStubComponent {}
 
+@Component({
+  template: '',
+  selector: 'lib-theme-selection',
+})
+class ThemeSelectionStubComponent {}
+
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
@@ -19,7 +25,9 @@ describe('HeaderComponent', () => {
       imports: [HeaderComponent, NavigationComponent],
     })
       .overrideComponent(HeaderComponent, {
-        set: { imports: [NavigationStubComponent] },
+        set: {
+          imports: [NavigationStubComponent, ThemeSelectionStubComponent],
+        },
       })
       .compileComponents();
 

@@ -15,7 +15,6 @@ import { PhotoFullscreenComponent } from '../photo-fullscreen/photo-fullscreen.c
 import { MaterialIconComponent } from '@shared/material-icon-component';
 import { Subject, Subscription } from 'rxjs';
 import { OverlayMatIconBtnComponent } from '@shared/overlay-context';
-import { GalleryPaginationComponent } from '../gallery-pagination/gallery-pagination.component';
 
 @Component({
   selector: 'app-photo-detailed-view',
