@@ -7,10 +7,10 @@ import { Theme, IThemeSelectionService } from '../models';
 export class ThemeSelectionService implements IThemeSelectionService {
   private readonly themeAttr = 'theme';
   private readonly storageKey = 'theme';
-  private readonly theme: WritableSignal<Theme>;
+  readonly theme: WritableSignal<Theme>;
 
   constructor() {
-    effect(() => this.onThemeChange());
+    effect(this.onThemeChange);
     const defaultTheme = this.getDefaultTheme();
     this.theme = signal<Theme>(defaultTheme);
   }
@@ -26,14 +26,6 @@ export class ThemeSelectionService implements IThemeSelectionService {
   private prefersDarkTheme(): boolean {
     const query = '(prefers-color-scheme: dark)';
     return window.matchMedia(query).matches;
-  }
-
-  getTheme(): Theme {
-    return this.theme();
-  }
-
-  select(theme: Theme): void {
-    this.theme.set(theme);
   }
 
   private onThemeChange = (): void => {

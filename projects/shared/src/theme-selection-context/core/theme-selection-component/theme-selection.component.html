@@ -1,14 +1,7 @@
-<form class="select-theme__form">
-    <fieldset>
-        <legend>Select a theme</legend>
-        <select
-            [(ngModel)]="theme"
-            name="theme"
-            class="select-theme__select"
-            (change)="onThemeChange()"
-        >
-            <option [value]="Theme.Light">{{ Theme.Light }}</option>
-            <option [value]="Theme.Dark">{{ Theme.Dark }}</option>
-        </select>
-    </fieldset>
-</form>
+<button
+    type="button"
+    class="theme-selection__btn"
+    (click)="changeTheme()"
+>
+    <lib-material-icon>{{ icon() }}</lib-material-icon>
+</button>

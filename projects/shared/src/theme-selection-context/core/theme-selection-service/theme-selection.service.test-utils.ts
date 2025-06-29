@@ -16,7 +16,7 @@ export class ThemeSelectionServiceTestUtils {
   }
 
   fakeTheme(theme: Theme): void {
-    this.testedService['theme'].set(theme);
+    this.testedService.theme.set(theme);
   }
 
   flushEffects(): void {

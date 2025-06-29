@@ -1,0 +1,11 @@
+:host {
+  display: block;
+  margin: auto;
+  padding: 0 var(--spacing-02);
+}
+
+.theme-selection {
+  &__btn {
+    --material-icon-fs: 1rem;
+  }
+}

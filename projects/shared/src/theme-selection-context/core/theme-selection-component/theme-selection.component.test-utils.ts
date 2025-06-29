@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ThemeSelectionComponent } from './theme-selection.component';
-import { DebugElement, Provider } from '@angular/core';
+import { DebugElement, Provider, signal } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { IThemeSelectionService, Theme } from '../models';
 import { ThemeSelectionService } from '@shared/public-api';
@@ -10,11 +10,10 @@ export class ThemeSelectionComponentTestUtils {
   private fixture!: ComponentFixture<ThemeSelectionComponent>;
 
   private readonly defaultThemeSelectionServieTheme = Theme.Dark;
-  private fakeTheme: Theme = this.defaultThemeSelectionServieTheme;
+  private fakeTheme = signal<Theme>(this.defaultThemeSelectionServieTheme);
   private readonly fakeThemeSelectionService =
-    jasmine.createSpyObj<IThemeSelectionService>('ThemeSelectionService', {
-      select: undefined,
-      getTheme: this.fakeTheme,
+    jasmine.createSpyObj<IThemeSelectionService>('ThemeSelectionService', [], {
+      theme: this.fakeTheme,
     });
   private readonly themeSelectionServiceProvider: Provider = {
     provide: ThemeSelectionService,
@@ -36,27 +35,28 @@ export class ThemeSelectionComponentTestUtils {
     return this.testedComponent;
   }
 
-  getForm(): DebugElement {
-    const selector = '.select-theme__form';
-    return this.fixture.debugElement.query(By.css(selector));
+  getServiceTheme(): Theme {
+    return this.fakeThemeSelectionService.theme();
   }
 
-  getFormOption(value: Theme): DebugElement {
-    return this.fixture.debugElement.query(
-      (elt) => elt.attributes['value'] === value
-    );
-  }
-
-  getSelect(): DebugElement {
-    const selector = '.select-theme__select';
-    return this.fixture.debugElement.query(By.css(selector));
-  }
-
-  getSelectSpy(): jasmine.Spy {
-    return this.fakeThemeSelectionService.select;
+  getServiceThemeSpy(): jasmine.Spy {
+    return spyOn(this.fakeThemeSelectionService.theme, 'set');
   }
 
   getDefaultThemeSelectionServieTheme(): Theme {
     return this.defaultThemeSelectionServieTheme;
+  }
+
+  getThemeButton(): DebugElement {
+    const selector = '.theme-selection__btn';
+    return this.fixture.debugElement.query(By.css(selector));
+  }
+
+  detectChanges(): void {
+    this.fixture.detectChanges();
+  }
+
+  async whenStable(): Promise<void> {
+    await this.fixture.whenStable();
   }
 }

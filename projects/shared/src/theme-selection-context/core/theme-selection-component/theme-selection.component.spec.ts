@@ -1,6 +1,6 @@
-import { DebugElement } from '@angular/core';
 import { ThemeSelectionComponentTestUtils } from './theme-selection.component.test-utils';
-import { Theme } from '../models';
+import { Theme, ThemeIcon } from '../models';
+import { ThemeSelectionComponent } from './theme-selection.component';
 
 describe('ThemeSelectionComponent', () => {
   let testUtils: ThemeSelectionComponentTestUtils;
@@ -15,58 +15,63 @@ describe('ThemeSelectionComponent', () => {
     expect(testedComponent).toBeTruthy();
   });
 
-  describe('the theme-selection form', () => {
+  it("should by default have its theme matching the theme-selection service's theme", () => {
+    const testedComponent = testUtils.getTestedComponent();
+    const defaultTheme = testedComponent.theme();
+    const expectedTheme = testUtils.getServiceTheme();
+    expect(defaultTheme).toBe(expectedTheme);
+  });
+
+  describe('the theme button', () => {
+    let defaultServiceTheme: Theme;
+
+    beforeEach(() => {
+      defaultServiceTheme = testUtils.getDefaultThemeSelectionServieTheme();
+    });
+
     it('should be displayed', () => {
-      const form = testUtils.getForm()?.nativeElement as HTMLFormElement;
-      expect(form).toBeTruthy();
+      const themeButton = testUtils.getThemeButton();
+      expect(themeButton.nativeElement).toBeTruthy();
     });
 
     const themes = Object.values(Theme);
     themes.forEach((theme) => {
-      it(`should have a "${theme}" option`, () => {
-        const lightOption = testUtils.getFormOption(theme)
-          ?.nativeElement as HTMLInputElement;
-        expect(lightOption).toBeTruthy();
-      });
-    });
+      describe(`when the them is "${theme}"`, () => {
+        let testedComponent: ThemeSelectionComponent;
+        const expectedTheme = theme === Theme.Dark ? Theme.Light : Theme.Dark;
 
-    describe('by default', () => {
-      let defaultServiceTheme: Theme;
-
-      beforeEach(() => {
-        defaultServiceTheme = testUtils.getDefaultThemeSelectionServieTheme();
-      });
-
-      it("should have selected the theme-selection service's theme", () => {
-        const select = testUtils.getSelect().nativeElement as HTMLSelectElement;
-        const defaultFormTheme = select.value;
-        const expectedTheme = defaultFormTheme;
-        expect(defaultFormTheme).toBe(expectedTheme);
-      });
-    });
-
-    describe('when an option is selected', () => {
-      let option: DebugElement;
-      const optionValue = Theme.Dark;
-      let selectSpy: jasmine.Spy;
-
-      beforeEach(() => {
-        selectSpy = testUtils.getSelectSpy();
-        selectSpy.calls.reset();
-
-        option = testUtils.getFormOption(optionValue);
-      });
-
-      it('should update the theme-selection service with the selected option', () => {
-        const optionElt = option.nativeElement as HTMLOptionElement;
-
-        const select = testUtils.getSelect();
-        select.triggerEventHandler('change', {
-          target: optionElt,
+        beforeEach(() => {
+          testedComponent = testUtils.getTestedComponent();
+          testedComponent.theme.set(theme);
         });
 
-        const expectedValue = optionElt.value;
-        expect(selectSpy).toHaveBeenCalledOnceWith(expectedValue);
+        it(`should display the "${expectedTheme}" icon`, () => {
+          const icon = testedComponent.icon();
+          const expectedDisplayedIcon =
+            expectedTheme === Theme.Dark ? ThemeIcon.Dark : ThemeIcon.Light;
+          expect(icon).toBe(expectedDisplayedIcon);
+        });
+      });
+    });
+
+    describe('when clicked on', () => {
+      let serviceThemeSpy: jasmine.Spy;
+
+      beforeEach(async () => {
+        serviceThemeSpy = testUtils.getServiceThemeSpy();
+        serviceThemeSpy.calls.reset();
+
+        const themeButton = testUtils.getThemeButton();
+        (themeButton.nativeElement as HTMLButtonElement).click();
+
+        testUtils.detectChanges();
+        await testUtils.whenStable();
+      });
+
+      it('should update the theme of the theme-selection service', () => {
+        const expectedValue =
+          defaultServiceTheme === Theme.Light ? Theme.Dark : Theme.Light;
+        expect(serviceThemeSpy).toHaveBeenCalledOnceWith(expectedValue);
       });
     });
   });

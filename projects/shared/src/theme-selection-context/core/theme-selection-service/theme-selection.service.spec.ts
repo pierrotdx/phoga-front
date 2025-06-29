@@ -19,56 +19,7 @@ describe('ThemeSelectionServiceService', () => {
     expect(testedService).toBeTruthy();
   });
 
-  describe('select()', () => {
-    const initTheme = Theme.Light;
-
-    beforeEach(() => {
-      testedService = testUtils.createService();
-      testUtils.fakeTheme(initTheme);
-      testUtils.flushEffects();
-    });
-
-    it('should change the selected theme', async () => {
-      const expectedTheme = Theme.Dark;
-
-      testedService.select(expectedTheme);
-
-      const theme = testedService.getTheme();
-      expect(theme).toBe(expectedTheme);
-    });
-
-    it('should update the local storage with the selected theme', () => {
-      const expectedTheme = Theme.Dark;
-
-      testedService.select(expectedTheme);
-      testUtils.flushEffects();
-
-      const key = testUtils.getThemeKeyInLocalStorage();
-      expect(localStorage[key]).toBe(expectedTheme);
-    });
-
-    it('should update the "theme" attribute of the HTML document', () => {
-      // switch to dark theme
-      let expectedTheme = Theme.Dark;
-
-      testedService.select(expectedTheme);
-      testUtils.flushEffects();
-
-      let htmlDocThemeAttribute = testUtils.getHtmlDocThemeAttribute();
-      expect(htmlDocThemeAttribute).toBe(expectedTheme);
-
-      // switch to light theme
-      expectedTheme = Theme.Light;
-
-      testedService.select(expectedTheme);
-      testUtils.flushEffects();
-
-      htmlDocThemeAttribute = testUtils.getHtmlDocThemeAttribute();
-      expect(htmlDocThemeAttribute).toBe(expectedTheme);
-    });
-  });
-
-  describe('getTheme()', () => {
+  describe('theme', () => {
     describe('by default', () => {
       describe('when there is no theme stored in the local storage', () => {
         describe('when the system-preferred theme is "dark"', () => {
@@ -82,7 +33,7 @@ describe('ThemeSelectionServiceService', () => {
           it('should set the theme to "dark"', () => {
             const expectedTheme = systemPreferredTheme;
 
-            const theme = testedService.getTheme();
+            const theme = testedService.theme();
 
             expect(theme).toBe(expectedTheme);
           });
@@ -97,7 +48,7 @@ describe('ThemeSelectionServiceService', () => {
           it('should set the theme to "light"', () => {
             const expectedTheme = Theme.Light;
 
-            const theme = testedService.getTheme();
+            const theme = testedService.theme();
 
             expect(theme).toBe(expectedTheme);
           });
@@ -117,10 +68,50 @@ describe('ThemeSelectionServiceService', () => {
         it('should take the local-storage value', async () => {
           const expectedTheme = storedTheme;
 
-          const theme = testedService.getTheme();
+          const theme = testedService.theme();
 
           expect(theme).toBe(expectedTheme);
         });
+      });
+    });
+
+    describe('when its value changes', () => {
+      const initTheme = Theme.Light;
+
+      beforeEach(() => {
+        testedService = testUtils.createService();
+        testUtils.fakeTheme(initTheme);
+        testUtils.flushEffects();
+      });
+
+      it('should update the local storage', () => {
+        const expectedTheme = Theme.Dark;
+
+        testedService.theme.set(expectedTheme);
+        testUtils.flushEffects();
+
+        const key = testUtils.getThemeKeyInLocalStorage();
+        expect(localStorage[key]).toBe(expectedTheme);
+      });
+
+      it('should update the "theme" attribute of the HTML document', () => {
+        // switch to dark theme
+        let expectedTheme = Theme.Dark;
+
+        testedService.theme.set(expectedTheme);
+        testUtils.flushEffects();
+
+        let htmlDocThemeAttribute = testUtils.getHtmlDocThemeAttribute();
+        expect(htmlDocThemeAttribute).toBe(expectedTheme);
+
+        // switch to light theme
+        expectedTheme = Theme.Light;
+
+        testedService.theme.set(expectedTheme);
+        testUtils.flushEffects();
+
+        htmlDocThemeAttribute = testUtils.getHtmlDocThemeAttribute();
+        expect(htmlDocThemeAttribute).toBe(expectedTheme);
       });
     });
   });
