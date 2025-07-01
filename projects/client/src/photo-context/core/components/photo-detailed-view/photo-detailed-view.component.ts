@@ -65,7 +65,7 @@ export class PhotoDetailedViewComponent implements OnDestroy {
     this.subs.push(sub);
   }
 
-  private onSelectedPhoto = (selectedPhoto: ISelectedPhoto): void => {
+  private readonly onSelectedPhoto = (selectedPhoto: ISelectedPhoto): void => {
     this.selectedPhoto.set(selectedPhoto);
   };
 

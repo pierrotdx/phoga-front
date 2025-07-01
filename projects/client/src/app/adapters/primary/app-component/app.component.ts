@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import {
   AboutSectionComponent,
   FooterComponent,
@@ -21,10 +21,12 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   ],
   templateUrl: './app.component.html',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   hasInit = signal<boolean>(false);
 
-  constructor(private readonly galleryService: GalleryService) {
+  constructor(private readonly galleryService: GalleryService) {}
+
+  ngOnInit(): void {
     void this.init();
   }
 

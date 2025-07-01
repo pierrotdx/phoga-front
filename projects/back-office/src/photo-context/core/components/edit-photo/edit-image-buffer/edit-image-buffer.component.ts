@@ -22,7 +22,7 @@ import { IPhoto } from '@shared/photo-context';
   templateUrl: './edit-image-buffer.component.html',
 })
 export class EditImageBufferComponent implements OnInit, OnDestroy {
-  private subs: Subscription[] = [];
+  private readonly subs: Subscription[] = [];
   private initViewModel: IPhotoVM['imageBuffer'];
 
   @Input() initImageUrl: IPhoto['imageUrl'];
@@ -32,7 +32,7 @@ export class EditImageBufferComponent implements OnInit, OnDestroy {
   @Output() isValid = new EventEmitter<boolean>(false);
 
   private useFullSizeImg = false;
-  private defaultImgWidthInPct = 20 * 1000000;
+  private readonly defaultImgWidthInPct = 20 * 1000000;
   imgWidthInPct = this.defaultImgWidthInPct;
 
   imageBufferInput =

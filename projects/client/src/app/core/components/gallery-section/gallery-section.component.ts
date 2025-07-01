@@ -45,7 +45,9 @@ export class GallerySectionComponent implements OnInit, OnDestroy {
     this.subs.push(sub);
   }
 
-  private onSelectedGalleryChange = (gallery: IGallery | undefined): void => {
+  private readonly onSelectedGalleryChange = (
+    gallery: IGallery | undefined
+  ): void => {
     if (!gallery) {
       this.galleryService.select(this.defaultGalleryId);
       return;
@@ -63,7 +65,7 @@ export class GallerySectionComponent implements OnInit, OnDestroy {
     }
   }
 
-  private onSelectedPhotoChange = (photo: IPhoto | undefined) => {
+  private readonly onSelectedPhotoChange = (photo: IPhoto | undefined) => {
     this.selectedPhoto.set(photo);
     this.showDetailedView.set(!!photo);
   };

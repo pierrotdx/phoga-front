@@ -60,7 +60,7 @@ export class GalleryPreviewComponent implements OnDestroy, AfterViewInit {
     this.photosSub = photos$.subscribe(this.onPhotosChange);
   }
 
-  private onPhotosChange = async (photos: IPhoto[]) => {
+  private readonly onPhotosChange = async (photos: IPhoto[]) => {
     this.photos.set(photos);
   };
 

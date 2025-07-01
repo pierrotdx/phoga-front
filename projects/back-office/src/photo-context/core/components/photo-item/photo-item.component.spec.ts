@@ -1,6 +1,5 @@
 import { IPhoto, Photo } from '@shared/photo-context';
 import { PhotoItemTestUtils } from './photo-item.test-utils';
-import { Buffer } from 'buffer';
 
 describe('PhotoItemComponent', () => {
   let testUtils: PhotoItemTestUtils;

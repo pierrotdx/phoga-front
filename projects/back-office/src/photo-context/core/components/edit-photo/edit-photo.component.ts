@@ -12,7 +12,7 @@ import {
 } from '@shared/photo-context';
 import { UUID_PROVIDER_TOKEN, IUuidGenerator } from '@shared/uuid-context';
 import { firstValueFrom } from 'rxjs';
-import { isEmpty, view } from 'ramda';
+import { isEmpty } from 'ramda';
 import { Router } from '@angular/router';
 import {
   EndpointId,
@@ -94,7 +94,7 @@ export class EditPhotoComponent {
   private getPhotoFromVM(
     viewModel: IPhotoVM
   ): IAddPhotoParams | IEditPhotoParams {
-    const _id = this.photo()?._id || this.uuidGenerator.generate();
+    const _id = this.photo()?._id ?? this.uuidGenerator.generate();
     const params: IAddPhotoParams | IEditPhotoParams = { _id };
     const metadata = this.getPhotoMetadataFromVM(viewModel.metadata);
     if (metadata) {

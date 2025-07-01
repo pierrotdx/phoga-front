@@ -124,7 +124,7 @@ export class SwiperWrapperComponentTestUtils extends CompTestUtils<SwiperWrapper
   }
 
   getSwiperComponent() {
-    return this.fixture.componentInstance.swiperComponent!;
+    return this.fixture.componentInstance.swiperComponent;
   }
 
   protected getSwiperComponentElement() {

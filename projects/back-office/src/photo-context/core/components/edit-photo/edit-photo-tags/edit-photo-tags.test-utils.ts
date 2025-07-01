@@ -7,7 +7,7 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { ISearchResult } from '@shared/models';
 
 export class EditPhotoTagsTestUtils {
-  private fakeTagApiService = jasmine.createSpyObj<TagApiService>(
+  private readonly fakeTagApiService = jasmine.createSpyObj<TagApiService>(
     'TagApiService',
     ['search']
   );
