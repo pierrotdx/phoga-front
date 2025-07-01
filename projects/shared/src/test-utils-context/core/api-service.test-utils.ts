@@ -87,11 +87,11 @@ export class ApiServiceTestUtils<TService>
 
   expectBodyFormDataToEqual(formData1: FormData): void {
     const bodyFormData: FormData = this.requestMock.request.body;
-    for (var [key, value] of formData1.entries()) {
+    for (let [key, value] of formData1.entries()) {
       expect(bodyFormData.has(key)).toBeTrue();
       expect(bodyFormData.get(key)).toEqual(value);
     }
-    for (var [key, value] of bodyFormData.entries()) {
+    for (let [key, value] of bodyFormData.entries()) {
       expect(formData1.has(key)).toBeTrue();
       expect(formData1.get(key)).toEqual(value);
     }

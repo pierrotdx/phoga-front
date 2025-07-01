@@ -16,5 +16,9 @@
   },
   "javascript.referencesCodeLens.enabled": true,
   "typescript.referencesCodeLens.enabled": true,
-  "typescript.implementationsCodeLens.enabled": true
+  "typescript.implementationsCodeLens.enabled": true,
+  "sonarlint.connectedMode.project": {
+    "connectionId": "pierrotdx",
+    "projectKey": "pierrotdx_phoga-front"
+  }
 }

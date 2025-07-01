@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { AuthService } from './auth.service';
 import { TokenUtilsService } from '../token-utils-service/token-utils.service';
-import { AUTH_PROVISIONER_TOKEN, Scope } from '../models';
+import { AUTH_PROVISIONER_TOKEN } from '../models';
 import { AuthProviderFake } from '../../adapters';
 
 export class AuthServiceTestUtils {

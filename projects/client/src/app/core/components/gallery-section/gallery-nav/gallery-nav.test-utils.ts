@@ -51,8 +51,6 @@ export class GalleryNavTestUtils {
       observe: this.fakeBreakpointState$.asObservable(),
     });
 
-  private selectedTagOutputSpy!: jasmine.Spy;
-
   async globalBeforeEach(): Promise<void> {
     this.fakeGalleryService.select.and.callFake(this.fakeSelectGallery);
     this.simulateBreakpointState(Breakpoints.XSmall);
@@ -142,7 +140,7 @@ export class GalleryNavTestUtils {
       navItemId === noTagNavItemId
         ? this.getNoTagNavItem()
         : this.getNavItem(navItemId);
-    const selectedItem = this.getSelectedItem() || undefined;
+    const selectedItem = this.getSelectedItem();
     expect(item).toEqual(selectedItem);
   }
 

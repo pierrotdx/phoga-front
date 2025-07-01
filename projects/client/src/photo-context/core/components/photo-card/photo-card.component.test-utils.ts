@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PhotoCardComponent } from './photo-card.component';
 import { PhotoFullscreenComponent } from '..';
 import { MaterialIconComponent } from '@shared/material-icon-component';

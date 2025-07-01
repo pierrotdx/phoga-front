@@ -1,18 +1,15 @@
 import { DebugElement } from '@angular/core';
 import { AuthTestUtils } from './auth.test-utils';
-import { EndpointId, IEndpoints } from '@back-office/endpoints-context';
 import { fakeAsync } from '@angular/core/testing';
 
 describe('AuthComponent', () => {
   let testUtils: AuthTestUtils;
-  let endpoints: IEndpoints;
   const loginBtnId = 'login';
   const logoutBtnId = 'logout';
 
   beforeEach(async () => {
     testUtils = new AuthTestUtils();
     await testUtils.beforeEachGlobal();
-    endpoints = testUtils.getEndpoints();
   });
 
   afterEach(() => {
@@ -30,11 +27,9 @@ describe('AuthComponent', () => {
 
     describe('the login button', () => {
       let loginButton: DebugElement;
-      let redirectUrl: string;
 
       beforeEach(() => {
         loginButton = testUtils.getElementById(loginBtnId);
-        redirectUrl = endpoints.getRelativePath(EndpointId.Restricted);
       });
 
       it('should exist', () => {
@@ -85,11 +80,9 @@ describe('AuthComponent', () => {
 
     describe('the login button', () => {
       let loginButton: DebugElement;
-      let redirectUrl: string;
 
       beforeEach(() => {
         loginButton = testUtils.getElementById(loginBtnId);
-        redirectUrl = endpoints.getRelativePath(EndpointId.Restricted);
       });
 
       it('should not exist', () => {

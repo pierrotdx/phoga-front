@@ -19,7 +19,7 @@ export class EditTagFormComponent {
   tag = input<ITag>();
 
   viewModel: ITagVM = { name: '' };
-  isValid = signal<Boolean>(false);
+  isValid = signal<boolean>(false);
 
   @Output() save = new EventEmitter<ITagVM>();
   @Output() cancel = new EventEmitter<void>();

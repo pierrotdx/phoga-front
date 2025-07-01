@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { IGallery, IGalleryOptions, ISearchPhotoFilter } from '../models';
+import { IGallery, IGalleryOptions } from '../models';
 
 export interface IGalleryService {
   selectedGallery$: Observable<IGallery | undefined>;

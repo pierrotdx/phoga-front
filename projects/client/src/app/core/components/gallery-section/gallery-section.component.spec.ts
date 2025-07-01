@@ -1,14 +1,11 @@
-import { GallerySectionComponent } from './gallery-section.component';
 import { GallerySectionTestUtils } from './gallery-section.test-utils';
 
 describe('GallerySectionComponent', () => {
   let testUtils: GallerySectionTestUtils;
-  let testedComponent: GallerySectionComponent;
 
   beforeEach(async () => {
     testUtils = new GallerySectionTestUtils();
     await testUtils.globalBeforeEach();
-    testedComponent = testUtils.getTestedComponent();
   });
 
   it('should create', () => {

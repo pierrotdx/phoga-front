@@ -36,11 +36,9 @@ export class CompTestUtils<T> {
 
   protected getConfig(): TestModuleMetadata {
     const imports = this.config?.imports
-      ? [this.comp, ...this.config?.imports]
+      ? [this.comp, ...(this.config?.imports ?? [])]
       : [this.comp];
-    const config: TestModuleMetadata = Object.assign({}, this.config, {
-      imports,
-    });
+    const config: TestModuleMetadata = { ...this.config, ...imports };
     return config;
   }
 
@@ -51,7 +49,7 @@ export class CompTestUtils<T> {
 
   getElementById(id: string): DebugElement {
     const pageElement = this.fixture.debugElement;
-    return pageElement.query(By.css(`#${id}`))!;
+    return pageElement.query(By.css(`#${id}`));
   }
 
   getComponent(): T {

@@ -5,7 +5,7 @@ import { jwtDecode, JwtPayload } from 'jwt-decode';
   providedIn: 'root',
 })
 export class TokenUtilsService {
-  private tokenKey = 'token';
+  private readonly tokenKey = 'token';
 
   setStoredToken(accessToken: string | undefined): void {
     if (!accessToken) {

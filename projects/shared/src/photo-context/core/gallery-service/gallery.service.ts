@@ -5,7 +5,6 @@ import {
   IGallery,
   IGalleryOptions,
   IGalleryService,
-  ISearchPhotoFilter,
   PhotoApiService,
 } from '../';
 import { clone } from 'ramda';

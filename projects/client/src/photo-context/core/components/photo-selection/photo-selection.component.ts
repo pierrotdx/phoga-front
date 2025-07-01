@@ -34,13 +34,13 @@ export class PhotoSelectionComponent implements OnDestroy {
   private readonly activateItemEmitter = new Subject<number | undefined>();
   activateItem$ = this.activateItemEmitter.asObservable();
 
-  private swipeToItemEmitter = new Subject<number>();
+  private readonly swipeToItemEmitter = new Subject<number>();
   readonly swipeToItem$ = this.swipeToItemEmitter.asObservable();
 
   private readonly addItemsEmitter = new Subject<IPhoto[]>();
   readonly addItems$ = this.addItemsEmitter.asObservable();
 
-  private nbPreloadPhotos: number = 2;
+  private readonly nbPreloadPhotos: number = 2;
   readonly nbSlides = 4;
 
   readonly initPhotos = signal<IPhoto[]>([]);
@@ -91,7 +91,7 @@ export class PhotoSelectionComponent implements OnDestroy {
     subsList.push(handler);
   }
 
-  private onFirstPhotosLoading = async (): Promise<void> => {
+  private readonly onFirstPhotosLoading = async (): Promise<void> => {
     const gallery = this.gallery();
     const galleryPhotos = await firstValueFrom(gallery.galleryPhotos$);
     const nbMissingPhotos = this.nbSlides - galleryPhotos.all.length;
@@ -103,7 +103,7 @@ export class PhotoSelectionComponent implements OnDestroy {
     this.hasInitPhotos.set(true);
   };
 
-  private onGalleryPhotos = async (
+  private readonly onGalleryPhotos = async (
     galleryPhotos: IGalleryPhotos
   ): Promise<void> => {
     if (!this.hasInitPhotos()) {
@@ -149,7 +149,7 @@ export class PhotoSelectionComponent implements OnDestroy {
     this.setupSubHandler(this.selectNextPhoto$(), this.onSelectNext, this.subs);
   }
 
-  private onSelectNext = async (): Promise<void> => {
+  private readonly onSelectNext = async (): Promise<void> => {
     await this.gallery().selectNextPhoto();
   };
 
@@ -161,7 +161,7 @@ export class PhotoSelectionComponent implements OnDestroy {
     );
   }
 
-  private onSelectPrevious = (): void => {
+  private readonly onSelectPrevious = (): void => {
     this.gallery().selectPreviousPhoto();
   };
 

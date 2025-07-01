@@ -1,14 +1,13 @@
 import {
   HttpClient,
   HttpErrorResponse,
-  HttpResponse,
 } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import {
   ENVIRONMENT_TOKEN,
   ISharedEnvironment,
 } from '../../../environment-context';
-import { catchError, Observable, map, throwError } from 'rxjs';
+import { catchError, Observable, map } from 'rxjs';
 import { Buffer } from 'buffer';
 import {
   IAddPhotoParams,
@@ -124,7 +123,7 @@ export class PhotoApiService {
     const formData = new FormData();
     formData.append('_id', addPhotoParams._id);
     if (addPhotoParams.imageBuffer) {
-      const file = new File([addPhotoParams.imageBuffer!.buffer], 'image');
+      const file = new File([addPhotoParams.imageBuffer.buffer], 'image');
       formData.append('image', file);
     }
     if (addPhotoParams.metadata?.date) {

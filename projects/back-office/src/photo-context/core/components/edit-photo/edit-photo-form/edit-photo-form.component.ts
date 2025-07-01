@@ -48,7 +48,7 @@ export class EditPhotoFormComponent implements AfterViewInit, OnDestroy {
   form = viewChild<NgModel>('editPhotoForm');
   viewModel: IPhotoVM | undefined;
   private isImageEditValid = false;
-  isValid = signal<Boolean>(false);
+  isValid = signal<boolean>(false);
 
   constructor(
     @Inject(UUID_PROVIDER_TOKEN) private readonly uuidGenerator: IUuidGenerator
@@ -78,8 +78,8 @@ export class EditPhotoFormComponent implements AfterViewInit, OnDestroy {
     const titles = this.getViewModelTitles();
     this.viewModel = {
       metadata: {
-        description: this.photo.metadata?.description || '',
-        location: this.photo.metadata?.location || '',
+        description: this.photo.metadata?.description ?? '',
+        location: this.photo.metadata?.location ?? '',
         titles,
         date: '',
       },

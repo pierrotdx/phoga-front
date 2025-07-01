@@ -91,7 +91,7 @@ export class GalleryServiceTestUtils {
     return spies;
   }
 
-  private fakeGalleryCreationAndExtractPhotoPreloadSpy =
+  private readonly fakeGalleryCreationAndExtractPhotoPreloadSpy =
     (spies: jasmine.Spy[]) => (id: string, options?: IGalleryOptions) => {
       // fake gallery creation
       const gallery = new Gallery({} as any, id, options);

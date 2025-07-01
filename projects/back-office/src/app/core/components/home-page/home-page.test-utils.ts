@@ -20,7 +20,7 @@ export class HomePageTestUtils {
   component!: HomePageComponent;
 
   private fixture!: ComponentFixture<HomePageComponent>;
-  private photoApiServiceMock = {
+  private readonly photoApiServiceMock = {
     searchPhoto: (
       options?: ISearchPhotoOptions
     ): Observable<IPhoto[] | undefined> => of([]),

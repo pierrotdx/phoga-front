@@ -1,6 +1,6 @@
 import { GalleryNavTestUtils } from './gallery-nav.test-utils';
 import { fakeAsync, tick } from '@angular/core/testing';
-import { DefaultGalleryId, Gallery, IGallery } from '@shared/photo-context';
+import { IGallery } from '@shared/photo-context';
 
 describe('GalleryNavComponent', () => {
   let testUtils: GalleryNavTestUtils;
@@ -36,7 +36,7 @@ describe('GalleryNavComponent', () => {
         testedComponent.selectNavItem(gallery._id);
         testUtils.detectChanges();
 
-        expectedValue = gallery.name || gallery._id;
+        expectedValue = gallery.name ?? gallery._id;
         expect(navMenuTrigger.innerText).toBe(expectedValue);
       });
     });

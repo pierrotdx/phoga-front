@@ -21,7 +21,7 @@ export class ThemeSelectionComponent {
     this.icon = computed<ThemeIcon>(this.computeIcon);
   }
 
-  private computeIcon = (): ThemeIcon =>
+  private readonly computeIcon = (): ThemeIcon =>
     this.themeSelectionService.theme() === Theme.Dark
       ? ThemeIcon.Light
       : ThemeIcon.Dark;

@@ -5,8 +5,11 @@ import {
   ISwiperInitOptions,
 } from '../models';
 import { SwiperComponent } from './swiper.component';
-import { SwiperWrapperComponent, TestItem } from './swiper-component-tests';
-import { SwiperComponentTestExpects } from './swiper-component-tests';
+import {
+  SwiperComponentTestExpects,
+  SwiperWrapperComponent,
+  TestItem,
+} from './swiper-component-tests';
 
 // Need to test the swiper component
 // via a wrapping component

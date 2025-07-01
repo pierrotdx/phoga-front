@@ -24,7 +24,7 @@ export class Gallery implements IGallery {
   private from: number = 0;
   readonly defaultSize: number = 3;
 
-  private _totalCount = new BehaviorSubject<number | undefined>(undefined);
+  private readonly _totalCount = new BehaviorSubject<number | undefined>(undefined);
   readonly totalCount$ = this._totalCount.asObservable();
 
   private readonly _selectedPhoto$ = new BehaviorSubject<ISelectedPhoto>(
@@ -74,7 +74,7 @@ export class Gallery implements IGallery {
   private getSearchPhotoOptions(size?: number): ISearchPhotoOptions {
     const options: ISearchPhotoOptions = {
       from: this.from,
-      size: size || this.defaultSize,
+      size: size ?? this.defaultSize,
     };
     return options;
   }
@@ -158,7 +158,6 @@ export class Gallery implements IGallery {
     const photoToSelect: IPhoto | undefined = allPhotos[selectedPhotoIndex + 1];
     if (photoToSelect) {
       this.selectPhoto(photoToSelect._id);
-      return;
     } else if (this.hasMorePhotosToLoad()) {
       await this.loadMore();
       await this.selectNextPhoto();
