@@ -15,7 +15,7 @@ import { clone, equals } from 'ramda';
 
 export class Swiper<T> implements ISwiper<T> {
   private loop = false;
-  private _stateChange$ = new ReplaySubject<ISwiperState<T>>(1);
+  private readonly _stateChange$ = new ReplaySubject<ISwiperState<T>>(1);
   readonly stateChange$ = this._stateChange$
     .asObservable()
     .pipe(distinctUntilChanged(equals<ISwiperState<T>>));

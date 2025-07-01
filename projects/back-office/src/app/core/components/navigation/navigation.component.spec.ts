@@ -1,6 +1,4 @@
-import { DebugElement } from '@angular/core';
 import { NavigationTestUtils } from './navigation.test-utils';
-import { fakeAsync } from '@angular/core/testing';
 
 describe('NavigationComponent', () => {
   let testUtils: NavigationTestUtils;

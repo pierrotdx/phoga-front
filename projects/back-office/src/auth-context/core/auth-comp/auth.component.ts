@@ -45,7 +45,7 @@ export class AuthComponent implements OnInit, OnDestroy {
     this.accessTokenSub.unsubscribe();
   }
 
-  private onAuthChange = () => {
+  private readonly onAuthChange = () => {
     this.updateIsAuthenticated();
   };
 

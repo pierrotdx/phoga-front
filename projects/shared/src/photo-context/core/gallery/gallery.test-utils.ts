@@ -4,7 +4,6 @@ import { firstValueFrom, of } from 'rxjs';
 import { ISelectedPhoto } from '../models/selected-photo';
 import { PhotoApiService } from '../photo-api-service/photo-api.service';
 import { ISearchResult } from '@shared/models';
-import { TestBed } from '@angular/core/testing';
 
 export class GalleryTestUtils {
   private readonly fakePhotoApiService = jasmine.createSpyObj<PhotoApiService>(

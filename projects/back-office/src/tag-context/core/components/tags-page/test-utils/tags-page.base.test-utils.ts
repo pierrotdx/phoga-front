@@ -3,7 +3,6 @@ import {
   provideRouter,
   RouterLink,
   RouterLinkWithHref,
-  withComponentInputBinding,
 } from '@angular/router';
 import { TagsPageComponent } from '../tags-page.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';

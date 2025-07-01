@@ -5,7 +5,6 @@ import {
   IPhotoUtilsService,
   PHOTO_UTILS_SERVICE_TOKEN,
 } from '@shared/photo-context';
-import { isEmpty, omit } from 'ramda';
 
 @Component({
   selector: 'app-photo-metadata',

@@ -19,13 +19,11 @@ import {
   IAutoSwipeOptions,
 } from '../models';
 import { Swiper } from '../swiper/swiper';
-import { ITagApiService } from '@shared/tag-context';
 
 @Component({
   selector: 'lib-swiper',
   imports: [NgTemplateOutlet],
   templateUrl: './swiper.component.html',
-  styleUrl: './swiper.component.scss',
 })
 export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
   readonly nbSlides = input.required<number>();
@@ -137,7 +135,9 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
     }
   }
 
-  private onSwiperStateChange = (swiperState: ISwiperState<T>): void => {
+  private readonly onSwiperStateChange = (
+    swiperState: ISwiperState<T>
+  ): void => {
     this.slides.set(swiperState.slides);
     this.swiperStateChange.emit(swiperState);
   };
@@ -147,7 +147,7 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
     this.activateItemHandler.subscribeTo(activateItem$);
   }
 
-  private onActivateItem = (index: number | undefined): void => {
+  private readonly onActivateItem = (index: number | undefined): void => {
     this.activateItem(index);
   };
 
@@ -160,7 +160,7 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
     this.swipeToNextHandler.subscribeTo(swipeToNext$);
   }
 
-  private onSwipeToNext = (): void => {
+  private readonly onSwipeToNext = (): void => {
     this.swiper.swipeToNext();
   };
 
@@ -169,7 +169,7 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
     this.swipeToPreviousHandler.subscribeTo(swipeToPrevious$);
   }
 
-  private onSwipeToPrevious = (): void => {
+  private readonly onSwipeToPrevious = (): void => {
     this.swiper.swipeToPrevious();
   };
 
@@ -178,7 +178,7 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
     this.autoSwipeStartHandler.subscribeTo(autoSwipeStart$);
   }
 
-  private onAutoSwipeStart = (options?: IAutoSwipeOptions) => {
+  private readonly onAutoSwipeStart = (options?: IAutoSwipeOptions) => {
     this.swiper.autoSwipeStart(options);
   };
 
@@ -187,7 +187,7 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
     this.autoSwipeStopHandler.subscribeTo(autoSwipeStop$);
   }
 
-  private onAutoSwipeStop = () => {
+  private readonly onAutoSwipeStop = () => {
     this.swiper.autoSwipeStop();
   };
 
@@ -196,7 +196,7 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
     this.swipeToItemHandler.subscribeTo(swipeToItem$);
   }
 
-  private onSwipeToItem = (itemIndex: number): void => {
+  private readonly onSwipeToItem = (itemIndex: number): void => {
     this.swipeToItem(itemIndex);
   };
 
@@ -209,7 +209,7 @@ export class SwiperComponent<T extends { _id: string }> implements OnDestroy {
     this.addItemHandler.subscribeTo(addItem$);
   }
 
-  private onAddItems = (itemsToAdd: T[]): void => {
+  private readonly onAddItems = (itemsToAdd: T[]): void => {
     this.swiper.addItems(itemsToAdd);
     this.emitItems();
   };

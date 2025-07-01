@@ -1,4 +1,4 @@
-import { Buffer } from "buffer";
+import { Buffer } from 'buffer';
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
@@ -10,7 +10,7 @@ export class BufferToImagePipe implements PipeTransform {
     return await image$;
   }
 
-  private getImagePromise = (imageBuffer: Buffer): Promise<string> =>
+  private readonly getImagePromise = (imageBuffer: Buffer): Promise<string> =>
     new Promise(function (resolve, reject) {
       if (!imageBuffer) {
         reject(new Error('no buffer provided in input'));
@@ -21,7 +21,8 @@ export class BufferToImagePipe implements PipeTransform {
         resolve(fileReader.result as string);
       };
       fileReader.onerror = (err) => {
-        reject(err);
+        const error = new Error('failed to load image buffer', { cause: err });
+        reject(error);
       };
       fileReader.readAsDataURL(blob);
     });

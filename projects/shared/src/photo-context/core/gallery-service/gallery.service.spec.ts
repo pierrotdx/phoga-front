@@ -160,7 +160,7 @@ describe('GalleryServiceService', () => {
 
       testedService.deselect();
       expectedSelectedGalleryId = undefined;
-      await testUtils.expectSelectedGalleryToBe(undefined);
+      await testUtils.expectSelectedGalleryToBe(expectedSelectedGalleryId);
     });
   });
 

@@ -20,7 +20,7 @@ export class PhotoApiTestUtils
   private readonly consoleErrorSpy = spyOn(console, 'error');
 
   constructor() {
-    const apiBaseUrl = 'http://api-domain.com';
+    const apiBaseUrl = 'https://api-domain.com';
     super(PhotoApiService, apiBaseUrl);
   }
 
@@ -76,7 +76,7 @@ export class PhotoApiTestUtils
     if (addPhotoParams.imageBuffer) {
       formData.append(
         'image',
-        new File([addPhotoParams.imageBuffer!.buffer], 'image')
+        new File([addPhotoParams.imageBuffer.buffer], 'image')
       );
     }
     if (addPhotoParams.tagIds) {

@@ -67,6 +67,6 @@ export class AuthService {
     }
     const userScopes = (this.tokenService.decodeToken(accessToken) as any)
       .permissions;
-    return userScopes || defaultScope;
+    return userScopes ?? defaultScope;
   }
 }

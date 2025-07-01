@@ -5,14 +5,12 @@ import {
   GalleryService,
   IGallery,
   IGalleryService,
-  ISearchPhotoFilter,
   PhotoApiService,
 } from '@shared/photo-context';
 import { of, Subject } from 'rxjs';
 import { Component, DebugElement, input, Provider } from '@angular/core';
 import { SectionComponent } from '../section/section.component';
 import { By } from '@angular/platform-browser';
-import { GalleryComponent } from '../../../../photo-context';
 
 @Component({
   template: '',
@@ -79,19 +77,11 @@ export class GallerySectionTestUtils {
     this.fixture.autoDetectChanges();
   }
 
-  getTestedComponent(): GallerySectionComponent {
-    return this.testedComponent;
-  }
-
   expectTestedComponentToBeCreated(): void {
     expect(this.testedComponent).toBeTruthy();
   }
 
   queryByCss(selector: string): DebugElement {
     return this.fixture.debugElement.query(By.css(selector));
-  }
-
-  detectChanges(): void {
-    this.fixture.detectChanges();
   }
 }

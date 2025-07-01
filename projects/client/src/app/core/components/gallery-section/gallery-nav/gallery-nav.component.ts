@@ -1,21 +1,10 @@
 import { NgTemplateOutlet } from '@angular/common';
-import {
-  Component,
-  computed,
-  effect,
-  EventEmitter,
-  OnDestroy,
-  Output,
-  resource,
-  Signal,
-  signal,
-} from '@angular/core';
+import { Component, computed, OnDestroy, Signal, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MaterialIconComponent } from '@shared/material-icon-component';
 import { OverlayPanelComponent } from '@shared/overlay-context';
-import { ISelectedTag, ITag, TagApiService } from '@shared/tag-context';
-import { firstValueFrom, map, Unsubscribable } from 'rxjs';
+import { map, Unsubscribable } from 'rxjs';
 import {
   DefaultGalleryId,
   GalleryService,
@@ -36,7 +25,7 @@ export class GalleryNavComponent implements OnDestroy {
   menuTriggerPlaceHolder = computed<string>(() => {
     const selectedGallery = this.selectedGallery();
     return selectedGallery
-      ? selectedGallery.name || selectedGallery._id
+      ? selectedGallery.name ?? selectedGallery._id
       : this.noSelectionPlaceHolder;
   });
 

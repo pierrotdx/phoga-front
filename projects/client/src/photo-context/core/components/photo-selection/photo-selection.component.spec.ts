@@ -42,7 +42,6 @@ describe('PhotoSelectionComponent', () => {
   describe('when the nb of preloaded photos is lesser than the required nb of slides', () => {
     const nbPreloadPhotos = 2;
     const preloadPhotos = dumbPhotos.slice(0, nbPreloadPhotos);
-    let loadPhotosSpy: jasmine.Spy;
 
     it('should be loading the required nb of slides', async () => {
       testUtils.createComponent();
@@ -53,8 +52,6 @@ describe('PhotoSelectionComponent', () => {
       testUtils.getHasMorePhotosToLoadSpy().and.returnValue(true);
       testUtils.detectChanges();
       await testUtils.whenStable();
-
-      loadPhotosSpy = testUtils.getLoadPhotosFromServerSpy();
 
       const expectedSize = testUtils.getRequiredSlidesNb() - nbPreloadPhotos;
       const expectedFrom = preloadPhotos.length + 1;

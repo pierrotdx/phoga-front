@@ -22,7 +22,7 @@ export class GalleryPaginationComponent implements OnDestroy {
   private readonly totalCountSub: SubscriptionHandler<number | undefined>;
 
   readonly selectedPhoto = signal<ISelectedPhoto>(undefined);
-  private selectedPhotoSub: SubscriptionHandler<ISelectedPhoto>;
+  private readonly selectedPhotoSub: SubscriptionHandler<ISelectedPhoto>;
   readonly selectedPhotoPosition = computed<number | undefined>(() => {
     const selectedPhoto = this.selectedPhoto();
     if (!selectedPhoto) {
@@ -51,22 +51,22 @@ export class GalleryPaginationComponent implements OnDestroy {
     effect(this.onGalleryChange);
   }
 
-  private onGalleryChange = () => {
+  private readonly onGalleryChange = () => {
     const gallery = this.gallery();
     this.totalCountSub.subscribeTo(gallery.totalCount$);
     this.selectedPhotoSub.subscribeTo(gallery.selectedPhoto$);
     this.galleryPhotosSub.subscribeTo(gallery.galleryPhotos$);
   };
 
-  private onTotalCountChange = (totalCount: number | undefined): void => {
+  private readonly onTotalCountChange = (totalCount: number | undefined): void => {
     this.totalCount.set(totalCount);
   };
 
-  private onSelectedPhotoChange = (selectedPhoto: ISelectedPhoto): void => {
+  private readonly onSelectedPhotoChange = (selectedPhoto: ISelectedPhoto): void => {
     this.selectedPhoto.set(selectedPhoto);
   };
 
-  private onGalleryPhotosChange = (galleryPhotos: IGalleryPhotos) => {
+  private readonly onGalleryPhotosChange = (galleryPhotos: IGalleryPhotos) => {
     this.allLoadedPhotos.set(galleryPhotos.all);
   };
 

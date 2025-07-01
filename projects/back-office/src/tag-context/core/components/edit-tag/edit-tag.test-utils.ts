@@ -21,7 +21,7 @@ export class EditTagTestUtils {
   private readonly dumbVoidObservable = new BehaviorSubject<void>(
     undefined
   ).asObservable();
-  private fakeTagApiService = jasmine.createSpyObj<TagApiService>(
+  private readonly fakeTagApiService = jasmine.createSpyObj<TagApiService>(
     'TagApiService',
     {
       add: this.dumbVoidObservable,
@@ -70,7 +70,7 @@ export class EditTagTestUtils {
     );
   }
 
-  private fetchTagFake = (_id: string): ITag => ({ _id });
+  private readonly fetchTagFake = (_id: string): ITag => ({ _id });
 
   private mockUuidGenerator() {
     const uuidGenerator = TestBed.inject(UUID_PROVIDER_TOKEN);
