@@ -27,7 +27,6 @@ describe('SwiperComponent', () => {
       { _id: 'slide-2' },
       { _id: 'slide-3' },
       { _id: 'slide-4' },
-      { _id: 'slide-5' },
     ];
     testUtils = await restartTestUtils(testUtils, { nbSlides, items });
   });
