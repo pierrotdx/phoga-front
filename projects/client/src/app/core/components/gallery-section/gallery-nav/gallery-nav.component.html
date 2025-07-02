@@ -1,6 +1,7 @@
 @if(galleries(); as galleries) {
     <div class="gallery-nav__nav-menu-trigger gallery-nav--selected"
-        (click)="togglePanel()">
+        (click)="togglePanel()"
+        (keydown)="togglePanel()">
         <button type="button" >{{ menuTriggerPlaceHolder() }}</button>
     </div>
     @if(isMobile()) {
@@ -10,7 +11,8 @@
                 </ng-content>
                 <button type="button"
                     class="gallery-nav__close-btn"
-                    (click)="togglePanel()">
+                    (click)="togglePanel()"
+                    (keydown)="togglePanel()">
                     <lib-material-icon>close</lib-material-icon>
                 </button>
         </app-overlay-panel>
@@ -28,7 +30,8 @@
                         <li [id]="gallery._id"
                             class="gallery-nav__nav-item"
                             [class.gallery-nav--selected]="selectedGallery()?._id === gallery._id"
-                            (click)="selectNavItem(gallery._id)">
+                            (click)="selectNavItem(gallery._id)"
+                            (keydown)="selectNavItem(gallery._id)">
                             <button type="button">{{ gallery.name || gallery._id }}</button>
                         </li>
                     }

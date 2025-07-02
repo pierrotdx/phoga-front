@@ -5,7 +5,8 @@
                             class="photo-card__image">
             </app-photo-image>
             <app-overlay-mat-icon-btn class="photo-card__image-btn"
-                                      (click)="select()">
+                                      (click)="select()"
+                                      (keydown)="select()">
                 expand_content
             </app-overlay-mat-icon-btn>
         </div>
@@ -16,7 +17,8 @@
      <app-overlay-panel [show]="showDetailedView()">
         <app-photo-detailed-view
             [gallery]="gallery()"
-            (close)="deselect()">
+            (close)="deselect()"
+            (keydown)="deselect()">
         </app-photo-detailed-view>
     </app-overlay-panel>
 }

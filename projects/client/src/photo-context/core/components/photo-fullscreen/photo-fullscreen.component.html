@@ -1,11 +1,12 @@
-@if(imageUrl(); as imageUrl) {
+@if(photo(); as photo) {
     <app-overlay-panel [show]="show()">
         <div class="photo-fullscreen">
             <img class="photo-fullscreen__image"
-                 [src]="imageUrl"
-                 alt="image not available"/>
+                 [src]="photo.imageUrl"
+                 [alt]="photo.metadata?.titles?.[0] || photo.metadata?.description || photo._id"/>
                 <app-overlay-mat-icon-btn class="photo-fullscreen__close-btn"
-                                          (click)="close()">
+                    (keydown)="close()"
+                    (click)="close()">
                     close
                 </app-overlay-mat-icon-btn>
         </div>

@@ -1,12 +1,17 @@
 @if(viewModel) {
     <img (click)="onImgClick()"
+        (keydown)="onImgClick()"
     [src]="viewModel | bufferToImage$ | async"
-    [style]="'max-height: 400px; max-width:' + imgWidthInPct +'%'">
+    [style]="'max-height: 400px; max-width:' + imgWidthInPct +'%'"
+    alt="the selected photo">
     <button type="button" (click)="deleteImage()">delete image</button>
 } @else if (initImageUrl) {
-    <img (click)="onImgClick()"
-    [src]="initImageUrl"
-    [style]="'max-height: 400px; max-width:' + imgWidthInPct +'%'">
+    <img 
+        (click)="onImgClick()"
+        (keydown)="onImgClick()"
+        [src]="initImageUrl"
+        alt="the photo to edit"
+        [style]="'max-height: 400px; max-width:' + imgWidthInPct +'%'">
 } @else {
     <div>no image</div>
 }
