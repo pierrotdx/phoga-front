@@ -3,25 +3,24 @@
         <div class="photo-detailed-view__image-container">
             <app-photo-image
                 [photo]="selectedPhoto"
-                class="photo-detailed-view__image"
-            >
+                class="photo-detailed-view__image">
             </app-photo-image>
             <app-overlay-mat-icon-btn
                 class="photo-detailed-view__fullscreen-btn show-on-image-hover"
                 (click)="openFullscreen()"
-            >
+                (keydown)="openFullscreen()">
                 fullscreen
             </app-overlay-mat-icon-btn>
             <app-overlay-mat-icon-btn
                 class="photo-detailed-view__previous-btn show-on-image-hover"
                 (click)="selectPrevious()"
-            >
+                                (keydown)="selectPrevious()">
                 arrow_back
             </app-overlay-mat-icon-btn>
             <app-overlay-mat-icon-btn
                 class="photo-detailed-view__next-btn show-on-image-hover"
                 (click)="selectNext()"
-            >
+                (keydown)="selectNext()">
                 arrow_forward
             </app-overlay-mat-icon-btn>
         </div>
@@ -46,7 +45,7 @@
     </article>
     <app-photo-fullscreen
         [(show)]="showFullscreen"
-        [imageUrl]="selectedPhoto.imageUrl"
+        [photo]="selectedPhoto"
     >
     </app-photo-fullscreen>
 } @else {

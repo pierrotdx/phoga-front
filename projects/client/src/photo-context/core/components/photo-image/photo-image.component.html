@@ -1,6 +1,7 @@
 
-@if (photo().imageUrl; as url) {
+@if (photo(); as photo) {
     <img
         class="photo-image__image"
-        [src]="url">
+        [src]="photo.imageUrl"
+        [alt]="photo.metadata?.titles?.[0] || photo.metadata?.description || photo._id">
 }

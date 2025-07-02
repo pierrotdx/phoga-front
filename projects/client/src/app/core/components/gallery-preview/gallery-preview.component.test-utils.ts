@@ -28,7 +28,7 @@ export class GalleryPreviewComponentTestUtils {
 
   readonly dumbGalleryId = 'dumb gallery';
 
-  private dumbGallery = jasmine.createSpyObj<IGallery>('Gallery', [], {
+  private readonly dumbGallery = jasmine.createSpyObj<IGallery>('Gallery', [], {
     _id: this.dumbGalleryId,
     name: 'dumb gallery',
     galleryPhotos$: this.galleryPhotos$.asObservable(),

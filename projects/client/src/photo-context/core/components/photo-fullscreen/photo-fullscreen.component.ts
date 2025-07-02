@@ -12,7 +12,7 @@ import { IPhoto } from '@shared/photo-context';
   styleUrl: './photo-fullscreen.component.scss',
 })
 export class PhotoFullscreenComponent {
-  imageUrl = input<IPhoto['imageUrl']>();
+  photo = input<IPhoto>();
   show = model<boolean>(false);
 
   close(): void {

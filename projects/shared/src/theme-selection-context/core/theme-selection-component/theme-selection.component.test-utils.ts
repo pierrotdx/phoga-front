@@ -10,7 +10,7 @@ export class ThemeSelectionComponentTestUtils {
   private fixture!: ComponentFixture<ThemeSelectionComponent>;
 
   private readonly defaultThemeSelectionServieTheme = Theme.Dark;
-  private fakeTheme = signal<Theme>(this.defaultThemeSelectionServieTheme);
+  private readonly fakeTheme = signal<Theme>(this.defaultThemeSelectionServieTheme);
   private readonly fakeThemeSelectionService =
     jasmine.createSpyObj<IThemeSelectionService>('ThemeSelectionService', [], {
       theme: this.fakeTheme,
