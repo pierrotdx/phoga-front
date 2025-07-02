@@ -56,7 +56,7 @@ export class PhotoSelectionTestUtils {
 
   private fixture!: ComponentFixture<PhotoSelectionComponent>;
   private component!: PhotoSelectionComponent;
-  private hasInit = new BehaviorSubject<boolean>(false);
+  private readonly hasInit = new BehaviorSubject<boolean>(false);
 
   private selectPhotoSpy!: jasmine.Spy;
   private selectNextPhotoSpy!: jasmine.Spy;
@@ -133,7 +133,7 @@ export class PhotoSelectionTestUtils {
     });
   }
 
-  private onHasInitPhotos = () => {
+  private readonly onHasInitPhotos = () => {
     const hasInitPhotos = this.component.hasInitPhotos();
     this.hasInit.next(hasInitPhotos);
   };

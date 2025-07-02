@@ -46,8 +46,7 @@ export class PhotoImageStubComponent {
 })
 export class PhotoFullscreenStubComponent {
   show = model<boolean>();
-  imageBuffer = input<IPhoto['imageBuffer']>();
-  imageUrl = input<IPhoto['imageUrl']>();
+  photo = input<IPhoto>();
 }
 
 export class PhotoDetailedViewComponentTestUtils {

@@ -1,12 +1,14 @@
 <header class="header">
-    <h1 class="header__title">
-        <a href="/#home">
-            <img
-                alt="phoga website"
-                [src]="'logo.svg'"
-            >
-        </a>
-    </h1>
+    <h1 class="header__title visually-hidden">PHOGA Website</h1>
+    <a
+        class="header__logo"
+        href="/#home"
+    >
+        <img
+            alt="PHOGA logo"
+            [src]="'logo.svg'"
+        >
+    </a>
     <lib-theme-selection></lib-theme-selection>
     <app-navigation class="header__nav"></app-navigation>
 </header>

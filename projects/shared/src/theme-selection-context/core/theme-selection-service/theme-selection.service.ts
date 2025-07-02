@@ -28,7 +28,7 @@ export class ThemeSelectionService implements IThemeSelectionService {
     return window.matchMedia(query).matches;
   }
 
-  private onThemeChange = (): void => {
+  private readonly onThemeChange = (): void => {
     const theme = this.theme();
     this.storeThemeInLocalStorage(theme);
     this.activateTheme(theme);

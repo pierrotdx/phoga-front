@@ -21,7 +21,8 @@
              let-slide="slide">
     <div class="photo-option"
          [class.photo-option--active]="slide.isActive"
-         (click)="selectPhoto(slide.value._id)">
+         (click)="selectPhoto(slide.value._id)"
+         (keydown)="selectPhoto(slide.value._id)">
         <app-photo-image [photo]="slide.value"></app-photo-image>
     </div>
 </ng-template>
