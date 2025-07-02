@@ -20,4 +20,4 @@ This project is composed of three sub-projects:
 
 ### Current state
 
-The project is still under development and not ready for production. The staging version of the client can be previewed [here](https://staging-dot-phoga-client-dot-phoga-449314.ew.r.appspot.com) (initial loading may be a bit slow as server needs to wake up).
+The project is still under development and not ready for production. The staging version of the client can be previewed [here](https://staging-dot-phoga-client-dot-phoga-449314.ew.r.appspot.com) **(initial loading may be a bit slow (~1 min) as server needs to wake up)**.
