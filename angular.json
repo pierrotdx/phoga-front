@@ -28,7 +28,16 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "tsConfig": "projects/shared/tsconfig.spec.json",
-            "polyfills": ["zone.js", "zone.js/testing"]
+            "polyfills": ["zone.js", "zone.js/testing"],
+            "karmaConfig": "projects/shared/karma.conf.js"
+          },
+          "configurations": {
+            "ci": {
+              "codeCoverage": true,
+              "watch": false,
+              "browsers": "ChromeHeadless",
+              "progress": false
+            }
           }
         }
       }
@@ -132,7 +141,16 @@
               }
             ],
             "styles": ["projects/client/src/styles/styles.scss"],
-            "scripts": []
+            "scripts": [],
+            "karmaConfig": "projects/client/karma.conf.js"
+          },
+          "configurations": {
+            "ci": {
+              "codeCoverage": true,
+              "watch": false,
+              "browsers": "ChromeHeadless",
+              "progress": false
+            }
           }
         }
       }
@@ -248,7 +266,16 @@
               "includePaths": ["node_modules/normalize-scss/sass"]
             },
             "styles": ["projects/back-office/src/styles/styles.scss"],
-            "scripts": []
+            "scripts": [],
+            "karmaConfig": "projects/back-office/karma.conf.js"
+          },
+          "configurations": {
+            "ci": {
+              "codeCoverage": true,
+              "watch": false,
+              "browsers": "ChromeHeadless",
+              "progress": false
+            }
           }
         }
       }
