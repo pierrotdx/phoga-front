@@ -20,8 +20,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Test and coverage - "shared" project
-        run: ng test:shared:ci
+        run: npm run test:shared:ci
       - name: Test and coverage - "back-office" project
-        run: ng test:back-office:ci
+        run: npm run test:back-office:ci
       - name: Test and coverage - "client" project
-        run: ng test:client:ci
+        run: npm run test:client:ci
