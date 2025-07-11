@@ -2,5 +2,9 @@
   "sonarCloudOrganization": "pierrotdx",
   "projectKey": "pierrotdx_phoga-front",
   "region": "EU",
-  "reportPaths": ["./coverage/**/lcov.info"]
+  "reportPaths": [
+    "./coverage/shared/lcov.info",
+    "./coverage/back-office/lcov.info",
+    "./coverage/client/lcov.info"
+  ]
 }
