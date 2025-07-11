@@ -13,7 +13,10 @@
     "deploy": "npm run build --configuration production",
     "run:bo": "node ./dist/back-office/browser/main.js",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "test:shared:ci": "ng test shared --configuration ci",
+    "test:back-office:ci": "ng test back-office --configuration ci",
+    "test:client:ci": "ng test client --configuration ci"
   },
   "private": true,
   "dependencies": {

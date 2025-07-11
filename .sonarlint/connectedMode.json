@@ -1,5 +1,6 @@
 {
-    "sonarCloudOrganization": "pierrotdx",
-    "projectKey": "pierrotdx_phoga-front",
-    "region": "EU"
+  "sonarCloudOrganization": "pierrotdx",
+  "projectKey": "pierrotdx_phoga-front",
+  "region": "EU",
+  "reportPaths": ["./coverage/**/lcov.info"]
 }
