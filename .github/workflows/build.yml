@@ -17,8 +17,11 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      - name: Install Angular CLI
-        run: npm install -g @angular/cli
+      # https://github.com/marketplace/actions/angular-github-actions
+      - name: Install Angular 19.0.2
+        uses: actions/angular-github-actions
+        with:
+          version: 19.0.2
       - name: Install dependencies
         run: npm ci
       - name: Test and coverage - "shared" project
