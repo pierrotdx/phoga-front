@@ -4,7 +4,7 @@ on:
     branches:
       - master
     paths:
-      - "projects/shared/"
+      - "projects/shared/**"
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
