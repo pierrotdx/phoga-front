@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - master
+    paths:
+      - "projects/shared/"
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
