@@ -20,6 +20,6 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          projectBaseDir: projects/shared
+          projectBaseDir: projects/shared/
       - name: Test and coverage
         run: npm run test:shared:ci
