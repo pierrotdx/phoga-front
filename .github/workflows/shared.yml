@@ -1,4 +1,4 @@
-name: Build
+name: shared
 on:
   push:
     branches:
