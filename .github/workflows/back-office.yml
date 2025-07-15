@@ -31,3 +31,5 @@ jobs:
         run: pwd
       - name: tmp4
         run: ls coverage/back-office
+      - name: tmp5
+        run: cat coverage/back-office/lcov.info
