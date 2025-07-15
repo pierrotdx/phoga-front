@@ -17,7 +17,9 @@ jobs:
         run: npm ci
       - name: Test and coverage
         run: npm run test:back-office:ci
-      - name: tmp
+      - name: tmp1
+        run: pwd
+      - name: tmp2
         run: ls coverage/back-office
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
