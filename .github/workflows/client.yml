@@ -8,7 +8,7 @@ on:
 jobs:
   sonarqube:
     name: SonarQube
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -17,6 +17,8 @@ jobs:
         run: npm ci
       - name: Test and coverage
         run: npm run test:client:ci
+      - name: tmp
+        run: ls
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
