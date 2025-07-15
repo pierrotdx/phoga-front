@@ -27,3 +27,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACK_OFFICE }}
         with:
           projectBaseDir: projects/back-office/
+      - name: tmp3
+        run: pwd
+      - name: tmp4
+        run: ls coverage/back-office
