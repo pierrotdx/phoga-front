@@ -23,10 +23,9 @@ jobs:
         run: ls coverage/back-office
         # https://community.sonarsource.com/t/code-coverage-doesnt-work-with-github-action/16747/6
       - name: fix code coverage paths
-        working-directory: ./coverage
+        working-directory: ./coverage/back-office
         run: |
-          sed -i 's/\/home\/runner\/work\/phoga-front\/phoga-front\//\/github\/workspace\//g' lcov.info
-          sed -i 's/\/home\/runner\/work\/phoga-front\/phoga-front\//\/github\/workspace\//g' sonar-cloud-reporter.xml
+          sed -i 's/\/home\/runner\/work\/phoga-front\/phoga-front\/projects\/back-office\/..\/..\/coverage\//\/home\/runner\/work\/phoga-front\/phoga-front\/projects\/back-office\/coverage\//g' lcov.info
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
