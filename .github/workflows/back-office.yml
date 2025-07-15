@@ -21,6 +21,12 @@ jobs:
         run: pwd
       - name: tmp2
         run: ls coverage/back-office
+        # https://community.sonarsource.com/t/code-coverage-doesnt-work-with-github-action/16747/6
+      - name: fix code coverage paths
+        working-directory: ./coverage
+        run: |
+          sed -i 's/\/home\/runner\/work\/phoga-front\/phoga-front\//\/github\/workspace\//g' lcov.info
+          sed -i 's/\/home\/runner\/work\/phoga-front\/phoga-front\//\/github\/workspace\//g' sonar-cloud-reporter.xml
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
