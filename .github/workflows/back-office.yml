@@ -18,7 +18,7 @@ jobs:
       - name: Test and coverage
         run: npm run test:back-office:ci
       # https://community.sonarsource.com/t/code-coverage-doesnt-work-with-github-action/16747/6
-      - name: fix code coverage paths
+      - name: Fix code coverage paths
         working-directory: /home/runner/work/phoga-front/phoga-front/coverage/back-office
         run: |
           sed -i 's|projects/back-office/src/|/home/runner/work/phoga-front/phoga-front/projects/back-office/src/|g' lcov.info
