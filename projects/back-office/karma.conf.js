@@ -4,6 +4,12 @@
 module.exports = function (config) {
   config.set({
     basePath: "",
+    exclude: [
+      "**/*.spec.ts",
+      "**/*test-utils*.ts",
+      "**/*fake*.ts",
+      "**/fake/**.ts",
+    ],
     frameworks: ["jasmine", "@angular-devkit/build-angular"],
     plugins: [
       require("karma-jasmine"),
