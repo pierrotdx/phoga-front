@@ -17,6 +17,11 @@ jobs:
         run: npm ci
       - name: Test and coverage
         run: npm run test:shared:ci
+      # https://community.sonarsource.com/t/code-coverage-doesnt-work-with-github-action/16747/6
+      - name: fix code coverage paths
+        working-directory: /home/runner/work/phoga-front/phoga-front/coverage/shared
+        run: |
+          sed -i 's|projects/shared/src/|/home/runner/work/phoga-front/phoga-front/projects/shared/src/|g' lcov.info
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
