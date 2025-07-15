@@ -25,7 +25,7 @@ jobs:
       - name: fix code coverage paths
         working-directory: /home/runner/work/phoga-front/phoga-front/coverage/back-office
         run: |
-          sed -i 's/  projects\/back-office\/src\/\//\/home\/runner\/work\/phoga-front\/phoga-front\/projects\/back-office\/src\//g' lcov.info
+          sed -i 's/projects\/back-office\/src\/\//\/home\/runner\/work\/phoga-front\/phoga-front\/projects\/back-office\/src\//g' lcov.info
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
