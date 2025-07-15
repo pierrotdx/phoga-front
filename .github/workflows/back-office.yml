@@ -17,6 +17,8 @@ jobs:
         run: npm ci
       - name: Test and coverage
         run: npm run test:back-office:ci
+      - name: tmp
+        run: ls -all ./coverage
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
