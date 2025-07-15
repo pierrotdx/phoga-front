@@ -17,11 +17,7 @@ jobs:
         run: npm ci
       - name: Test and coverage
         run: npm run test:back-office:ci
-      - name: tmp1
-        run: pwd
-      - name: tmp2
-        run: ls coverage/back-office
-        # https://community.sonarsource.com/t/code-coverage-doesnt-work-with-github-action/16747/6
+      # https://community.sonarsource.com/t/code-coverage-doesnt-work-with-github-action/16747/6
       - name: fix code coverage paths
         working-directory: /home/runner/work/phoga-front/phoga-front/coverage/back-office
         run: |
@@ -32,9 +28,3 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACK_OFFICE }}
         with:
           projectBaseDir: projects/back-office/
-      - name: tmp3
-        run: pwd
-      - name: tmp4
-        run: ls coverage/back-office
-      - name: tmp5
-        run: cat coverage/back-office/lcov.info
