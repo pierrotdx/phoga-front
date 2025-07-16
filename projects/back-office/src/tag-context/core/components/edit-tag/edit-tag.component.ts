@@ -66,7 +66,11 @@ export class EditTagComponent {
   }
 
   private async updateTag(viewModel: ITagVM): Promise<void> {
-    const tag: ITag = { ...viewModel, _id: this.id()! };
+    const _id = this.id();
+    if (!_id) {
+      return;
+    }
+    const tag: ITag = { ...viewModel, _id };
     const updateTag$ = this.tagApiService.replace(tag);
     await firstValueFrom(updateTag$);
   }

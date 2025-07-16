@@ -26,7 +26,10 @@ export class TokenUtilsService {
       return false;
     }
     const decodedToken = this.decodeToken(accessToken);
-    const expDate = new Date(decodedToken.exp! * 1000);
+    if (!decodedToken?.exp) {
+      throw new Error('no token provided');
+    }
+    const expDate = new Date(decodedToken.exp * 1000);
     const now = new Date();
     return expDate.getTime() > now.getTime();
   }
