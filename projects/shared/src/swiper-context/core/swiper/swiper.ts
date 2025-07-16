@@ -148,8 +148,11 @@ export class Swiper<T> implements ISwiper<T> {
 
   private updateActiveItem(itemIndex: number | undefined): void {
     const items = this.items;
-    const isOutRange = itemIndex! < 0 || itemIndex! >= items.length;
-    if (itemIndex === undefined || isOutRange) {
+    const isOutRange =
+      itemIndex === undefined
+        ? true
+        : itemIndex < 0 || itemIndex >= items.length;
+    if (isOutRange) {
       delete this.state.activeItemIndex;
     } else {
       this.state.activeItemIndex = itemIndex;
