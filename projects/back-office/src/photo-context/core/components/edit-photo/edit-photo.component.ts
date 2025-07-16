@@ -67,9 +67,9 @@ export class EditPhotoComponent {
   }
 
   private async getPhotoBase(): Promise<IPhotoData | undefined> {
-    const result = await firstValueFrom(
-      this.photoApiService.getPhotoBase(this.photoId!)
-    );
+    const result = this.photoId
+      ? await firstValueFrom(this.photoApiService.getPhotoBase(this.photoId))
+      : undefined;
     return result instanceof Error ? undefined : result;
   }
 
