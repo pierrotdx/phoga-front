@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PhotoMetadataComponent } from './photo-metadata.component';
-import { PHOTO_UTILS_SERVICE_TOKEN } from '@shared/photo-context';
+import { PhotoUtilsServiceProvider } from '@shared/photo-context';
 
 describe('PhotoMetadataComponent', () => {
   let component: PhotoMetadataComponent;
@@ -10,12 +10,7 @@ describe('PhotoMetadataComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [PhotoMetadataComponent],
-      providers: [
-        {
-          provide: PHOTO_UTILS_SERVICE_TOKEN,
-          useValue: {},
-        },
-      ],
+      providers: [PhotoUtilsServiceProvider],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PhotoMetadataComponent);

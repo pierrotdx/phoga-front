@@ -1,4 +1,4 @@
-import { Component, Inject, Input, signal } from '@angular/core';
+import { Component, effect, Inject, input, signal } from '@angular/core';
 import { MaterialIconComponent } from '@shared/material-icon-component/material-icon.component';
 import {
   IPhoto,
@@ -13,51 +13,43 @@ import {
   styleUrl: './photo-metadata.component.scss',
 })
 export class PhotoMetadataComponent {
-  private _photoMetadata: IPhoto['metadata'] | undefined;
+  readonly photoMetadata = input<IPhoto['metadata']>();
 
-  @Input() set photoMetadata(value: IPhoto['metadata'] | undefined) {
-    this._photoMetadata = value || undefined;
-    this.updateTitle();
-    this.updateDescription();
-    this.updateLocation();
-    this.updateDate();
-  }
-  get photoMetadata() {
-    return this._photoMetadata;
-  }
-
-  title = signal<string | undefined>(undefined);
-  description = signal<string | undefined>(undefined);
-  location = signal<string | undefined>(undefined);
-  date = signal<string | undefined>(undefined);
+  readonly title = signal<string | undefined>(undefined);
+  readonly description = signal<string | undefined>(undefined);
+  readonly location = signal<string | undefined>(undefined);
+  readonly date = signal<string | undefined>(undefined);
 
   constructor(
     @Inject(PHOTO_UTILS_SERVICE_TOKEN)
     private readonly photoUtilsService: IPhotoUtilsService
-  ) {}
+  ) {
+    effect(() => {
+      this.updateTitle();
+      this.updateDescription();
+      this.updateLocation();
+      this.updateDate();
+    });
+  }
 
   private updateTitle(): void {
-    const title = this.photoUtilsService.getTitle(this.photoMetadata);
+    const title = this.photoUtilsService.getTitle(this.photoMetadata());
     this.title.set(title);
   }
 
   private updateDescription(): void {
-    const description = this.photoMetadata?.description;
+    const description = this.photoMetadata()?.description;
     this.description.set(description);
   }
 
   private updateLocation(): void {
-    const location = this.photoMetadata?.location;
+    const location = this.photoMetadata()?.location;
     this.location.set(location);
   }
 
   private updateDate(): void {
-    if (this.photoMetadata?.date) {
-      const stringDate = this.getFormattedStringDate(this.photoMetadata.date);
-      this.date.set(stringDate);
-    } else {
-      this.date.set(undefined);
-    }
+    const date = this.photoMetadata()?.date;
+    this.date.set(date ? this.getFormattedStringDate(date) : date);
   }
 
   private getFormattedStringDate(date: Date): string {
