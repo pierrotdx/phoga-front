@@ -3,12 +3,8 @@ import { LandingSectionComponent } from './landing-section.component';
 import { DebugElement, Provider } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ITagApiService, TagApiService } from '@shared/tag-context';
-import {
-  Gallery,
-  IGallery,
-  ISearchPhotoFilter,
-  PhotoApiService,
-} from '@shared/photo-context';
+import { ISearchPhotoFilter, PhotoApiService } from '@shared/photo-context';
+import { Gallery, IGallery } from '@client/gallery-context';
 
 export class LandingSectionComponentTestUtils {
   private testedComponent!: LandingSectionComponent;

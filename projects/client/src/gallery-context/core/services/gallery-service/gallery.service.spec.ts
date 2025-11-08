@@ -1,4 +1,5 @@
-import { DefaultGalleryId, IGallery, ISearchPhotoFilter } from '../models';
+import { ISearchPhotoFilter } from '@shared/photo-context';
+import { DefaultGalleryId, IGallery } from '../../models';
 import { GalleryService } from './gallery.service';
 import { GalleryServiceTestUtils } from './gallery.service.test-utils';
 import { ITag } from '@shared/tag-context';

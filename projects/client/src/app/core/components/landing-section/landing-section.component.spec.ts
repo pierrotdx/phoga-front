@@ -1,6 +1,6 @@
 import { ITag } from '@shared/tag-context';
 import { LandingSectionComponentTestUtils } from './landing-section.component.test-utils';
-import { IGallery } from '@shared/photo-context';
+import { IGallery } from '@client/gallery-context';
 
 describe('LandingSectionComponent', () => {
   let testUtils: LandingSectionComponentTestUtils;

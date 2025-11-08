@@ -1,5 +1,5 @@
 import { Component, effect, input, signal } from '@angular/core';
-import { IGallery, IPhoto } from '@shared/photo-context';
+import { IPhoto } from '@shared/photo-context';
 import { PhotoMetadataComponent } from '../photo-metadata/photo-metadata.component';
 import { PhotoImageComponent } from '../photo-image/photo-image.component';
 import {
@@ -8,6 +8,7 @@ import {
 } from '@shared/overlay-context';
 import { firstValueFrom } from 'rxjs';
 import { PhotoDetailedViewComponent } from '../photo-detailed-view/photo-detailed-view.component';
+import { IGallery } from '@client/gallery-context';
 
 @Component({
   selector: 'app-photo-card',

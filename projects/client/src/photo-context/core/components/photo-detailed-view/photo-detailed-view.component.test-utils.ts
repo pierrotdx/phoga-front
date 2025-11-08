@@ -2,17 +2,12 @@ import { Component, DebugElement, input, model } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MaterialIconComponent } from '@shared/material-icon-component';
 import { OverlayMatIconBtnComponent } from '@shared/overlay-context';
-import {
-  IGallery,
-  IGalleryPhotos,
-  IPhoto,
-  IPhotoMetadata,
-  ISelectedPhoto,
-} from '@shared/photo-context';
+import { IPhoto, IPhotoMetadata, ISelectedPhoto } from '@shared/photo-context';
 import { PhotoDetailedViewComponent } from './photo-detailed-view.component';
 
 import { ReplaySubject } from 'rxjs';
 import { By } from '@angular/platform-browser';
+import { IGallery, IGalleryPhotos } from '@client/gallery-context';
 
 @Component({
   selector: 'app-photo-selection',

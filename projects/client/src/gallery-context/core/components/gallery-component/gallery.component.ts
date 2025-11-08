@@ -2,13 +2,9 @@ import { Component, effect, input, OnDestroy, signal } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Subscription } from 'rxjs';
 import { splitEvery } from 'ramda';
-import { PhotoStripComponent } from '../photo-strip/photo-strip.component';
-import {
-  IGallery,
-  IGalleryPhotos,
-  IPhoto,
-  IPhotoStrip,
-} from '@shared/photo-context';
+import { PhotoStripComponent } from '../../../../photo-context/core/components/photo-strip/photo-strip.component';
+import { IPhoto, IPhotoStrip } from '@shared/photo-context';
+import { IGallery, IGalleryPhotos } from '../../models';
 
 @Component({
   selector: 'lib-gallery',

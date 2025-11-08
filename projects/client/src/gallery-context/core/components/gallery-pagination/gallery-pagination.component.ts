@@ -6,8 +6,9 @@ import {
   OnDestroy,
   signal,
 } from '@angular/core';
-import { IGallery, IGalleryPhotos, IPhoto, ISelectedPhoto } from '@shared/photo-context';
+import { IPhoto, ISelectedPhoto } from '@shared/photo-context';
 import { SubscriptionHandler } from '@shared/subscription-handler-context';
+import { IGallery, IGalleryPhotos } from '../../models';
 
 @Component({
   selector: 'app-gallery-pagination',

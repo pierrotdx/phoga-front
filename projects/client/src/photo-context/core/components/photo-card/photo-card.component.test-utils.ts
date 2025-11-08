@@ -4,17 +4,13 @@ import { PhotoFullscreenComponent } from '..';
 import { MaterialIconComponent } from '@shared/material-icon-component';
 import { Component, DebugElement, input, Output } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import {
-  IGallery,
-  IGalleryPhotos,
-  IPhoto,
-  IPhotoMetadata,
-} from '@shared/photo-context';
+import { IPhoto, IPhotoMetadata } from '@shared/photo-context';
 import { ReplaySubject, Subject } from 'rxjs';
 import {
   OverlayMatIconBtnComponent,
   OverlayPanelComponent,
 } from '@shared/overlay-context';
+import { IGallery, IGalleryPhotos } from '@client/gallery-context';
 
 @Component({
   selector: 'app-photo-image',

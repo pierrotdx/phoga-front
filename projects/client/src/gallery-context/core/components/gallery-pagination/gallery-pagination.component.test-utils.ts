@@ -1,13 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GalleryPaginationComponent } from './gallery-pagination.component';
-import {
-  IGallery,
-  IGalleryPhotos,
-  ISelectedPhoto,
-} from '@shared/photo-context';
+import { ISelectedPhoto } from '@shared/photo-context';
 import { BehaviorSubject } from 'rxjs';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { IGallery, IGalleryPhotos } from '../../models';
 
 export class GalleryPaginationComponentTestUtils {
   private testedComponent!: GalleryPaginationComponent;

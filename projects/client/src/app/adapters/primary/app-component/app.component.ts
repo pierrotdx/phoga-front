@@ -6,8 +6,8 @@ import {
   HeaderComponent,
   LandingSectionComponent,
 } from '../../../core';
-import { GalleryService } from '@shared/photo-context';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { GalleryService } from '@client/gallery-context';
 
 @Component({
   selector: 'app-root',

@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
-import { IPhoto } from './photo';
 import { IGalleryPhotos } from './gallery-photos';
+import { IPhoto } from '@shared/photo-context';
 
 export interface IGallery {
   _id: string;

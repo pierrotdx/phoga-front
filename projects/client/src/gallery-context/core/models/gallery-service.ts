@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
-import { IGallery, IGalleryOptions } from '../models';
+import { IGallery } from './gallery';
+import { IGalleryOptions } from './gallery-options';
 
 export interface IGalleryService {
   selectedGallery$: Observable<IGallery | undefined>;
@@ -11,4 +12,3 @@ export interface IGalleryService {
   initGalleries(): Promise<void>;
   defaultGalleryId: string;
 }
-

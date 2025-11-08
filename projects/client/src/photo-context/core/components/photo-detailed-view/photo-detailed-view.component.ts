@@ -7,7 +7,7 @@ import {
   Output,
   signal,
 } from '@angular/core';
-import { IGallery, ISelectedPhoto } from '@shared/photo-context';
+import { ISelectedPhoto } from '@shared/photo-context';
 import { PhotoSelectionComponent } from '../photo-selection/photo-selection.component';
 import { PhotoMetadataComponent } from '../photo-metadata/photo-metadata.component';
 import { PhotoImageComponent } from '../photo-image/photo-image.component';
@@ -15,6 +15,7 @@ import { PhotoFullscreenComponent } from '../photo-fullscreen/photo-fullscreen.c
 import { MaterialIconComponent } from '@shared/material-icon-component';
 import { Subject, Subscription } from 'rxjs';
 import { OverlayMatIconBtnComponent } from '@shared/overlay-context';
+import { IGallery } from '@client/gallery-context';
 
 @Component({
   selector: 'app-photo-detailed-view',

@@ -3,15 +3,15 @@ import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { SectionComponent } from '../section/section.component';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { Subscription } from 'rxjs';
-import {
-  DefaultGalleryId,
-  GalleryService,
-  IGallery,
-  IPhoto,
-} from '@shared/photo-context';
+import { IPhoto } from '@shared/photo-context';
 
 import { GalleryNavComponent } from './gallery-nav/gallery-nav.component';
-import { GalleryComponent } from '../../../../photo-context';
+import {
+  DefaultGalleryId,
+  GalleryComponent,
+  GalleryService,
+  IGallery,
+} from '@client/gallery-context';
 
 @Component({
   selector: 'app-gallery-section',

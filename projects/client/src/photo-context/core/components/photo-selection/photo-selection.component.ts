@@ -2,7 +2,7 @@ import { Component, effect, input, OnDestroy, signal } from '@angular/core';
 
 import { SwiperComponent } from '@shared/swiper-context';
 import { PhotoImageComponent } from '../photo-image/photo-image.component';
-import { IGallery, IGalleryPhotos, IPhoto } from '@shared/photo-context';
+import { IPhoto } from '@shared/photo-context';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import {
   firstValueFrom,
@@ -13,7 +13,8 @@ import {
 } from 'rxjs';
 import { SubscriptionHandler } from '@shared/subscription-handler-context';
 import { isEmpty } from 'ramda';
-import { GalleryPaginationComponent } from '../gallery-pagination/gallery-pagination.component';
+import { GalleryPaginationComponent } from '../../../../gallery-context/core/components/gallery-pagination/gallery-pagination.component';
+import { IGallery, IGalleryPhotos } from '@client/gallery-context';
 
 @Component({
   selector: 'app-photo-selection',

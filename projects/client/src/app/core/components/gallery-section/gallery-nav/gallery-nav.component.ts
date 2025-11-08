@@ -6,10 +6,10 @@ import { MaterialIconComponent } from '@shared/material-icon-component';
 import { OverlayPanelComponent } from '@shared/overlay-context';
 import { map, Unsubscribable } from 'rxjs';
 import {
+  IGallery,
   DefaultGalleryId,
   GalleryService,
-  IGallery,
-} from '@shared/photo-context';
+} from '@client/gallery-context';
 
 @Component({
   selector: 'app-gallery-nav',

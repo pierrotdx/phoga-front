@@ -1,15 +1,17 @@
 import { ISearchResult } from '@shared/models';
 import {
-  IGallery,
-  IGalleryOptions,
-  IGalleryPhotos,
   IPhoto,
   ISearchPhotoFilter,
   ISearchPhotoOptions,
-} from '../models';
+} from '../../../../../../shared/src/photo-context/core/models';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
-import { ISelectedPhoto } from '../models/selected-photo';
-import { PhotoApiService } from '../photo-api-service/photo-api.service';
+import { ISelectedPhoto } from '../../../../../../shared/src/photo-context/core/models/selected-photo';
+import { PhotoApiService } from '../../../../../../shared/src/photo-context/core/photo-api-service/photo-api.service';
+import {
+  IGallery,
+  IGalleryOptions,
+  IGalleryPhotos,
+} from '@client/gallery-context';
 
 export class Gallery implements IGallery {
   private readonly _galleryPhotos$ = new BehaviorSubject<IGalleryPhotos>({
@@ -24,7 +26,9 @@ export class Gallery implements IGallery {
   private from: number = 0;
   readonly defaultSize: number = 3;
 
-  private readonly _totalCount = new BehaviorSubject<number | undefined>(undefined);
+  private readonly _totalCount = new BehaviorSubject<number | undefined>(
+    undefined
+  );
   readonly totalCount$ = this._totalCount.asObservable();
 
   private readonly _selectedPhoto$ = new BehaviorSubject<ISelectedPhoto>(
