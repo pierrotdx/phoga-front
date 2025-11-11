@@ -2,7 +2,7 @@ import { GalleryPreviewComponentTestUtils } from './gallery-preview.component.te
 import { IPhoto, Photo } from '@shared/photo-context';
 import { ComponentFixture } from '@angular/core/testing';
 import { GalleryPreviewComponent } from './gallery-preview.component';
-import { IGalleryPhotos } from '@client/gallery-context';
+import { IGalleryPhotos } from '@shared/gallery-context';
 
 const dumbPhotos: IPhoto[] = [
   new Photo('photo-1'),

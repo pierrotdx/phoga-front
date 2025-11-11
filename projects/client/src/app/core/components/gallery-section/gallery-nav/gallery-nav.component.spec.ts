@@ -1,4 +1,4 @@
-import { IGallery } from '@client/gallery-context';
+import { IGallery } from '@shared/gallery-context';
 import { GalleryNavTestUtils } from './gallery-nav.test-utils';
 import { fakeAsync, tick } from '@angular/core/testing';
 

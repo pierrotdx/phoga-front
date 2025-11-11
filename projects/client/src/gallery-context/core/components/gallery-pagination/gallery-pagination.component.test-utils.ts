@@ -4,7 +4,7 @@ import { ISelectedPhoto } from '@shared/photo-context';
 import { BehaviorSubject } from 'rxjs';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { IGallery, IGalleryPhotos } from '../../models';
+import { IGalleryPhotos, IGallery } from '@shared/gallery-context';
 
 export class GalleryPaginationComponentTestUtils {
   private testedComponent!: GalleryPaginationComponent;

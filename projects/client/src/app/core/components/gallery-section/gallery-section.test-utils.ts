@@ -6,11 +6,8 @@ import { of, Subject } from 'rxjs';
 import { Component, DebugElement, input, Provider } from '@angular/core';
 import { SectionComponent } from '../section/section.component';
 import { By } from '@angular/platform-browser';
-import {
-  GalleryService,
-  IGallery,
-  IGalleryService,
-} from '@client/gallery-context';
+import { IGallery, IGalleryService, GalleryService } from '@shared/gallery-context';
+
 
 @Component({
   template: '',

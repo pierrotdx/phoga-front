@@ -7,7 +7,7 @@ import { PhotoDetailedViewComponent } from './photo-detailed-view.component';
 
 import { ReplaySubject } from 'rxjs';
 import { By } from '@angular/platform-browser';
-import { IGallery, IGalleryPhotos } from '@client/gallery-context';
+import { IGallery, IGalleryPhotos } from '@shared/gallery-context';
 
 @Component({
   selector: 'app-photo-selection',

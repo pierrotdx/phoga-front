@@ -6,7 +6,7 @@ import {
 } from './photo-detailed-view.component.test-utils';
 import { DebugElement } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { IGalleryPhotos } from '@client/gallery-context';
+import { IGalleryPhotos } from '@shared/gallery-context';
 
 describe('PhotoDetailedViewComponent', () => {
   let testUtils: PhotoDetailedViewComponentTestUtils;

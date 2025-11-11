@@ -10,7 +10,7 @@ import {
   OverlayMatIconBtnComponent,
   OverlayPanelComponent,
 } from '@shared/overlay-context';
-import { IGallery, IGalleryPhotos } from '@client/gallery-context';
+import { IGallery, IGalleryPhotos } from '@shared/gallery-context';
 
 @Component({
   selector: 'app-photo-image',

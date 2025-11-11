@@ -18,7 +18,7 @@ import { Component, DebugElement, effect, input } from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { NgClass } from '@angular/common';
 import { ISearchResult } from '@shared/models';
-import { Gallery, IGallery } from '@client/gallery-context';
+import { IGallery, Gallery } from '@shared/gallery-context';
 
 @Component({
   selector: 'app-photo-image',

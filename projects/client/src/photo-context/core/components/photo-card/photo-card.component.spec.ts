@@ -1,7 +1,7 @@
 import { Photo } from '@shared/photo-context';
 import { PhotoCardComponentTestUtils } from './photo-card.component.test-utils';
 import { Buffer } from 'buffer';
-import { IGalleryPhotos } from '@client/gallery-context';
+import { IGalleryPhotos } from '@shared/gallery-context';
 
 describe('PhotoCardComponent', () => {
   let testUtils: PhotoCardComponentTestUtils;

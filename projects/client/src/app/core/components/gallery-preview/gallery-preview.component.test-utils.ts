@@ -5,7 +5,7 @@ import {
   IGallery,
   IGalleryPhotos,
   IGalleryService,
-} from '@client/gallery-context';
+} from '@shared/gallery-context';
 import { ReplaySubject } from 'rxjs';
 import { DebugElement, Provider } from '@angular/core';
 import { By } from '@angular/platform-browser';

@@ -4,7 +4,7 @@ import { DebugElement, Provider } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ITagApiService, TagApiService } from '@shared/tag-context';
 import { ISearchPhotoFilter, PhotoApiService } from '@shared/photo-context';
-import { Gallery, IGallery } from '@client/gallery-context';
+import { IGallery, Gallery } from '@shared/gallery-context';
 
 export class LandingSectionComponentTestUtils {
   private testedComponent!: LandingSectionComponent;

@@ -14,7 +14,7 @@ import {
   IGalleryService,
   Gallery,
   GalleryService,
-} from '@client/gallery-context';
+} from '@shared/gallery-context';
 
 export const noTagNavItemId = 'no-tag-nav-item';
 

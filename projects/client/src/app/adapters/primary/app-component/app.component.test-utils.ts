@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { By } from '@angular/platform-browser';
-import { GalleryService, IGalleryService } from '@client/gallery-context';
+import { GalleryService, IGalleryService } from '@shared/gallery-context';
 
 @Component({
   selector: 'app-header',

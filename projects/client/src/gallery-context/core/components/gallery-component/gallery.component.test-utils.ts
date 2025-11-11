@@ -4,7 +4,7 @@ import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ReplaySubject } from 'rxjs';
 import { IPhotoStrip } from '@shared/public-api';
-import { IGallery, IGalleryPhotos } from '../../models';
+import { IGalleryPhotos, IGallery } from '@shared/gallery-context';
 
 export class GalleryComponentTestUtils {
   private testedComponent!: GalleryComponent;
