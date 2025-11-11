@@ -5,7 +5,7 @@ import {
   GallerySectionComponent,
   HeaderComponent,
   LandingSectionComponent,
-} from '../../../core';
+} from '../../../core/components';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { GalleryService } from '@client/gallery-context';
 

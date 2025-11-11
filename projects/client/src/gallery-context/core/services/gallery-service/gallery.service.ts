@@ -3,14 +3,15 @@ import { Injectable } from '@angular/core';
 import { clone } from 'ramda';
 import { BehaviorSubject, firstValueFrom, map } from 'rxjs';
 import { ITag, TagApiService } from '@shared/tag-context';
-import {
-  DefaultGalleryId,
-  IGallery,
-  IGalleryOptions,
-  IGalleryService,
-} from '@client/gallery-context';
+
 import { PhotoApiService } from '@shared/photo-context';
 import { Gallery } from '../gallery/gallery';
+import {
+  IGalleryService,
+  IGallery,
+  DefaultGalleryId,
+  IGalleryOptions,
+} from '../../models';
 
 @Injectable({
   providedIn: 'root',

@@ -1,17 +1,14 @@
 import { ISearchResult } from '@shared/models';
-import {
-  IPhoto,
-  ISearchPhotoFilter,
-  ISearchPhotoOptions,
-} from '../../../../../../shared/src/photo-context/core/models';
+
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
-import { ISelectedPhoto } from '../../../../../../shared/src/photo-context/core/models/selected-photo';
-import { PhotoApiService } from '../../../../../../shared/src/photo-context/core/photo-api-service/photo-api.service';
+import { IGallery, IGalleryOptions, IGalleryPhotos } from '../../models';
 import {
-  IGallery,
-  IGalleryOptions,
-  IGalleryPhotos,
-} from '@client/gallery-context';
+  ISelectedPhoto,
+  ISearchPhotoFilter,
+  PhotoApiService,
+  ISearchPhotoOptions,
+  IPhoto,
+} from '@shared/photo-context';
 
 export class Gallery implements IGallery {
   private readonly _galleryPhotos$ = new BehaviorSubject<IGalleryPhotos>({

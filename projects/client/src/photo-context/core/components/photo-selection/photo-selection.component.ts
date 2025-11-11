@@ -13,8 +13,8 @@ import {
 } from 'rxjs';
 import { SubscriptionHandler } from '@shared/subscription-handler-context';
 import { isEmpty } from 'ramda';
-import { GalleryPaginationComponent } from '../../../../gallery-context/core/components/gallery-pagination/gallery-pagination.component';
-import { IGallery, IGalleryPhotos } from '@client/gallery-context';
+import { GalleryPaginationComponent } from '@client/gallery-context/core/components/gallery-pagination/gallery-pagination.component';
+import { IGallery, IGalleryPhotos } from '@client/gallery-context/core/models';
 
 @Component({
   selector: 'app-photo-selection',
