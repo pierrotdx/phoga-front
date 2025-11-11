@@ -9,7 +9,7 @@ import {
   IGallery,
   DefaultGalleryId,
   GalleryService,
-} from '@client/gallery-context';
+} from '@shared/gallery-context';
 
 @Component({
   selector: 'app-gallery-nav',

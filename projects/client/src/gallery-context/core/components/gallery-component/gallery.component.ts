@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { splitEvery } from 'ramda';
 import { PhotoStripComponent } from '../../../../photo-context/core/components/photo-strip/photo-strip.component';
 import { IPhoto, IPhotoStrip } from '@shared/photo-context';
-import { IGallery, IGalleryPhotos } from '../../models';
+import { IGallery, IGalleryPhotos } from '@shared/gallery-context';
 
 @Component({
   selector: 'lib-gallery',

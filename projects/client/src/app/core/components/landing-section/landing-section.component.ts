@@ -2,8 +2,8 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, resource } from '@angular/core';
 
 import { PhotoImageComponent } from '@client/photo-context';
 
+import { GalleryService } from '@shared/gallery-context';
 import { GalleryPreviewComponent } from '../gallery-preview/gallery-preview.component';
-import { GalleryService } from '@client/gallery-context';
 
 @Component({
   selector: 'app-landing-section',

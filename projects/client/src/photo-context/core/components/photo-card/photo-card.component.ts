@@ -8,7 +8,7 @@ import {
 } from '@shared/overlay-context';
 import { firstValueFrom } from 'rxjs';
 import { PhotoDetailedViewComponent } from '../photo-detailed-view/photo-detailed-view.component';
-import { IGallery } from '@client/gallery-context/core/models';
+import { IGallery } from '@shared/gallery-context';
 
 @Component({
   selector: 'app-photo-card',

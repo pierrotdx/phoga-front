@@ -8,10 +8,10 @@ import { IPhoto } from '@shared/photo-context';
 import { GalleryNavComponent } from './gallery-nav/gallery-nav.component';
 import {
   DefaultGalleryId,
-  GalleryComponent,
   GalleryService,
   IGallery,
-} from '@client/gallery-context';
+} from '@shared/gallery-context';
+import { GalleryComponent } from '@client/gallery-context';
 
 @Component({
   selector: 'app-gallery-section',

@@ -19,7 +19,7 @@ import EmblaCarousel, {
 import { MaterialIconComponent } from '@shared/material-icon-component';
 import { map, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import { GalleryService, IGallery } from '@client/gallery-context';
+import { GalleryService, IGallery } from '@shared/gallery-context';
 import { IPhoto } from '@shared/photo-context';
 
 @Component({

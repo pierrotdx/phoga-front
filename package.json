@@ -17,9 +17,9 @@
     "test:shared:ci": "ng test shared --configuration ci",
     "test:back-office:ci": "ng test back-office --configuration ci",
     "test:client:ci": "ng test client --configuration ci",
-    "madge:client": "madge ./projects/client/src --ts-config ./projects/client/tsconfig.app.json --circular --extensions ts,js",
-    "madge:back-office": "madge ./projects/back-office/src --ts-config ./projects/back-office/tsconfig.app.json --circular --extensions ts,js",
-    "madge:shared": "madge ./projects/shared/src --ts-config ./projects/shared/tsconfig.lib.json --circular --extensions ts,js"
+    "madge:client": "madge ./projects/client/src --ts-config ./projects/client/tsconfig.app.json --circular --extensions ts,js --warning",
+    "madge:back-office": "madge ./projects/back-office/src --ts-config ./projects/back-office/tsconfig.app.json --circular --extensions ts,js --warning",
+    "madge:shared": "madge ./projects/shared/src --ts-config ./projects/shared/tsconfig.lib.json --circular --extensions ts,js --warning"
   },
   "private": true,
   "dependencies": {
