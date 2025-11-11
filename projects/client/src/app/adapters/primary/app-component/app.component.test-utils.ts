@@ -1,9 +1,9 @@
 import { Component, DebugElement, Provider } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { GalleryService, IGalleryService } from '@shared/photo-context';
 import { AppComponent } from './app.component';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { By } from '@angular/platform-browser';
+import { GalleryService, IGalleryService } from '@shared/gallery-context';
 
 @Component({
   selector: 'app-header',

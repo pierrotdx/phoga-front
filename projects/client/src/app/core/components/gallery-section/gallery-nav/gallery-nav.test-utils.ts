@@ -9,12 +9,12 @@ import {
 } from '@angular/cdk/layout';
 import { ReplaySubject, Subject } from 'rxjs';
 import {
+  IGallery,
   DefaultGalleryId,
+  IGalleryService,
   Gallery,
   GalleryService,
-  IGallery,
-  IGalleryService,
-} from '@shared/photo-context';
+} from '@shared/gallery-context';
 
 export const noTagNavItemId = 'no-tag-nav-item';
 

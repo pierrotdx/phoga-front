@@ -20,6 +20,7 @@ import {
   EnvironmentProvider,
 } from '../../../environment-context';
 import { TagApiService } from '@shared/tag-context';
+import { GalleryServiceProvider } from '@shared/gallery-context';
 
 const PhotoApiServiceProvider: Provider = {
   provide: PhotoApiService,
@@ -41,6 +42,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withInMemoryScrolling(inMemoryScrollingFeature)),
     provideHttpClient(),
+    GalleryServiceProvider,
     PhotoApiServiceProvider,
     PhotoUtilsServiceProvider,
     TagApiServiceProvider,

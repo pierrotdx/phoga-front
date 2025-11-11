@@ -3,7 +3,8 @@ import { GalleryComponent } from './gallery.component';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ReplaySubject } from 'rxjs';
-import { IGalleryPhotos, IGallery, IPhotoStrip } from '@shared/public-api';
+import { IPhotoStrip } from '@shared/public-api';
+import { IGalleryPhotos, IGallery } from '@shared/gallery-context';
 
 export class GalleryComponentTestUtils {
   private testedComponent!: GalleryComponent;

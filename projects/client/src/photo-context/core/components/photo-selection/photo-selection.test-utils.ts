@@ -2,8 +2,6 @@ import { PhotoSelectionComponent } from './photo-selection.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SwiperComponent } from '@shared/swiper-context';
 import {
-  Gallery,
-  IGallery,
   IPhoto,
   ISearchPhotoOptions,
   PhotoApiService,
@@ -20,6 +18,7 @@ import { Component, DebugElement, effect, input } from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { NgClass } from '@angular/common';
 import { ISearchResult } from '@shared/models';
+import { IGallery, Gallery } from '@shared/gallery-context';
 
 @Component({
   selector: 'app-photo-image',

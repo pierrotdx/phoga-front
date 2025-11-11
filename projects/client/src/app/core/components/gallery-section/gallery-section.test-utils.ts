@@ -1,16 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { GallerySectionComponent } from './gallery-section.component';
-import {
-  GalleryService,
-  IGallery,
-  IGalleryService,
-  PhotoApiService,
-} from '@shared/photo-context';
+import { PhotoApiService } from '@shared/photo-context';
 import { of, Subject } from 'rxjs';
 import { Component, DebugElement, input, Provider } from '@angular/core';
 import { SectionComponent } from '../section/section.component';
 import { By } from '@angular/platform-browser';
+import { IGallery, IGalleryService, GalleryService } from '@shared/gallery-context';
+
 
 @Component({
   template: '',

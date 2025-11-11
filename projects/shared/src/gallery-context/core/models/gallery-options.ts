@@ -1,4 +1,4 @@
-import { ISearchPhotoFilter } from './search-photo-filter';
+import { ISearchPhotoFilter } from '../../../../../shared/src/photo-context/core/models/search-photo-filter';
 
 export interface IGalleryOptions {
   filter?: ISearchPhotoFilter;

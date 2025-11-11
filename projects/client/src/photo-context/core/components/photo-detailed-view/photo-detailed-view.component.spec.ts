@@ -1,4 +1,4 @@
-import { IGalleryPhotos, IPhoto, Photo } from '@shared/photo-context';
+import { IPhoto, Photo } from '@shared/photo-context';
 import {
   PhotoDetailedViewComponentTestUtils,
   PhotoImageStubComponent,
@@ -6,6 +6,7 @@ import {
 } from './photo-detailed-view.component.test-utils';
 import { DebugElement } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { IGalleryPhotos } from '@shared/gallery-context';
 
 describe('PhotoDetailedViewComponent', () => {
   let testUtils: PhotoDetailedViewComponentTestUtils;

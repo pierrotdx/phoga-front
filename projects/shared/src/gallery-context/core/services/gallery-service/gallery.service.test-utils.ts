@@ -1,16 +1,13 @@
 import { Provider } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import {
-  Gallery,
-  GalleryService,
-  IGallery,
-  IGalleryOptions,
-  ISearchPhotoFilter,
-  PhotoApiService,
-} from '../';
+
 import { firstValueFrom, of } from 'rxjs';
 import { ITag, TagApiService } from '@shared/tag-context';
 import { ISearchResult } from '@shared/models';
+import { PhotoApiService, ISearchPhotoFilter } from '@shared/photo-context';
+import { IGallery, IGalleryOptions } from '../../models';
+import { Gallery } from '../gallery/gallery';
+import { GalleryService } from './gallery.service';
 
 export class GalleryServiceTestUtils {
   private testedService!: GalleryService;

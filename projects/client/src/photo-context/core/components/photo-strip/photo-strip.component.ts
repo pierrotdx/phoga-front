@@ -1,6 +1,7 @@
 import { Component, input } from '@angular/core';
-import { IGallery, IPhotoStrip } from '@shared/photo-context';
+import { IPhotoStrip } from '@shared/photo-context';
 import { PhotoCardComponent } from '../photo-card/photo-card.component';
+import { IGallery } from '@shared/gallery-context/core/models';
 
 @Component({
   selector: 'app-photo-strip',

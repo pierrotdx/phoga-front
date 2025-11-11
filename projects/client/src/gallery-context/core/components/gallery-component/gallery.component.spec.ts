@@ -1,5 +1,6 @@
-import { IGalleryPhotos, Photo } from '@shared/photo-context';
+import { Photo } from '@shared/photo-context';
 import { GalleryComponentTestUtils } from './gallery.component.test-utils';
+import { IGalleryPhotos } from '@shared/gallery-context';
 
 describe('GalleryComponent', () => {
   let testUtils: GalleryComponentTestUtils;

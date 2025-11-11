@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PhotoStripComponent } from './photo-strip.component';
-import { IGallery, IPhotoStrip } from '@shared/photo-context';
+import { IPhotoStrip } from '@shared/photo-context';
+import { IGallery } from '@shared/gallery-context';
 
 describe('PhotosStripComponent', () => {
   let component: PhotoStripComponent;

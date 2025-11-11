@@ -1,9 +1,9 @@
-import { IGalleryPhotos, IPhoto } from '../models';
 import { Gallery } from './gallery';
 import { firstValueFrom, of } from 'rxjs';
-import { ISelectedPhoto } from '../models/selected-photo';
-import { PhotoApiService } from '../photo-api-service/photo-api.service';
+
 import { ISearchResult } from '@shared/models';
+import { PhotoApiService, IPhoto, ISelectedPhoto } from '@shared/photo-context';
+import { IGalleryPhotos } from '../../models';
 
 export class GalleryTestUtils {
   private readonly fakePhotoApiService = jasmine.createSpyObj<PhotoApiService>(

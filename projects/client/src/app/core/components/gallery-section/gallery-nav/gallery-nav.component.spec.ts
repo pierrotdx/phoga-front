@@ -1,6 +1,6 @@
+import { IGallery } from '@shared/gallery-context';
 import { GalleryNavTestUtils } from './gallery-nav.test-utils';
 import { fakeAsync, tick } from '@angular/core/testing';
-import { IGallery } from '@shared/photo-context';
 
 describe('GalleryNavComponent', () => {
   let testUtils: GalleryNavTestUtils;

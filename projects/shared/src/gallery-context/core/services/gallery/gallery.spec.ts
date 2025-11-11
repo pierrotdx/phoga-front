@@ -1,9 +1,11 @@
 import { firstValueFrom, Subscription } from 'rxjs';
-import { IGalleryPhotos, IPhoto, ISelectedPhoto, Photo } from '../models';
+
 import { Gallery } from './gallery';
 import { GalleryTestUtils } from './gallery.test-utils';
 import { ISearchResult } from '@shared/models';
 import { splitEvery } from 'ramda';
+import { IPhoto, Photo, ISelectedPhoto } from '@shared/photo-context';
+import { IGalleryPhotos } from '../../models';
 
 describe('Gallery', () => {
   let testUtils: GalleryTestUtils;

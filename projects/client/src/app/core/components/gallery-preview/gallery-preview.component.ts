@@ -9,7 +9,6 @@ import {
   viewChild,
 } from '@angular/core';
 import { PhotoImageComponent } from '@client/photo-context';
-import { GalleryService, IGallery, IPhoto } from '@shared/photo-context';
 import AutoScroll from 'embla-carousel-auto-scroll';
 
 import EmblaCarousel, {
@@ -20,6 +19,8 @@ import EmblaCarousel, {
 import { MaterialIconComponent } from '@shared/material-icon-component';
 import { map, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { GalleryService, IGallery } from '@shared/gallery-context';
+import { IPhoto } from '@shared/photo-context';
 
 @Component({
   selector: 'app-gallery-preview',
