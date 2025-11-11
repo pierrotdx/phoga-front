@@ -1,4 +1,5 @@
-import { IEndpoints, Endpoint } from '.';
+import { Endpoint } from './endpoint';
+import { IEndpoints } from './models';
 import { EndpointId } from './models/endpoint-id';
 
 export class Endpoints implements IEndpoints {
